@@ -44,13 +44,12 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 @media(max-width:640px){
   .a-layout{grid-template-columns:1fr;height:100vh;}
   .a-side{display:none}
-  .a-main{padding:1rem 1rem 5rem 1rem} /* bottom padding for sticky btn */
-  .a-footer{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--border);padding:.75rem 1rem;margin:0;max-width:100%;z-index:50;border-radius:0;}
-  .a-note{display:none} /* hide note on mobile to save space */
+  .a-main{padding:1rem 1rem 120px 1rem;height:100vh;overflow-y:auto;}
   .a-title{font-size:1.1rem}
   .a-sub{font-size:.78rem}
   .bq-q{font-size:.78rem}
   .bq-opt{font-size:.68rem;padding:.28rem .55rem}
+  .a-footer{padding-top:1.5rem}
 }
 .a-side{background:var(--surface);border-right:1px solid var(--border);padding:2rem 1.25rem;display:flex;flex-direction:column;gap:.8rem;overflow-y:auto}
 .a-side-title{font-family:'Space Mono',monospace;font-size:.52rem;color:var(--muted);letter-spacing:.18em;text-transform:uppercase;margin-bottom:.2rem}
