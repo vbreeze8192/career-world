@@ -373,9 +373,17 @@ const STEPS=[
     {id:'feedback',t:'Hai ricevuto feedback critico su un tuo lavoro? Come l\'hai gestito?',opts:['L\'ho usato per migliorare','Mi ha fatto male ma l\'ho integrato','L\'ho preso molto sul personale','Non ricordo situazioni']},
     {id:'network',t:'Hai mai aiutato attivamente un\'altra persona (collega, studentessa) a crescere o a farsi vedere?',opts:['Sì, più volte e consapevolmente','Qualche volta','Raramente, non ci ho pensato','No']},
    ]},
-  {id:'pref',tag:'FASE 3 · PREFERENZE',title:'Dove stai meglio?',
-   sub:'Questi slider non hanno risposta giusta. Tutti i punti dello spettro hanno mercato.',
-   note:'Le preferenze possono cambiare — e il gioco lo mostrerà.',
+  {id:'pref',tag:'FASE 3 · ORIENTAMENTO',title:'Come ti vedi nel lavoro tech?',
+   sub:'Prima la domanda più importante: non dipende da cosa sai fare ora, ma da dove vuoi andare.',
+   note:'L\'orientamento è il segnale principale per la tua classe — indipendente dall\'esperienza attuale.',
+   qs:[
+    {id:'orient',t:'Quale di queste frasi ti descrive meglio — indipendentemente da cosa sai fare ora?',opts:[
+      '📊 Voglio trasformare dati in decisioni di business comprensibili a tutti',
+      '🔬 Voglio costruire modelli predittivi che anticipano il futuro',
+      '⚙️ Voglio portare sistemi AI in produzione e farli scalare',
+      '🤖 Voglio costruire con LLM, agenti e i tool AI più recenti',
+    ]},
+   ],
    sls:[
     {id:'stab',label:'Stabilità vs Rischio',lo:'Stabilità e prevedibilità',hi:'Rischio, velocità, incertezza'},
     {id:'tech',label:'Deep Tech vs Strategico',lo:'Focus tecnico profondo',hi:'Strategia, prodotto, business'},
@@ -622,13 +630,69 @@ function statSegs(key,val){
   </div>`;
 }
 
+// ── Progress panel ──────────────────────────
+function getWorldProgress(){
+  const npcs = (currentWorldDef||WORLD_DEFS[ST.world.id]||{}).npcs||[];
+  const vis   = ST.world.visited;
+  const reqNPC  = npcs.filter(n=>n.required && n.type==='npc');
+  const reqSis  = npcs.filter(n=>n.required && n.type==='sis');
+  const reqTech = npcs.filter(n=>n.required && n.type==='tech');
+  const optNPC  = npcs.filter(n=>!n.required && n.type==='npc');
+  const optSis  = npcs.filter(n=>!n.required && n.type==='sis');
+  const optTech = npcs.filter(n=>!n.required && n.type==='tech');
+  const npcGoal  = Math.min(3, reqNPC.length);
+  const sisGoal  = Math.min(1, reqSis.length);
+  const techGoal = Math.min(1, reqTech.length);
+  const doneNPC  = reqNPC.filter(n=>vis.includes(n.id)).length;
+  const doneSis  = reqSis.filter(n=>vis.includes(n.id)).length;
+  const doneTech = reqTech.filter(n=>vis.includes(n.id)).length;
+  const doneOptNPC  = optNPC.filter(n=>vis.includes(n.id)).length;
+  const doneOptSis  = optSis.filter(n=>vis.includes(n.id)).length;
+  const doneOptTech = optTech.filter(n=>vis.includes(n.id)).length;
+  const unlocked = doneNPC>=npcGoal && doneSis>=sisGoal && doneTech>=techGoal;
+  return {
+    npcGoal, sisGoal, techGoal,
+    doneNPC, doneSis, doneTech,
+    doneOptNPC, doneOptSis, doneOptTech,
+    optNPC:optNPC.length, optSis:optSis.length, optTech:optTech.length,
+    unlocked
+  };
+}
+
+function buildProgressPanel(){
+  const p = getWorldProgress();
+  const NPC_C  = '#a0c4ff';
+  const SIS_C  = '#e53935';
+  const TECH_C = '#f7c46a';
+
+  function pips(done, goal, optDone, optTotal, color){
+    let h='';
+    for(let i=0;i<goal;i++){
+      const on=i<done;
+      h+=`<div class="pp-pip${on?' done':''}" style="${on?`background:${color};box-shadow:0 0 4px ${color}88`:''}"></div>`;
+    }
+    for(let i=0;i<Math.min(optTotal,2);i++){
+      const on=i<optDone;
+      h+=`<div class="pp-pip opt" style="${on?`background:${color}66;border-color:${color}44`:''}"></div>`;
+    }
+    return h;
+  }
+
+  const rows=[
+    `<div class="pp-row"><span class="pp-label">👥</span><div class="pp-pips">${pips(p.doneNPC,p.npcGoal,p.doneOptNPC,p.optNPC,NPC_C)}</div><span class="pp-count" style="color:${NPC_C}">${p.doneNPC}/${p.npcGoal}</span></div>`,
+    `<div class="pp-row"><span class="pp-label">❤️</span><div class="pp-pips">${pips(p.doneSis,p.sisGoal,p.doneOptSis,p.optSis,SIS_C)}</div><span class="pp-count" style="color:${SIS_C}">${p.doneSis}/${p.sisGoal}</span></div>`,
+    `<div class="pp-row"><span class="pp-label">💻</span><div class="pp-pips">${pips(p.doneTech,p.techGoal,p.doneOptTech,p.optTech,TECH_C)}</div><span class="pp-count" style="color:${TECH_C}">${p.doneTech}/${p.techGoal}</span></div>`,
+  ].join('');
+
+  const status = p.unlocked
+    ? `<div class="pp-status open" id="ppStatus">🔓 APERTA</div>`
+    : `<div class="pp-status locked" id="ppStatus">🔒 ${p.doneNPC+p.doneSis+p.doneTech}/${p.npcGoal+p.sisGoal+p.techGoal}</div>`;
+
+  return `<div class="progress-panel" id="progressPanel">${rows}${status}</div>`;
+}
+
 function renderHUD(worldLabel){
   const cls=CLASSES[ST.char.cls];
-  // Show required progress in counter
-  const _npcs = WORLD_DEFS[ST.world.id]?.npcs||[];
-  const _req = _npcs.filter(n=>n.required);
-  const _done = ST.world.visited.filter(id=>_req.some(n=>n.id===id)).length;
-  const total = _req.length || _npcs.length;
   const statHtml=Object.entries(ST.gs).map(([k,v])=>statSegs(k,v)).join('');
   document.getElementById('gHud').innerHTML=`
     <div class="g-hud-left">
@@ -639,20 +703,14 @@ function renderHUD(worldLabel){
       <div class="g-world-label">${worldLabel}</div>
       <div class="g-stats-row">${statHtml}</div>
     </div>
-    <div class="npc-counter" id="npcCounter">${_done||ST.world.visited.length}/${total}</div>`;
+    ${buildProgressPanel()}`;
 }
 
 function updHUD(){
-  // Full re-render of stats row — avoids getElementById misses after DOM changes
   const statsRow=document.querySelector('.g-stats-row');
   if(statsRow) statsRow.innerHTML=Object.entries(ST.gs).map(([k,v])=>statSegs(k,v)).join('');
-  // Show required progress in counter
-  const _npcs = WORLD_DEFS[ST.world.id]?.npcs||[];
-  const _req = _npcs.filter(n=>n.required);
-  const _done = ST.world.visited.filter(id=>_req.some(n=>n.id===id)).length;
-  const total = _req.length || _npcs.length;
-  const el=document.getElementById('npcCounter');
-  if(el)el.textContent=`${_done||ST.world.visited.length}/${total}`;
+  const panel=document.getElementById('progressPanel');
+  if(panel) panel.outerHTML=buildProgressPanel();
 }
 
 // ══════════════════════════════════════
@@ -2043,43 +2101,52 @@ const PA_INNER_CRITICS = [
 // ══════════════════════════════════════════════════════════════
 // PATCH FUNCTION — applies all additions to existing worlds
 // ══════════════════════════════════════════════════════════════
+function typeOf(n){
+  // Determine NPC type from sprite or id if not set
+  if(n.type) return n.type;
+  if(n.sprite==='sis' || n.id.includes('sister') || n.id.includes('_sis')) return 'sis';
+  if(n.sprite==='tech' || n.id.startsWith('tech_') || n.id.includes('_tech')) return 'tech';
+  return 'npc';
+}
+
 function patchWorldsV12(){
-  // Mark existing PMI npcs as required/type
+  // PMI — required: 3 npc + 1 sis + 1 tech
   const pmiReq = ['manager','collega','sister','tech_pmi'];
   WORLD_DEFS.pmi.npcs.forEach(n=>{
-    if(!n.type) n.type = n.id==='sister'?'sis':n.id.startsWith('tech')?'tech':'npc';
+    n.type = typeOf(n);
     if(!n.hasOwnProperty('required')) n.required = pmiReq.includes(n.id);
   });
   WORLD_DEFS.pmi.npcs.push(...PMI_ADDITIONS);
 
-  // Startup
+  // Startup — required: founder(npc) + collega_startup(npc) + sister_startup(sis) + tech_startup(tech)
+  // That gives 2 npc + 1 sis + 1 tech → door opens after 2 npc + 1 sis + 1 tech
   const startupReq = ['founder','collega_startup','sister_startup','tech_startup'];
   WORLD_DEFS.startup.npcs.forEach(n=>{
-    if(!n.type) n.type = n.id.includes('sis')||n.sprite==='sis'?'sis':n.id.startsWith('tech')?'tech':'npc';
+    n.type = typeOf(n);
     if(!n.hasOwnProperty('required')) n.required = startupReq.includes(n.id);
   });
   WORLD_DEFS.startup.npcs.push(...STARTUP_ADDITIONS);
 
-  // Consulenza
+  // Consulenza — required: partner(npc) + double_bind(npc) + sister_cons(sis) + tech_cons(tech)
   const consReq = ['partner','double_bind','sister_cons','tech_cons'];
   WORLD_DEFS.consulenza.npcs.forEach(n=>{
-    if(!n.type) n.type = n.id.includes('sis')||n.sprite==='sis'?'sis':n.id.startsWith('tech')?'tech':'npc';
+    n.type = typeOf(n);
     if(!n.hasOwnProperty('required')) n.required = consReq.includes(n.id);
   });
   WORLD_DEFS.consulenza.npcs.push(...CONSULENZA_ADDITIONS);
 
-  // Corporate
-  const corpReq = ['hr_corp','sister_corp','double_bind','tech_corp'];
+  // Corporate — required: hr_corp(npc) + network_corp(npc) + sister_corp(sis) + tech_corp(tech)
+  const corpReq = ['hr_corp','network_corp','sister_corp','tech_corp'];
   WORLD_DEFS.corporate.npcs.forEach(n=>{
-    if(!n.type) n.type = n.id.includes('sis')||n.sprite==='sis'?'sis':n.id.startsWith('tech')?'tech':'npc';
+    n.type = typeOf(n);
     if(!n.hasOwnProperty('required')) n.required = corpReq.includes(n.id);
   });
   WORLD_DEFS.corporate.npcs.push(...CORPORATE_ADDITIONS);
 
-  // PIVA
-  const pivaReq = ['primo_cliente','sister_piva','scope_creep','tech_piva'];
+  // PIVA — required: primo_cliente(npc) + scope_creep(npc) + sister_piva(sis) + tech_piva(tech)
+  const pivaReq = ['primo_cliente','scope_creep','sister_piva','tech_piva'];
   WORLD_DEFS.piva.npcs.forEach(n=>{
-    if(!n.type) n.type = n.id.includes('sis')||n.sprite==='sis'?'sis':n.id.startsWith('tech')?'tech':'npc';
+    n.type = typeOf(n);
     if(!n.hasOwnProperty('required')) n.required = pivaReq.includes(n.id);
   });
   WORLD_DEFS.piva.npcs.push(...PIVA_ADDITIONS);
@@ -2537,17 +2604,9 @@ function gUpdate(){
 
   // Door unlock check
   // Door unlocks when required minimums are met
-  const reqNPCs = currentWorldDef.npcs.filter(n=>n.required && n.type==='npc' || (!n.type && n.required));
-  const reqSis  = currentWorldDef.npcs.filter(n=>n.required && n.type==='sis');
-  const reqTech = currentWorldDef.npcs.filter(n=>n.required && n.type==='tech');
-  const doneNPC  = reqNPCs.filter(n=>ST.world.visited.includes(n.id)).length;
-  const doneSis  = reqSis.filter(n=>ST.world.visited.includes(n.id)).length;
-  const doneTech = reqTech.filter(n=>ST.world.visited.includes(n.id)).length;
-  // Need: 3 NPCs + 1 sis + 1 tech (or all required if fewer exist)
-  const npcGoal  = Math.min(3, reqNPCs.length);
-  const sisGoal  = Math.min(1, reqSis.length);
-  const techGoal = Math.min(1, reqTech.length);
-  const allVisited = doneNPC>=npcGoal && doneSis>=sisGoal && doneTech>=techGoal;
+  // Door unlock check — only required minimum (3 npc + 1 sis + 1 tech)
+  const _prog = getWorldProgress();
+  const allVisited = _prog.unlocked;
   scn.exitDoors.forEach(door=>{
     if(!door.getData('unlocked') && allVisited){
       door.setTexture('door_open');
@@ -2665,10 +2724,10 @@ function closeDebrief(){
   const _needTech = Math.min(1,_allNpcs.filter(n=>n.required&&n.type==='tech').length);
   const _needTot  = _needNPC+_needSis+_needTech;
   const _stillNeed = _needTot - _doneReq;
-  const _prog = getWorldProgress();
-  setMsg(_prog.unlocked
+  const _p = getWorldProgress();
+  setMsg(_p.unlocked
     ? '🔓 Porta sbloccata! Avvicinati e premi SPAZIO/Z per uscire. Le interazioni opzionali rimangono disponibili.'
-    : `🔒 Completa: ${_prog.npcGoal-_prog.doneNPC} NPC + ${_prog.sisGoal-_prog.doneSis} sorellanza + ${_prog.techGoal-_prog.doneTech} sfida tech`);
+    : `🔒 Mancano: ${Math.max(0,_p.npcGoal-_p.doneNPC)} NPC 👥 + ${Math.max(0,_p.sisGoal-_p.doneSis)} sorellanza ❤️ + ${Math.max(0,_p.techGoal-_p.doneTech)} sfida 💻`);
 }
 
 // ── Exit handling ───────────────────────
