@@ -1,0 +1,2004 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Career World</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#09090f;--surface:#111120;--surface2:#191930;
+  --border:#2a2a4a;--border2:#3a3a6a;
+  --text:#e8e8f8;--muted:#6868a8;
+  --accent:#7c6af7;--accent2:#f76a9a;--accent3:#6af7c8;
+  --warn:#f7c46a;--danger:#f76a6a;
+  --cSKILL:#4fc3f7;--cVOICE:#f06292;--cCLARITY:#aed581;
+  --cNETWORK:#ffb74d;--cENERGY:#4db6ac;--cRADAR:#ce93d8;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;touch-action:none}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text)}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.08) 2px,rgba(0,0,0,.08) 4px);pointer-events:none;z-index:9000}
+#gc{width:100vw;height:100vh;overflow:hidden;position:relative}
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;overflow-y:auto;opacity:0;transform:translateY(14px);transition:opacity .35s,transform .35s;pointer-events:none}
+.scr.on{opacity:1;transform:none;pointer-events:all}
+
+/* ── TITLE ── */
+#s-title{background:radial-gradient(ellipse at 50% 40%,#1a1040 0%,var(--bg) 70%);gap:2rem;text-align:center}
+.t-pixel{font-family:'Press Start 2P',monospace;font-size:clamp(1.4rem,4.5vw,2.8rem);color:var(--accent);text-shadow:0 0 30px rgba(124,106,247,.6);line-height:1.5;animation:tpulse 3s ease-in-out infinite}
+@keyframes tpulse{0%,100%{text-shadow:0 0 30px rgba(124,106,247,.6)}50%{text-shadow:0 0 60px rgba(124,106,247,.9),0 0 100px rgba(247,106,154,.3)}}
+.t-sub{font-family:'Space Mono',monospace;font-size:.78rem;color:var(--muted);letter-spacing:.1em}
+.t-desc{max-width:460px;font-size:.88rem;line-height:1.75;color:var(--muted)}
+.t-desc strong{color:var(--accent3)}
+.btn-start{font-family:'Press Start 2P',monospace;font-size:.68rem;padding:1rem 2.2rem;background:transparent;border:2px solid var(--accent);color:var(--accent);cursor:pointer;letter-spacing:.1em;transition:all .2s;position:relative;overflow:hidden}
+.btn-start::before{content:'';position:absolute;inset:0;background:var(--accent);transform:translateX(-100%);transition:transform .25s;z-index:-1}
+.btn-start:hover{color:var(--bg)}.btn-start:hover::before{transform:translateX(0)}
+.stars{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.sd{position:absolute;border-radius:50%;background:white;animation:twink var(--d) ease-in-out infinite;animation-delay:var(--dl)}
+@keyframes twink{0%,100%{opacity:.1}50%{opacity:.7}}
+
+/* ── ASSESS ── */
+#s-assess{padding:0;align-items:stretch;justify-content:flex-start}
+.a-layout{display:grid;grid-template-columns:230px 1fr;height:100vh;width:100%}
+@media(max-width:640px){.a-layout{grid-template-columns:1fr}.a-side{display:none}}
+.a-side{background:var(--surface);border-right:1px solid var(--border);padding:2rem 1.25rem;display:flex;flex-direction:column;gap:.8rem;overflow-y:auto}
+.a-side-title{font-family:'Space Mono',monospace;font-size:.52rem;color:var(--muted);letter-spacing:.18em;text-transform:uppercase;margin-bottom:.2rem}
+.a-step{display:flex;align-items:center;gap:.6rem;padding:.5rem .65rem;border-radius:8px;font-size:.78rem;color:var(--muted);transition:all .2s}
+.a-step.active{background:rgba(124,106,247,.15);color:var(--accent)}
+.a-step.done{color:var(--accent3)}
+.a-step .snum{width:20px;height:20px;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:.48rem;flex-shrink:0}
+.a-step.done .snum{background:var(--accent3);border-color:var(--accent3);color:var(--bg)}
+.a-side-note{margin-top:auto;font-size:.68rem;color:var(--muted);line-height:1.6;padding-top:1rem;border-top:1px solid var(--border)}
+.a-main{padding:2.5rem;overflow-y:auto;display:flex;flex-direction:column;gap:1.3rem}
+@media(max-width:800px){.a-main{padding:1.25rem}}
+.a-tag{font-family:'Space Mono',monospace;font-size:.52rem;color:var(--accent);letter-spacing:.15em;text-transform:uppercase}
+.a-title{font-size:1.4rem;font-weight:700;line-height:1.3}
+.a-sub{font-size:.85rem;color:var(--muted);line-height:1.65;max-width:580px}
+.prog{height:3px;background:var(--border);border-radius:2px;overflow:hidden;max-width:500px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width .5s cubic-bezier(.22,1,.36,1)}
+.bq-list{display:flex;flex-direction:column;gap:.65rem;max-width:620px}
+.bq-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.85rem 1.05rem;transition:border-color .2s}
+.bq-item:hover{border-color:var(--border2)}
+.bq-q{font-size:.83rem;font-weight:500;margin-bottom:.6rem;line-height:1.5}
+.bq-opts{display:flex;gap:.38rem;flex-wrap:wrap}
+.bq-opt{font-size:.73rem;padding:.32rem .7rem;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .15s}
+.bq-opt:hover{border-color:var(--accent);color:var(--accent)}
+.bq-opt.sel{background:rgba(124,106,247,.2);border-color:var(--accent);color:var(--text)}
+.sl-list{display:flex;flex-direction:column;gap:1rem;max-width:580px}
+.sl-item{display:flex;flex-direction:column;gap:.5rem}
+.sl-label{font-size:.83rem;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.sl-tag{font-family:'Space Mono',monospace;font-size:.52rem;color:var(--accent);background:rgba(124,106,247,.15);padding:.18rem .45rem;border-radius:4px}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--border);border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px rgba(124,106,247,.5);cursor:pointer}
+.sl-ends{display:flex;justify-content:space-between;font-size:.66rem;color:var(--muted)}
+.a-footer{display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid var(--border);max-width:620px;gap:1rem}
+.a-note{font-size:.7rem;color:var(--muted);font-style:italic;line-height:1.5;max-width:300px}
+.btn-next{font-family:'Space Mono',monospace;font-size:.63rem;padding:.72rem 1.55rem;background:var(--accent);border:none;border-radius:8px;color:white;cursor:pointer;letter-spacing:.05em;transition:all .2s;white-space:nowrap}
+.btn-next:hover{background:#9585ff;transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,106,247,.4)}
+
+/* ── CARD ── */
+#s-card{background:radial-gradient(ellipse at 30% 50%,#1a1040 0%,var(--bg) 60%);flex-direction:row;gap:3rem;flex-wrap:wrap;justify-content:center;align-items:center}
+.c-left{max-width:340px;flex:1;display:flex;flex-direction:column;gap:1rem}
+.c-eyebrow{font-family:'Space Mono',monospace;font-size:.52rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase}
+.c-headline{font-size:clamp(1.25rem,3vw,1.85rem);font-weight:700;line-height:1.2}
+.c-headline em{color:var(--accent);font-style:normal}
+.c-expl{font-size:.83rem;color:var(--muted);line-height:1.7}
+.c-bias{background:rgba(106,247,200,.07);border:1px solid rgba(106,247,200,.2);border-radius:10px;padding:.85rem 1.05rem;font-size:.78rem;line-height:1.65;color:var(--accent3)}
+.c-right{flex:1;max-width:310px}
+.dnd-card{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.5);animation:cdrop .6s cubic-bezier(.22,1,.36,1) both}
+@keyframes cdrop{from{opacity:0;transform:translateY(-24px) scale(.96)}to{opacity:1;transform:none}}
+.c-top{padding:1.3rem;text-align:center;position:relative;overflow:hidden}
+.c-class-tag{font-family:'Space Mono',monospace;font-size:.5rem;letter-spacing:.12em;padding:.26rem .62rem;border-radius:4px;display:inline-block;margin-bottom:.6rem;font-weight:700}
+.c-av{font-size:3rem;margin:.35rem 0}
+.c-cname{font-family:'Space Mono',monospace;font-size:.9rem;margin-bottom:.18rem}
+.c-csub{font-size:.73rem;color:var(--muted)}
+.c-stats{padding:1rem 1.35rem;border-top:1px solid var(--border)}
+.st-row{display:flex;align-items:center;gap:.52rem;margin-bottom:.42rem}
+.st-row:last-child{margin-bottom:0}
+.st-key{font-family:'Space Mono',monospace;font-size:.46rem;width:48px;flex-shrink:0}
+.st-track{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.st-fill{height:100%;border-radius:3px;width:0;transition:width 1.2s cubic-bezier(.22,1,.36,1)}
+.st-num{font-family:'Space Mono',monospace;font-size:.7rem;width:22px;text-align:right;flex-shrink:0}
+.c-desc{padding:.85rem 1.35rem 1rem;border-top:1px solid var(--border);font-size:.74rem;color:var(--muted);line-height:1.65}
+.c-traits{display:flex;flex-wrap:wrap;gap:.28rem;margin-top:.65rem}
+.c-trait{font-size:.6rem;padding:.16rem .48rem;border:1px solid;border-radius:20px;font-weight:600}
+
+/* ── GAME ── */
+#s-game{padding:0;justify-content:flex-start;background:var(--bg);height:100vh;overflow:hidden}
+/* ── HUD ── */
+.g-hud{width:100%;background:var(--surface);border-bottom:1px solid var(--border);padding:.5rem 1.1rem;display:flex;align-items:center;gap:1rem;flex-shrink:0;flex-wrap:wrap;z-index:10}
+.g-hud-left{display:flex;align-items:center;gap:.75rem;flex-shrink:0}
+.g-hud-av{font-size:1.4rem}
+.g-cls{font-family:'Space Mono',monospace;font-size:.5rem;letter-spacing:.08em;padding:.22rem .55rem;border-radius:4px;white-space:nowrap}
+.g-hud-center{flex:1;display:flex;flex-direction:column;gap:.3rem;min-width:0}
+.g-world-label{font-family:'Press Start 2P',monospace;font-size:clamp(.45rem,.9vw,.65rem);color:var(--text);line-height:1.4}
+.g-stats-row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.g-st{display:flex;align-items:center;gap:.28rem}
+.g-st-key{font-family:'Space Mono',monospace;font-size:.42rem;white-space:nowrap}
+.g-segs{display:flex;gap:2px}
+.g-seg{width:7px;height:7px;border-radius:1px;border:1px solid rgba(255,255,255,.08);transition:background .3s}
+@media(max-width:600px){
+  .g-hud{padding:.3rem .65rem;gap:.5rem}
+  .g-world-label{font-size:.4rem}
+  .g-seg{width:5px;height:6px}
+}
+.g-area{flex:1;position:relative;overflow:hidden;width:100%;min-height:200px;display:flex;flex-direction:column}
+.g-area canvas{display:block;width:100%;image-rendering:pixelated;flex-shrink:0}
+.g-msg{position:absolute;bottom:0;left:0;right:0;background:rgba(9,9,15,.92);border-top:1px solid var(--border);padding:.5rem 1.1rem;font-family:'Space Mono',monospace;font-size:.62rem;color:var(--accent3);min-height:38px;display:flex;align-items:center;z-index:20}
+
+/* touch controls */
+#tc{position:absolute;bottom:42px;left:0;right:0;display:none;pointer-events:none;z-index:30;padding:0 .8rem .4rem}
+@media(hover:none),(max-width:600px){#tc{display:flex;justify-content:space-between;align-items:flex-end}}
+.tc-l{display:flex;gap:.4rem;pointer-events:all}
+.tc-r{pointer-events:all}
+.tc-btn{width:54px;height:54px;border-radius:50%;border:2px solid rgba(255,255,255,.18);background:rgba(0,0,0,.45);color:rgba(255,255,255,.7);font-size:1.2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:none;transition:background .1s,border-color .1s}
+.tc-btn.pressed{background:rgba(124,106,247,.45);border-color:rgba(124,106,247,.8)}
+.tc-jump{width:62px;height:62px;background:rgba(106,247,200,.12);border-color:rgba(106,247,200,.35);font-size:1.4rem}
+.tc-jump.pressed{background:rgba(106,247,200,.4)}
+
+/* dialog */
+.dl-ov{position:absolute;inset:0;background:rgba(0,0,0,.72);display:flex;align-items:flex-end;justify-content:center;padding:1.1rem;z-index:50;animation:fadein .2s}
+@keyframes fadein{from{opacity:0}}
+.dl-box{width:100%;max-width:640px;background:var(--surface);border:1.5px solid var(--accent);border-radius:12px;padding:1.3rem;box-shadow:0 0 40px rgba(124,106,247,.18);animation:slideup .25s cubic-bezier(.22,1,.36,1)}
+@keyframes slideup{from{transform:translateY(18px);opacity:0}}
+.dl-box.critic{border-color:var(--danger);box-shadow:0 0 40px rgba(247,106,106,.15)}
+.dl-box.sister{border-color:#f06292;box-shadow:0 0 40px rgba(240,98,146,.15)}
+.dl-box.tech{border-color:var(--warn);box-shadow:0 0 40px rgba(247,196,106,.15)}
+.dl-box.debrief{border-color:var(--accent3);max-height:72vh;overflow-y:auto}
+.dl-spk{font-family:'Space Mono',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.42rem}
+.dl-txt{font-size:.9rem;line-height:1.65;margin-bottom:1rem;color:var(--text)}
+.dl-choices{display:flex;flex-direction:column;gap:.42rem}
+.ch-btn{font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;padding:.62rem .9rem;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);cursor:pointer;text-align:left;transition:all .15s}
+.ch-btn:hover{border-color:var(--accent);background:rgba(124,106,247,.1)}
+.db-sec{margin-bottom:.85rem}
+.db-lbl{font-family:'Space Mono',monospace;font-size:.5rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.28rem}
+.db-ins{background:rgba(106,247,200,.07);border-left:3px solid var(--accent3);padding:.58rem .75rem;font-size:.78rem;line-height:1.6;border-radius:0 6px 6px 0}
+.db-data{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--warn);margin-top:.32rem}
+.st-pills{display:flex;gap:.38rem;flex-wrap:wrap;margin-top:.42rem}
+.st-pill{font-family:'Space Mono',monospace;font-size:.56rem;padding:.2rem .52rem;border-radius:20px;border:1px solid}
+
+/* world transition */
+.wt-overlay{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;z-index:100}
+.wt-title{font-family:'Press Start 2P',monospace;font-size:clamp(.7rem,2vw,1.1rem);color:var(--accent3);text-align:center;line-height:1.8}
+.wt-sub{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--muted);text-align:center}
+.wt-progress{width:200px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:.5rem}
+.wt-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent3));animation:wtfill 2s ease forwards}
+@keyframes wtfill{from{width:0}to{width:100%}}
+
+/* OUTCOME */
+#s-outcome{background:radial-gradient(ellipse at 50% 60%,#0a1a10 0%,var(--bg) 70%);gap:1.5rem;text-align:center}
+.oc-em{font-size:3rem}
+.oc-title{font-family:'Press Start 2P',monospace;font-size:clamp(.6rem,1.8vw,1rem);color:var(--accent3);line-height:1.9}
+.oc-desc{font-size:.86rem;color:var(--muted);line-height:1.7;max-width:480px}
+.oc-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.3rem;text-align:left;width:100%;max-width:500px}
+.oc-card-title{font-family:'Space Mono',monospace;font-size:.5rem;color:var(--accent);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.65rem}
+.oc-rows{display:flex;flex-direction:column;gap:.42rem}
+.oc-row{display:flex;gap:.65rem;align-items:flex-start;font-size:.78rem;line-height:1.5}
+.oc-tag{font-family:'Space Mono',monospace;font-size:.5rem;padding:.16rem .42rem;border-radius:4px;white-space:nowrap;flex-shrink:0;margin-top:.1rem}
+.oc-take{background:rgba(124,106,247,.1);border:1px solid rgba(124,106,247,.28);border-radius:10px;padding:.9rem 1.05rem;font-size:.78rem;line-height:1.7;max-width:500px;text-align:left}
+.oc-take strong{color:var(--accent)}
+.btn-replay{font-family:'Space Mono',monospace;font-size:.6rem;padding:.72rem 1.7rem;background:transparent;border:1.5px solid var(--accent3);color:var(--accent3);cursor:pointer;border-radius:8px;letter-spacing:.07em;transition:all .2s}
+.btn-replay:hover{background:rgba(106,247,200,.1)}
+
+
+/* ── WORLD MAP ── */
+#s-map{background:radial-gradient(ellipse at 50% 40%,#0a1428 0%,var(--bg) 70%);padding:1.5rem;overflow-y:auto;}
+.map-wrap{width:100%;max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:1.25rem;align-items:center;}
+.map-title{font-family:'Press Start 2P',monospace;font-size:clamp(.55rem,1.4vw,.8rem);color:var(--accent);text-align:center;line-height:1.9;}
+.map-subtitle{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--muted);text-align:center;}
+.map-free-note{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--accent3);text-align:center;background:rgba(106,247,200,.07);border:1px solid rgba(106,247,200,.2);border-radius:8px;padding:.55rem .9rem;max-width:600px;}
+/* SVG map container */
+.map-svg-wrap{width:100%;max-width:680px;position:relative;}
+.map-svg-wrap svg{width:100%;height:auto;overflow:visible;}
+/* Node foreign objects */
+.mn-fo{overflow:visible;}
+.mn-card{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  cursor:pointer;
+  transition:transform .18s;
+}
+.mn-card:hover{transform:scale(1.08);}
+.mn-card:hover .mn-box{filter:brightness(1.2);}
+.mn-box{
+  width:84px;height:84px;
+  border-radius:12px;border:2px solid;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  transition:all .2s;position:relative;
+}
+.mn-emoji{font-size:1.8rem;line-height:1;}
+.mn-lbl{font-family:'Press Start 2P',monospace;font-size:.32rem;text-align:center;line-height:1.5;padding:0 4px;}
+.mn-status{font-family:'Space Mono',monospace;font-size:.52rem;margin-top:3px;text-align:center;}
+.mn-done-badge{position:absolute;top:-7px;right:-7px;background:#6af7c8;color:#060e08;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:bold;line-height:1;}
+.mn-affinities{font-family:'Space Mono',monospace;font-size:.48rem;color:var(--muted);text-align:center;max-width:84px;line-height:1.4;margin-top:2px;}
+@media(max-width:500px){
+  .mn-box{width:64px;height:64px;border-radius:9px;}
+  .mn-emoji{font-size:1.4rem;}
+  .mn-lbl{font-size:.28rem;}
+}
+@media(max-width:600px){
+  .mn-box{width:72px;height:72px;}
+  .mn-emoji{font-size:1.5rem}
+  .mn-label{font-size:.32rem}
+}
+
+/* npc counter badge */
+.npc-counter{font-family:'Press Start 2P',monospace;font-size:.4rem;color:var(--warn);padding:.2rem .5rem;background:rgba(247,196,106,.1);border:1px solid rgba(247,196,106,.3);border-radius:4px;margin-left:auto}
+
+/* world intro overlay */
+.wi-ov{position:absolute;inset:0;background:rgba(5,5,15,.96);display:flex;align-items:center;justify-content:center;z-index:200;padding:1.5rem;animation:fadein .3s}
+.wi-box{width:100%;max-width:560px;display:flex;flex-direction:column;gap:1rem}
+.wi-emoji{font-size:3rem;text-align:center}
+.wi-title{font-family:'Press Start 2P',monospace;font-size:clamp(.7rem,2vw,1.1rem);text-align:center;line-height:1.8}
+.wi-what{font-size:.8rem;color:var(--muted);line-height:1.65;font-style:italic;text-align:center}
+.wi-role{font-size:.82rem;line-height:1.65;color:var(--text)}
+.wi-cols{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.wi-col{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.7rem .9rem}
+.wi-col-title{font-family:'Space Mono',monospace;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.4rem}
+.wi-col li{font-size:.76rem;color:var(--muted);line-height:1.6;margin-left:1rem}
+.wi-hint{background:rgba(106,247,200,.07);border:1px solid rgba(106,247,200,.2);border-radius:8px;padding:.65rem .9rem;font-size:.78rem;color:var(--accent3);text-align:center;line-height:1.6}
+.wi-hint kbd{background:rgba(106,247,200,.15);border:1px solid rgba(106,247,200,.3);border-radius:3px;padding:.05rem .3rem;font-family:'Space Mono',monospace;font-size:.72rem}
+
+@media(max-width:600px){
+  .a-layout{grid-template-columns:1fr!important}
+  .a-main{padding:1.1rem!important}
+  #s-card{flex-direction:column!important;padding:1.1rem!important}
+  .c-left,.c-right{max-width:100%!important}
+  .g-hud{padding:.3rem .65rem;gap:.5rem}
+  .g-world{display:none}
+}
+</style>
+</head>
+<body>
+<div id="gc">
+
+<div id="s-title" class="scr on">
+  <div class="stars" id="stars"></div>
+  <div class="t-pixel">CAREER<br>WORLD</div>
+  <div class="t-sub">// navigare il mercato tech con consapevolezza</div>
+  <div class="t-desc">Un gioco per esplorare il mondo del lavoro.<br>Scopri la tua classe — poi naviga il campo.<br><strong>Nessun game over. Solo conoscenza.</strong></div>
+  <button class="btn-start" id="btnStart">[ INIZIA ]</button>
+</div>
+
+<div id="s-assess" class="scr">
+  <div class="a-layout">
+    <div class="a-side">
+      <div class="a-side-title">Il tuo percorso</div>
+      <div class="a-step active" id="stp-0"><div class="snum">1</div><div>Hard Skills<br><span style="font-size:.68em;color:var(--muted)">Cosa hai fatto</span></div></div>
+      <div class="a-step" id="stp-1"><div class="snum">2</div><div>Soft Skills<br><span style="font-size:.68em;color:var(--muted)">Come lavori</span></div></div>
+      <div class="a-step" id="stp-2"><div class="snum">3</div><div>Preferenze<br><span style="font-size:.68em;color:var(--muted)">Dove stai bene</span></div></div>
+      <div class="a-side-note">Le domande misurano <em>azioni reali</em> — riduce il bias di auto-valutazione sistematico del 20–35%.</div>
+    </div>
+    <div class="a-main" id="aMain"></div>
+  </div>
+</div>
+
+<div id="s-card" class="scr">
+  <div class="c-left">
+    <div class="c-eyebrow">// CLASSE ASSEGNATA</div>
+    <div class="c-headline">La tua <em>mappa di partenza</em></div>
+    <div class="c-expl">Questa card fotografa dove sei adesso. Le stat cambieranno navigando i mondi.</div>
+    <div class="c-bias" id="biasNote"></div>
+    <button class="btn-next" id="btnEnterGame" style="margin-top:.5rem;align-self:flex-start">Entra nel Mondo 1 →</button>
+  </div>
+  <div class="c-right"><div class="dnd-card" id="dndCard"></div></div>
+</div>
+
+
+<div id="s-map" class="scr">
+  <div class="map-wrap" id="mapWrap"></div>
+</div>
+
+<div id="s-game" class="scr">
+  <div class="g-hud" id="gHud"></div>
+  <div class="g-area" id="gArea">
+    <div class="g-msg" id="gMsg">Muoviti con ← → ↑ ↓ · Premi SPAZIO o Z vicino a un NPC per interagire</div>
+    <div id="tc">
+      <div class="tc-l">
+        <div class="tc-btn" id="tc-left">◀</div>
+        <div class="tc-btn" id="tc-right">▶</div>
+        <div class="tc-btn" id="tc-up">▲</div>
+        <div class="tc-btn" id="tc-down">▼</div>
+      </div>
+      <div class="tc-r"><div class="tc-btn tc-jump" id="tc-act">✦</div></div>
+    </div>
+    <div id="dlLayer"></div>
+  </div>
+</div>
+
+<div id="s-outcome" class="scr"></div>
+
+</div>
+<script>
+// ══════════════════════════════════════
+// GLOBAL STATE
+// ══════════════════════════════════════
+const ST={
+  screen:'title', step:0,
+  ans:{hard:{},soft:{},pref:{}},
+  char:null,
+  gs:{SKILL:0,VOICE:0,CLARITY:0,NETWORK:0,ENERGY:10,RADAR:0},
+  world:{id:null,visited:[],choices:[],patterns:[]},
+  worldPath:null,
+  worldHistory:[], // which worlds completed
+};
+
+// Single source of truth for stat colors — hex, not CSS vars, so they work everywhere
+const SC={
+  SKILL:'#4fc3f7',
+  VOICE:'#f06292',
+  CLARITY:'#aed581',
+  NETWORK:'#ffb74d',
+  ENERGY:'#4db6ac',
+  RADAR:'#ce93d8',
+};
+
+// ══════════════════════════════════════
+// ASSESSMENT DATA
+// ══════════════════════════════════════
+const STEPS=[
+  {id:'hard',tag:'FASE 1 · HARD SKILLS',title:'Cosa hai fatto con la tecnologia?',
+   sub:'Non "quanto sai" — cosa hai effettivamente realizzato. Anche una volta sola conta.',
+   note:'Le domande comportamentali riducono il bias di auto-rating sistematico.',
+   qs:[
+    {id:'python',t:'Hai scritto uno script Python/R per risolvere un problema reale, anche piccolo?',opts:['Sì, più volte','Una volta / in corso','Solo tutorial','Non è il mio focus']},
+    {id:'sql',t:'Hai interrogato un database con SQL per estrarre o analizzare dati?',opts:['Sì, regolarmente','Qualche volta','Solo tutorial','No']},
+    {id:'viz',t:'Hai costruito una dashboard o visualizzazione che qualcuno ha usato davvero?',opts:['Sì','In corso','Solo esercizi','No']},
+    {id:'ml',t:'Hai addestrato un modello ML, anche su un dataset pubblico?',opts:['Sì, in produzione','Sì, progetto personale','Solo corso/tutorial','No']},
+    {id:'llm',t:'Hai integrato un LLM o API AI in qualcosa di concreto?',opts:['Sì, in un progetto reale','Esperimenti/prototipo','Solo prompt su interfaccia','No']},
+    {id:'cloud',t:'Hai deployato qualcosa su cloud (anche free tier)?',opts:['Sì','Esperimenti','No ma so i concetti','No']},
+    {id:'sdev',t:'Hai lavorato su codebase condivisa con git, code review, CI/CD?',opts:['Sì, in team','Progetti personali','Solo concetti','No']},
+   ]},
+  {id:'soft',tag:'FASE 2 · SOFT SKILLS',title:'Come ti sei comportata in situazioni reali?',
+   sub:'Pensa a esperienze concrete: lavoro, università, progetti, associazioni.',
+   note:'Non esiste risposta giusta. Questi dati costruiscono la tua mappa.',
+   qs:[
+    {id:'comm',t:'Hai presentato un lavoro tecnico a persone non tecniche?',opts:['Sì, più volte','Una volta','Sì, con difficoltà','Non ancora']},
+    {id:'conflict',t:'Quando non eri d\'accordo con una decisione di un superiore, hai...',opts:['Espresso il mio punto con dati','Fatto domande per capire','Taciuto ma ci ho rimuginato','Accettato senza problemi']},
+    {id:'auto',t:'Hai gestito un progetto importante in autonomia, senza supervisione?',opts:['Sì, con successo','Sì, con difficoltà ma ce l\'ho fatta','Preferisco avere guida','Non ancora capitato']},
+    {id:'chaos',t:'Quando cambiano priorità improvvisamente, come reagisci?',opts:['Mi adatto bene','Ci metto un po\' ma riesco','Preferisco stabilità','Mi stresso molto']},
+    {id:'feedback',t:'Hai ricevuto feedback critico su un tuo lavoro? Come l\'hai gestito?',opts:['L\'ho usato per migliorare','Mi ha fatto male ma l\'ho integrato','L\'ho preso molto sul personale','Non ricordo situazioni']},
+    {id:'network',t:'Hai mai aiutato attivamente un\'altra persona (collega, studentessa) a crescere o a farsi vedere?',opts:['Sì, più volte e consapevolmente','Qualche volta','Raramente, non ci ho pensato','No']},
+   ]},
+  {id:'pref',tag:'FASE 3 · PREFERENZE',title:'Dove stai meglio?',
+   sub:'Questi slider non hanno risposta giusta. Tutti i punti dello spettro hanno mercato.',
+   note:'Le preferenze possono cambiare — e il gioco lo mostrerà.',
+   sls:[
+    {id:'stab',label:'Stabilità vs Rischio',lo:'Stabilità e prevedibilità',hi:'Rischio, velocità, incertezza'},
+    {id:'tech',label:'Deep Tech vs Strategico',lo:'Focus tecnico profondo',hi:'Strategia, prodotto, business'},
+    {id:'solo',label:'Solista vs Team',lo:'Focus profondo da sola',hi:'Energia di gruppo'},
+    {id:'speed',label:'Lungo periodo vs Impatto immediato',lo:'Costruire qualcosa che dura',hi:'Vedere l\'impatto subito'},
+   ]},
+];
+
+const SMAP={
+  'Sì, più volte':5,'Sì, regolarmente':5,'Sì, in produzione':5,'Sì, in un progetto reale':5,'Sì, in team':5,'Sì, con successo':5,'Sì, più volte e consapevolmente':5,
+  'Una volta / in corso':3,'Qualche volta':3,'Sì, progetto personale':3,'Esperimenti/prototipo':3,'Sì':4,'Sì, con difficoltà ma ce l\'ho fatta':4,
+  'Una volta':3,'Sì, con difficoltà':3,'Ci metto un po\' ma riesco':3,'Esperimenti':3,'In corso':3,'Qualche volta':3,
+  'Solo tutorial':1.5,'Solo corso/tutorial':1.5,'Solo esercizi':1.5,'Solo concetti':1,'Solo prompt su interfaccia':1,'No ma so i concetti':1,
+  'Espresso il mio punto con dati':5,'Fatto domande per capire':4,'Taciuto ma ci ho rimuginato':2,'Accettato senza problemi':3,
+  'Mi adatto bene':5,'Preferisco stabilità':2,'Mi stresso molto':1,
+  'L\'ho usato per migliorare':5,'Mi ha fatto male ma l\'ho integrato':4,'L\'ho preso molto sul personale':2,
+  'Non ancora':2,'Non è il mio focus':1,'Non ancora capitato':2,'Preferisco avere guida':2,
+  'Non ricordo situazioni':2,'Raramente, non ci ho pensato':2,'No':0,
+};
+
+const CLASSES={
+  analyst:{id:'analyst',name:'Data Analyst',av:'📊',color:'#4fc3f7',bg:'rgba(79,195,247,.1)',
+    desc:'Trasformi numeri in decisioni. Il tuo superpotere è la chiarezza comunicativa — dove gli altri vedono dati, tu vedi storie che il business può usare.',
+    traits:['SQL Master','Storyteller','BI Wizard','Business-minded'],best:['Big Consulenza','Large Corporate'],hard:['Startup early-stage']},
+  scientist:{id:'scientist',name:'Data Scientist',av:'🔬',color:'#81c784',bg:'rgba(129,199,132,.1)',
+    desc:'Costruisci modelli che anticipano il futuro. Hai mente ibrida: metà matematica, metà ingegneria.',
+    traits:['ML Practitioner','Statista','Model Builder','Curiosa'],best:['Big Consulenza','Large Corporate'],hard:['PMI piccole']},
+  ml:{id:'ml',name:'ML Engineer',av:'⚙️',color:'#ffb74d',bg:'rgba(255,183,77,.1)',
+    desc:'Porti i modelli in produzione. Sei l\'ingegnera delle pipeline: il tuo codice deve reggere quando il traffico esplode.',
+    traits:['MLOps','Pipeline Builder','Scale Expert','DevOps-minded'],best:['Startup growth','Large Corporate'],hard:['PMI Settore']},
+  ai:{id:'ai',name:'AI Engineer',av:'🤖',color:'#ce93d8',bg:'rgba(206,147,216,.1)',
+    desc:'Costruisci con LLM, RAG e agenti AI. Sei al confine tra ricerca e prodotto — il profilo più richiesto del momento.',
+    traits:['LLM Builder','RAG Expert','Agent Designer','System Thinker'],best:['Startup Tech','Scale-up'],hard:['PMI Settore','PA']},
+};
+
+function computeChar(){
+  const h=ST.ans.hard,s=ST.ans.soft,p=ST.ans.pref;
+  const sc=id=>SMAP[h[id]]||0,ss=id=>SMAP[s[id]]||0;
+  let scores={
+    analyst: sc('sql')*2+sc('viz')*2+sc('python')+ss('comm')*2,
+    scientist:sc('ml')*2+sc('python')*1.5+sc('viz')+ss('auto'),
+    ml:      sc('cloud')*2+sc('sdev')*2+sc('ml')+sc('python')+ss('auto')*1.5,
+    ai:      sc('llm')*3+sc('python')*1.5+sc('sdev')+ss('chaos')*1.5,
+  };
+  const tech=(p.tech||50)/100,stab=(p.stab||50)/100;
+  scores.analyst+=(1-tech)*6;scores.scientist+=tech*6;scores.ml+=tech*8;scores.ai+=(1-stab)*6+tech*4;
+  const best=Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];
+  const clamp=(v,mn=2,mx=18)=>Math.min(mx,Math.max(mn,Math.round(v)));
+  const avg=(...v)=>v.reduce((a,b)=>a+b,0)/v.length;
+  const n=(v,mx=5)=>(v/mx)*16+2;
+  const stats={
+    SKILL: clamp(n(avg(sc('python'),sc('sql'),sc('ml'),sc('llm')))),
+    VOICE: clamp(n(avg(ss('comm'),ss('conflict')*.9))),
+    CLARITY:clamp(n(avg(ss('feedback'),ss('auto')))),
+    NETWORK:clamp(n(avg(ss('network')))+Math.floor(Math.random()*3)+3),
+    ENERGY: clamp(n(avg(ss('chaos'),ss('feedback')))),
+    RADAR:  3,
+  };
+  return {cls:best,stats};
+}
+
+// ══════════════════════════════════════
+// SCREEN MANAGER
+// ══════════════════════════════════════
+function show(id){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  document.getElementById('s-'+id).classList.add('on');
+  ST.screen=id;
+}
+
+// ══════════════════════════════════════
+// ASSESSMENT
+// ══════════════════════════════════════
+function renderAssess(){
+  const step=STEPS[ST.step];
+  [0,1,2].forEach(i=>{
+    const el=document.getElementById('stp-'+i);
+    el.classList.remove('active','done');
+    if(i<ST.step)el.classList.add('done');
+    if(i===ST.step)el.classList.add('active');
+  });
+  const pct=((ST.step+1)/3*100).toFixed(0);
+  let html=`<div class="a-tag">${step.tag}</div>
+  <div class="a-title">${step.title}</div>
+  <div class="a-sub">${step.sub}</div>
+  <div class="prog"><div class="prog-fill" style="width:${pct}%"></div></div>`;
+  if(step.qs){
+    html+=`<div class="bq-list">`;
+    step.qs.forEach(q=>{
+      const saved=ST.ans[step.id][q.id];
+      html+=`<div class="bq-item"><div class="bq-q">${q.t}</div><div class="bq-opts">
+        ${q.opts.map(o=>`<button class="bq-opt${saved===o?' sel':''}" data-qid="${q.id}" data-step="${step.id}" data-v="${o}">${o}</button>`).join('')}
+      </div></div>`;
+    });
+    html+=`</div>`;
+  } else {
+    html+=`<div class="sl-list">`;
+    step.sls.forEach(sl=>{
+      const v=ST.ans.pref[sl.id]!==undefined?ST.ans.pref[sl.id]:50;
+      const lbl=v<30?sl.lo:v>70?sl.hi:'Bilanciato';
+      html+=`<div class="sl-item">
+        <div class="sl-label">${sl.label}<span class="sl-tag" id="slv-${sl.id}">${lbl}</span></div>
+        <input type="range" min="0" max="100" value="${v}" data-pref="${sl.id}" style="background:linear-gradient(90deg,var(--accent) ${v}%,var(--border) ${v}%)">
+        <div class="sl-ends"><span>${sl.lo}</span><span>${sl.hi}</span></div>
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+  const isLast=ST.step===2;
+  html+=`<div class="a-footer"><div class="a-note">${step.note}</div>
+  <button class="btn-next" id="btnNA">${isLast?'Genera la mia Card →':'Avanti →'}</button></div>`;
+  document.getElementById('aMain').innerHTML=html;
+  document.querySelectorAll('.bq-opt').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const{qid,step,v}=b.dataset;
+      ST.ans[step][qid]=v;
+      b.closest('.bq-opts').querySelectorAll('.bq-opt').forEach(x=>x.classList.remove('sel'));
+      b.classList.add('sel');
+    });
+  });
+  document.querySelectorAll('input[type=range]').forEach(sl=>{
+    sl.addEventListener('input',()=>{
+      const v=+sl.value,id=sl.dataset.pref;
+      ST.ans.pref[id]=v;
+      const sdef=STEPS[2].sls.find(s=>s.id===id);
+      const lbl=v<30?sdef.lo:v>70?sdef.hi:'Bilanciato';
+      const tag=document.getElementById('slv-'+id);
+      if(tag)tag.textContent=lbl;
+      sl.style.background=`linear-gradient(90deg,var(--accent) ${v}%,var(--border) ${v}%)`;
+    });
+  });
+  document.getElementById('btnNA').addEventListener('click',()=>{
+    if(ST.step<2){ST.step++;renderAssess();}
+    else{
+      ST.char=computeChar();
+      ST.gs={...ST.char.stats,ENERGY:10};
+      show('card');renderCard();
+    }
+  });
+}
+
+// ══════════════════════════════════════
+// CARD
+// ══════════════════════════════════════
+function renderCard(){
+  const ch=ST.char,cls=CLASSES[ch.cls];
+  // Segments for card (max 20, 8 segs for more precision on card)
+  const CARD_SEGS=10;
+  const rows=Object.entries(ch.stats).map(([k,v])=>{
+    const filled=Math.min(CARD_SEGS,Math.round((v/20)*CARD_SEGS));
+    const color=SC[k];
+    const segs=Array.from({length:CARD_SEGS},(_,i)=>{
+      const on=i<filled;
+      return `<div style="flex:1;height:7px;border-radius:1px;background:${on?color:'rgba(255,255,255,.07)'};${on?`box-shadow:0 0 4px ${color}88`:''}"></div>`;
+    }).join('');
+    return `<div class="st-row">
+      <div class="st-key" style="color:${color}">${k}</div>
+      <div class="st-track" style="display:flex;gap:2px;background:none;padding:0">${segs}</div>
+      <div class="st-num" style="color:${color}">${v}</div>
+    </div>`;
+  }).join('');
+  const traits=cls.traits.map(t=>`<span class="c-trait" style="color:${cls.color};border-color:${cls.color}">${t}</span>`).join('');
+  document.getElementById('dndCard').innerHTML=`
+    <div class="c-top" style="background:${cls.bg}">
+      <div class="c-class-tag" style="background:${cls.color}22;color:${cls.color};border:1px solid ${cls.color}44">${cls.name.toUpperCase()}</div>
+      <div class="c-av">${cls.av}</div>
+      <div class="c-cname">PLAYER ONE</div>
+      <div class="c-csub">${cls.name} · Livello 1</div>
+    </div>
+    <div class="c-stats">${rows}</div>
+    <div class="c-desc">${cls.desc}<div class="c-traits">${traits}</div></div>`;
+  document.getElementById('biasNote').innerHTML=`<strong>📌 Prima di entrare:</strong><br>
+    Chi subisce bias di auto-svalutazione tende a sotto-stimare le proprie competenze del 20–35%. Le tue stat potrebbero essere più alte di quanto percepisci. <em>RADAR</em> — leggere il sistema — parte bassa per tutte: cresce solo con l'esperienza.`;
+  document.getElementById('btnEnterGame').onclick=()=>{
+    show('map');
+    renderMap();
+  };
+}
+
+// ══════════════════════════════════════
+// HUD
+// ══════════════════════════════════════
+const STAT_SEGS=10;
+const STAT_MAX={SKILL:20,VOICE:20,CLARITY:20,NETWORK:20,ENERGY:20,RADAR:20};
+
+function statSegs(key,val){
+  const max=STAT_MAX[key];
+  const filled=Math.min(STAT_SEGS,Math.round((val/max)*STAT_SEGS));
+  const color=SC[key];
+  const segs=Array.from({length:STAT_SEGS},(_,i)=>{
+    const on=i<filled;
+    return `<div class="g-seg" style="background:${on?color:'rgba(255,255,255,.07)'};${on?`box-shadow:0 0 5px ${color}88`:''}"></div>`;
+  }).join('');
+  return `<div class="g-st">
+    <span class="g-st-key" style="color:${color}">${key}</span>
+    <div class="g-segs">${segs}</div>
+  </div>`;
+}
+
+function renderHUD(worldLabel){
+  const cls=CLASSES[ST.char.cls];
+  const total=WORLD_DEFS[ST.world.id]?.npcs?.length||0;
+  const statHtml=Object.entries(ST.gs).map(([k,v])=>statSegs(k,v)).join('');
+  document.getElementById('gHud').innerHTML=`
+    <div class="g-hud-left">
+      <div class="g-hud-av">${cls.av}</div>
+      <div class="g-cls" style="background:${cls.color}22;color:${cls.color}">${cls.name}</div>
+    </div>
+    <div class="g-hud-center">
+      <div class="g-world-label">${worldLabel}</div>
+      <div class="g-stats-row">${statHtml}</div>
+    </div>
+    <div class="npc-counter" id="npcCounter">${ST.world.visited.length}/${total}</div>`;
+}
+
+function updHUD(){
+  // Full re-render of stats row — avoids getElementById misses after DOM changes
+  const statsRow=document.querySelector('.g-stats-row');
+  if(statsRow) statsRow.innerHTML=Object.entries(ST.gs).map(([k,v])=>statSegs(k,v)).join('');
+  const total=WORLD_DEFS[ST.world.id]?.npcs?.length||0;
+  const el=document.getElementById('npcCounter');
+  if(el)el.textContent=`${ST.world.visited.length}/${total}`;
+}
+
+// ══════════════════════════════════════
+// WORLD DEFINITIONS (data layer)
+// ══════════════════════════════════════
+const WORLD_DEFS={
+  pmi:{
+    label:'WORLD 1 · PMI SETTORE',
+    palette:{floor:0x1a1a2e,wall:0x2a2a4e,accent:0x3a4a6a,bg:0x0d0e1a},
+    // exits: after all NPCs visited, 2 doors appear
+    exits:[
+      {id:'startup',label:'STARTUP →',color:0xce93d8,x:0.85,y:0.5},
+      {id:'consulenza',label:'CONSULENZA →',color:0x4fc3f7,x:0.85,y:0.72},
+    ],
+    npcs:[
+      {
+        id:'manager',sprite:'mgr',label:'Ufficio HR',
+        gridX:4,gridY:5,
+        dlg:{spk:'👔 Manager HR — MetalTech',color:'var(--accent)',
+          txt:'Benvenuta. Sei la nuova data analyst. "Data scientist", come dici tu — qui facciamo le cose praticamente. Avrai bisogno di Excel, gestire il cliente, e ogni tanto supporto in produzione. La tua laurea? Utile, ma conta di più l\'iniziativa.',
+          chs:[
+            {t:'OK — posso avere una descrizione scritta del ruolo?',out:'assertive'},
+            {t:'Certo, mi adatterò a quello che serve.',out:'passive'},
+            {t:'"Supporto in produzione" non era nel colloquio. Posso avere chiarezza?',out:'direct'},
+          ]},
+        outs:{
+          assertive:{msg:'Hai chiesto chiarezza in modo professionale. +VOICE +CLARITY',stat:{VOICE:1,CLARITY:1}},
+          passive:  {msg:'Hai accettato senza chiedere. Il ruolo resterà vago. +ENERGY a breve termine.',stat:{ENERGY:1}},
+          direct:   {msg:'Hai nominato il problema direttamente. +RADAR +VOICE',stat:{RADAR:2,VOICE:1}},
+        },
+        db:{pat:'Il ruolo vago come meccanismo di sfruttamento',
+          ins:'Nelle PMI i ruoli tech sono spesso fluidi. Questo può significare crescita — o lavoro non pagato. Chiedere una job description scritta nella prima settimana è normale, non una provocazione.',
+          data:'McKinsey 2023: le donne in ruoli tech nelle PMI riportano il 40% in più di task fuori JD rispetto ai colleghi uomini.'}
+      },
+      {
+        id:'collega',sprite:'col',label:'Open Space',
+        gridX:8,gridY:7,
+        dlg:{spk:'👨‍💻 Collega — Marco',color:'var(--accent)',
+          txt:'Ciao! Il management ha visto che sei brava a spiegare le cose. Ti chiedono di fare la "facilitatrice" nelle riunioni con i clienti, preparare i deck, coordinare il team. Non è nel tuo ruolo ufficialmente, ma sai com\'è.',
+          chs:[
+            {t:'Posso farlo, ma voglio che venga riconosciuto formalmente.',out:'negotiate'},
+            {t:'Certo, nessun problema. Sono qui per aiutare.',out:'accept'},
+            {t:'Prima voglio capire se è il percorso che voglio costruire qui.',out:'strategic'},
+          ]},
+        outs:{
+          negotiate:{msg:'Hai legato il lavoro extra al riconoscimento. +VOICE +NETWORK',stat:{VOICE:2,NETWORK:1}},
+          accept:   {msg:'Hai accettato. Probabilmente lo chiederanno ancora. +ENERGY -CLARITY',stat:{ENERGY:1,CLARITY:-1}},
+          strategic:{msg:'Hai preso tempo per valutare. +CLARITY +RADAR',stat:{CLARITY:2,RADAR:1}},
+        },
+        db:{pat:'Il "lavoro invisibile" e l\'office housework',
+          ins:'Le donne ricevono il doppio delle richieste di lavoro non riconosciuto. Non è perché siano più brave — è un pattern sistemico.',
+          data:'Harvard Business Review 2022: le donne dedicano 200 ore/anno in più a lavoro non tracciato nei sistemi di performance review.'}
+      },
+      {
+        id:'sister',sprite:'sis',label:'Mensa',
+        gridX:6,gridY:9,
+        dlg:{spk:'💜 Giulia — Senior Dev (Alleata)',color:'#f06292',
+          txt:'Hey, mi ha detto Marco che stai facendo i deck per il cliente. Lo so, è successo anche a me. Ascolta: tieni traccia di tutto quello che fai fuori JD. E quando presenti qualcosa, assicurati di inviare una mail prima con il tuo nome — così resta traccia. Ti copro io nelle riunioni se vedo che qualcuno si prende il credito.',
+          chs:[
+            {t:'Grazie. Come hai imparato a navigare queste situazioni?',out:'learn'},
+            {t:'Apprezzo, ma non voglio creare conflitti.',out:'avoid'},
+            {t:'Possiamo costruire qualcosa di più sistematico per il team?',out:'systemic'},
+          ]},
+        outs:{
+          learn:   {msg:'Hai costruito una connessione reale. +NETWORK +RADAR',stat:{NETWORK:2,RADAR:1}},
+          avoid:   {msg:'Hai evitato il conflitto. Ma hai perso un\'alleata. +ENERGY -NETWORK',stat:{ENERGY:1,NETWORK:-1}},
+          systemic:{msg:'Pensi in grande: cambiare il sistema, non solo navigarlo. +NETWORK +CLARITY +RADAR',stat:{NETWORK:2,CLARITY:1,RADAR:2}},
+        },
+        db:{pat:'La sorellanza come strategia professionale, non solo supporto emotivo',
+          ins:'Il supporto attivo tra donne sul lavoro — nominare i contributi altrui, costruire visibilità reciproca — è documentato come uno dei fattori più efficaci contro il credit gap. Non è sentimentalismo: è strategia.',
+          data:'Lean In / McKinsey 2023: le donne che hanno un\'alleata donna con seniority hanno il 24% in più di probabilità di essere promosse entro 3 anni.'}
+      },
+      {
+        id:'tech_pmi',sprite:'tech',label:'Server Room',
+        gridX:12,gridY:8,
+        dlg:{spk:'💻 Scenario Tecnico — PMI',color:'var(--warn)',
+          txt:'Hai un dataset di produzione con il 35% di valori mancanti nelle colonne di temperatura. Il manager vuole il modello per domani. Cosa fai?',
+          chs:[
+            {t:'Imputo con la media e consegno — il manager vuole i risultati.',out:'fast'},
+            {t:'Analizzo il pattern dei missing: se MCAR imputo, se MAR/MNAR discuto con il manager le implicazioni prima di procedere.',out:'rigorous'},
+            {t:'Chiedo più dati storici per capire il contesto prima di scegliere la strategia.',out:'context'},
+          ]},
+        outs:{
+          fast:    {msg:'Veloce ma rischioso: imputare senza analizzare il pattern può introdurre bias sistemici nel modello. +ENERGY -SKILL',stat:{ENERGY:1,SKILL:-1}},
+          rigorous:{msg:'Approccio corretto e comunicabile. Distinguere MCAR/MAR/MNAR è esattamente quello che separa un buon data scientist da un\'analista. +SKILL +CLARITY',stat:{SKILL:2,CLARITY:1}},
+          context: {msg:'Ottima domanda di business. I dati non parlano da soli — il contesto è tutto. +SKILL +RADAR',stat:{SKILL:1,RADAR:2}},
+        },
+        db:{pat:'Il trade-off velocità/rigore nelle PMI',
+          ins:'Nelle PMI la pressione sui tempi è reale. Ma consegnare un modello con dati mal gestiti crea problemi maggiori downstream. Imparare a comunicare il "costo" della fretta tecnica al management è una skill fondamentale.',
+          data:'Un modello addestrato su dati con missing non analizzati può avere bias fino al 40% nelle predizioni — spesso invisibile finché non arriva in produzione. (Speranza et al., 2022)'}
+      },
+    ]
+  },
+
+  startup:{
+    label:'WORLD 2A · STARTUP TECH',
+    palette:{floor:0x1a0a2e,wall:0x2e1a4e,accent:0x4a2a6a,bg:0x0d0810},
+    exits:[{id:'end_startup',label:'FINE →',color:0xce93d8,x:0.88,y:0.5}],
+    npcs:[
+      {
+        id:'founder',sprite:'mgr',label:'CEO Corner',
+        gridX:4,gridY:5,
+        dlg:{spk:'🚀 Founder — StartupAI',color:'var(--accent)',
+          txt:'Benvenuta! Qui non c\'è burocrazia, siamo una famiglia. Tutti fanno un po\' di tutto. Ti chiedo di essere "full-stack AI" — modelli, infra, prodotto, pitch ai clienti. La tua idea di ieri era ottima btw, l\'ho presentata agli investitori stamattina.',
+          chs:[
+            {t:'"Full-stack AI" è molto ampio. Possiamo definire le priorità del mio ruolo?',out:'scope'},
+            {t:'Certo, mi piace la varietà! Sono entusiasta.',out:'enthusiast'},
+            {t:'"L\'hai presentata" — ma era mia. Come funziona la visibilità delle idee qui?',out:'credit'},
+          ]},
+        outs:{
+          scope:    {msg:'Hai definito i confini prima di imbarcarsi. +CLARITY +VOICE',stat:{CLARITY:2,VOICE:1}},
+          enthusiast:{msg:'Entusiasmo reale — ma senza confini chiari ti ritroverai a fare tutto. +ENERGY -CLARITY',stat:{ENERGY:2,CLARITY:-1}},
+          credit:   {msg:'Hai nominato il problema direttamente. Importante farlo subito nelle startup. +VOICE +RADAR',stat:{VOICE:2,RADAR:2}},
+        },
+        db:{pat:'La cultura "famiglia" come vettore di sfruttamento',
+          ins:'Il frame della "famiglia" nelle startup normalizza confini professionali assenti, orari illimitati e lavoro non pagato. Non è sempre malafede — ma è una struttura che colpisce di più chi è già in posizione di svantaggio.',
+          data:'Sequoia Capital Survey 2023: il 67% dei dipendenti di startup segnala "scope creep" nel proprio ruolo entro i primi 6 mesi. Le donne lo segnalano il 40% più frequentemente degli uomini.'}
+      },
+      {
+        id:'sister_startup',sprite:'sis',label:'Cucina',
+        gridX:7,gridY:8,
+        dlg:{spk:'💜 Priya — Senior ML Eng (Alleata)',color:'#f06292',
+          txt:'Ehi, ho sentito che hai sollevato la questione del credito con il founder. Brava. Io ho imparato a mandare sempre un recap scritto dopo le conversazioni con lui — "come discusso oggi, la mia proposta è X". Ti sembra paranoico? Non lo è. Facciamolo insieme se vuoi.',
+          chs:[
+            {t:'Sì, è una buona idea. Come hai costruito questa abitudine?',out:'learn'},
+            {t:'Non voglio sembrare diffidente — ci tengo al rapporto.',out:'trust'},
+            {t:'Potremmo proporre un sistema di tracking delle idee per tutto il team.',out:'systemic'},
+          ]},
+        outs:{
+          learn:   {msg:'Hai imparato una strategia concreta. +NETWORK +SKILL',stat:{NETWORK:2,SKILL:1}},
+          trust:   {msg:'La fiducia è importante — ma documentare non è sfiducia, è professionalità. +ENERGY -RADAR',stat:{ENERGY:1,RADAR:-1}},
+          systemic:{msg:'Proponi un cambiamento strutturale. Rischioso ma ad alto impatto. +NETWORK +RADAR +CLARITY',stat:{NETWORK:2,RADAR:2,CLARITY:1}},
+        },
+        db:{pat:'La documentazione come protezione, non come paranoia',
+          ins:'Nelle startup la comunicazione orale è la norma, e questo crea asimmetrie di potere. Documentare per iscritto non è segnale di sfiducia — è una pratica professionale che protegge tutti, ma soprattutto chi è già meno visibile.',
+          data:'McKinsey Women in the Workplace 2023: nelle startup il "credit gap" è il 35% più alto rispetto alle corporate, principalmente per l\'informalità dei processi di attribuzione.'}
+      },
+      {
+        id:'collega_startup',sprite:'col',label:'Open Space',
+        gridX:10,gridY:6,
+        dlg:{spk:'👨‍💻 Collega — Luca',color:'var(--accent)',
+          txt:'Senti, c\'è un colloquio interno per il ruolo di Tech Lead. Ho già detto al founder che sarei perfetto. Tu hai fatto un lavoro figo sul modello, ma non hai ancora "leadership" — sai, non hai mai gestito nessuno.',
+          chs:[
+            {t:'Ho gestito il progetto X end-to-end e coordinato 3 stakeholder. È leadership.',out:'redefine'},
+            {t:'Hai ragione, forse non sono ancora pronta.',out:'defer'},
+            {t:'Interessante. Posso sapere quali sono i criteri formali per il ruolo?',out:'criteria'},
+          ]},
+        outs:{
+          redefine:{msg:'Hai ridefinito "leadership" con dati concreti. +VOICE +SKILL',stat:{VOICE:2,SKILL:1}},
+          defer:   {msg:'Hai ceduto senza verificare se i criteri erano reali. -VOICE -CLARITY',stat:{VOICE:-1,CLARITY:-1}},
+          criteria:{msg:'Hai smontato l\'argomento chiedendo i criteri. +CLARITY +RADAR',stat:{CLARITY:2,RADAR:2}},
+        },
+        db:{pat:'Il "non sei ancora pronta" come deterrente sistematico',
+          ins:'"Non sei ancora pronta" è una delle frasi più usate per escludere le donne da posizioni di leadership. Spesso i criteri sono impliciti e doppi: le stesse azioni vengono lette come "iniziativa" negli uomini e "presunzione" nelle donne.',
+          data:'Harvard Business Review 2019: le donne vengono valutate per promozioni in base alle performance attuali, gli uomini sul potenziale futuro — una asimmetria che si accumula nel tempo.'}
+      },
+      {
+        id:'tech_startup',sprite:'tech',label:'Whiteboard',
+        gridX:13,gridY:7,
+        dlg:{spk:'💻 Scenario Tecnico — Startup',color:'var(--warn)',
+          txt:'Il founder vuole un MVP del vostro sistema di raccomandazione per dopodomani. Hai dati sparsi, nessuna infrastruttura, e 2 giorni. Cosa proponi?',
+          chs:[
+            {t:'Collaborative filtering con matrix factorization — almeno offline per la demo.',out:'ml'},
+            {t:'Regole euristiche basate sulle categorie più popolari — funziona, è spiegabile e deployabile in 2 ore.',out:'pragmatic'},
+            {t:'Definisco prima i KPI di successo con il founder, poi scelgo l\'approccio. Senza metriche la demo non dimostra nulla.',out:'strategic'},
+          ]},
+        outs:{
+          ml:       {msg:'Tecnicamente corretto ma rischioso nei tempi. Matrix factorization in 2 giorni da zero è aggressivo. +SKILL',stat:{SKILL:1}},
+          pragmatic:{msg:'Scelta eccellente per un MVP: semplice, spiegabile, deployabile. Le euristiche battono i modelli complessi se i dati non ci sono. +SKILL +CLARITY',stat:{SKILL:2,CLARITY:1}},
+          strategic:{msg:'Pensi come una product manager, non solo come una data scientist. In una startup è oro. +SKILL +RADAR +CLARITY',stat:{SKILL:1,RADAR:2,CLARITY:2}},
+        },
+        db:{pat:'Il MVP tecnico: la semplicità come scelta, non come limite',
+          ins:'Nelle startup la pressione a dimostrare "ML avanzato" è alta — ma un sistema semplice che funziona batte sempre un sistema complesso che non è pronto. La scelta dell\'approccio tecnico giusto dipende dal contesto, non dalla complessità.',
+          data:'"Simple models with good features often outperform complex models with poor features." — Pedro Domingos, The Master Algorithm. Confermato in decine di Kaggle competition e deployment reali.'}
+      },
+    ]
+  },
+
+  consulenza:{
+    label:'WORLD 2B · BIG CONSULENZA',
+    palette:{floor:0x0a1a2e,wall:0x1a2a4e,accent:0x2a4a7a,bg:0x080d14},
+    exits:[{id:'end_consulenza',label:'FINE →',color:0x4fc3f7,x:0.88,y:0.5}],
+    npcs:[
+      {
+        id:'partner',sprite:'mgr',label:'Partner Office',
+        gridX:4,gridY:5,
+        dlg:{spk:'👔 Partner — McKenzie & Co',color:'var(--accent)',
+          txt:'Benvenuta. Qui la carriera è chiara: analyst, senior, manager, partner. Hai 2 anni per dimostrare di avere "executive presence". È difficile da definire, lo so — ma lo riconosciamo quando lo vediamo.',
+          chs:[
+            {t:'Posso avere esempi concreti di cosa si intende per executive presence?',out:'concrete'},
+            {t:'Capisco. Farò del mio meglio per svilupparla.',out:'passive'},
+            {t:'Interessante. Chi ha raggiunto partner negli ultimi 5 anni? Posso parlare con loro?',out:'research'},
+          ]},
+        outs:{
+          concrete:{msg:'Hai chiesto criteri concreti su un concetto vago. +CLARITY +VOICE',stat:{CLARITY:2,VOICE:1}},
+          passive: {msg:'Hai accettato un criterio opaco. -CLARITY',stat:{CLARITY:-1}},
+          research:{msg:'Vai alle fonti primarie. Vedi chi ce l\'ha fatta e come. +RADAR +NETWORK',stat:{RADAR:2,NETWORK:1}},
+        },
+        db:{pat:'"Executive presence" come criterio implicito di esclusione',
+          ins:'"Executive presence" è uno dei criteri di promozione più diffusi nelle grandi consulenze — e uno dei meno definiti. Le ricerche mostrano che viene applicato in modo sistematicamente diverso per uomini e donne: gli stessi comportamenti vengono letti come "autorevolezza" o "aggressività" a seconda del genere.',
+          data:'Center for Talent Innovation 2012: l\'81% dei senior leader cita "executive presence" come criterio chiave. Solo il 29% sa definirla in modo coerente. Le donne la sviluppano al 40% in meno secondo i loro evaluator — a parità di comportamenti osservati.'}
+      },
+      {
+        id:'sister_cons',sprite:'sis',label:'Sala Caffè',
+        gridX:7,gridY:9,
+        dlg:{spk:'💜 Amina — Senior Manager (Alleata)',color:'#f06292',
+          txt:'Hai parlato con il partner, vero? "Executive presence" — sento questa parola almeno 3 volte a settimana. Ascolta: documenta ogni presentazione che fai, chi c\'era, il feedback ricevuto. Io ho costruito un portfolio interno in 18 mesi e l\'ho usato nella mia review. E quando riesci, nomina il lavoro delle tue colleghe nelle riunioni — rende tutto il gruppo più visibile.',
+          chs:[
+            {t:'Questa idea del portfolio interno è concreta. Come l\'hai strutturato?',out:'learn'},
+            {t:'Hai mai considerato di portare questo sistema a livello di policy?',out:'systemic'},
+            {t:'Apprezzo — ma non voglio essere vista come quella che "fa politica".',out:'fear'},
+          ]},
+        outs:{
+          learn:   {msg:'Hai acquisito una strategia trasferibile. +NETWORK +SKILL',stat:{NETWORK:2,SKILL:1}},
+          systemic:{msg:'Pensi al cambiamento strutturale. +NETWORK +CLARITY +RADAR',stat:{NETWORK:2,CLARITY:1,RADAR:2}},
+          fear:   {msg:'La paura di sembrare "politica" è reale — ma spesso è esattamente quella che ti frena. +ENERGY -VOICE',stat:{ENERGY:1,VOICE:-1}},
+        },
+        db:{pat:'La visibilità come lavoro collettivo',
+          ins:'Nominare il lavoro delle colleghe nelle riunioni è un atto di alleanza attiva. In ambienti ad alta competizione interna, questa pratica distribuisce la visibilità in modo più equo e crea coalizioni più solide.',
+          data:'"Amplification" — la pratica di ripetere e attribuire i contributi delle donne in riunione — è stata documentata come strategia usata dalle donne del team Obama alla Casa Bianca. Risultato: il numero di interruzioni ai danni delle donne scese del 60% in 6 mesi.'}
+      },
+      {
+        id:'double_bind',sprite:'col',label:'Meeting Room',
+        gridX:10,gridY:6,
+        dlg:{spk:'👨‍💻 Collega Senior — Alessandro',color:'var(--accent)',
+          txt:'Ieri in riunione con il cliente sei stata molto diretta. Il partner mi ha detto che "forse ha un po\' di carattere". Ma la settimana scorsa quando non hai detto la tua sull\'approccio statistico, ti ha definita "poco propositiva". Come fai?',
+          chs:[
+            {t:'Questo si chiama double bind: qualunque cosa faccia, è sbagliata. Lo nomino.',out:'name'},
+            {t:'Forse devo trovare un equilibrio migliore nel tono.',out:'adapt'},
+            {t:'Interessante che lo noti anche tu. Hai osservato lo stesso pattern con altri colleghi maschi?',out:'data'},
+          ]},
+        outs:{
+          name:  {msg:'Hai nominato la struttura del problema. È il primo passo. +RADAR +VOICE',stat:{RADAR:2,VOICE:1}},
+          adapt: {msg:'L\'adattamento individuale non risolve un problema strutturale. +ENERGY -RADAR',stat:{ENERGY:1,RADAR:-1}},
+          data:  {msg:'Stai raccogliendo dati comparativi. Questo è RADAR che sale. +RADAR +CLARITY',stat:{RADAR:3,CLARITY:1}},
+        },
+        db:{pat:'Il double bind: qualunque cosa fai, è sbagliata',
+          ins:'Il double bind di genere sul lavoro — "troppo assertiva" se parla, "poco propositiva" se tace — è uno dei pattern più documentati nella ricerca su donne e leadership. Non è un problema da risolvere individualmente aggiustando il tono.',
+          data:'Catalyst Research 2007: le donne in ruoli di leadership vengono valutate negativamente sia quando adottano stili maschili (assertività) che quando adottano stili femminili (collaborazione). Gli uomini vengono valutati positivamente in entrambi i casi.'}
+      },
+      {
+        id:'tech_cons',sprite:'tech',label:'Analytics Room',
+        gridX:13,gridY:7,
+        dlg:{spk:'💻 Scenario Tecnico — Consulenza',color:'var(--warn)',
+          txt:'Il cliente ha un churn rate del 28% e vuole capire perché. Hai 2 settimane, accesso a dati transazionali e un\'intervista con il Customer Success team. Da dove inizi?',
+          chs:[
+            {t:'Costruisco subito un modello di churn prediction con XGBoost e SHAP per l\'interpretabilità.',out:'model_first'},
+            {t:'Prima l\'intervista con Customer Success per capire le ipotesi del business, poi EDA, poi il modello — se serve.',out:'business_first'},
+            {t:'Definisco la domanda: churn prediction o churn understanding? Sono due problemi diversi con soluzioni diverse.',out:'frame'},
+          ]},
+        outs:{
+          model_first:   {msg:'Il modello viene prima delle domande — rischio classico. Il cliente vuole insight, non accuracy. +SKILL -CLARITY',stat:{SKILL:1,CLARITY:-1}},
+          business_first:{msg:'Approccio corretto: il business context guida la scelta tecnica, non il contrario. +SKILL +CLARITY',stat:{SKILL:2,CLARITY:1}},
+          frame:         {msg:'Problem framing prima del solving — è la differenza tra un analista e uno strategist. +SKILL +RADAR +CLARITY',stat:{SKILL:1,RADAR:2,CLARITY:2}},
+        },
+        db:{pat:'Problem framing: la skill più sottovalutata nella data science applicata',
+          ins:'"Churn prediction" (modello che predice chi se ne va) e "churn understanding" (capire perché) richiedono approcci radicalmente diversi. Il primo è un problema di ML; il secondo è spesso più vicino all\'analisi qualitativa. Framing sbagliato = soluzione sbagliata, indipendentemente dalla qualità del modello.',
+          data:'Gartner 2023: il 60% dei progetti di data science fallisce non per problemi tecnici ma per mismatch tra il problema definito e il problema reale del business.'}
+      },
+    ]
+  },
+};
+
+// ══════════════════════════════════════
+// PHASER GAME ENGINE
+// ══════════════════════════════════════
+
+// Inner Critic per world — spawna a caso, non è un NPC fisso
+const INNER_CRITICS = {
+  pmi: {
+    id:'critic', sprite:'crit',
+    dlg:{spk:'👻 Inner Critic',color:'var(--danger)',
+      txt:'Ehi. Hai sentito cosa ha detto il manager? "Pratico". Forse non sei abbastanza tecnica per questo posto. Giulia è molto più esperta di te. Forse avresti dovuto studiare di più prima di iniziare.',
+      chs:[
+        {t:'Cosa mi dice concretamente di non sapere fare?',out:'question'},
+        {t:'Hai ragione. Devo studiare di più prima di dire la mia.',out:'believe'},
+        {t:'Questo è il bias di impostore. Che prove concrete ho delle mie competenze?',out:'reframe'},
+      ]},
+    outs:{
+      question:{msg:'Hai chiesto prove. L\'Inner Critic non ne ha. +CLARITY +RADAR',stat:{CLARITY:2,RADAR:1}},
+      believe: {msg:'Hai creduto alla voce senza verificare. -VOICE -CLARITY',stat:{VOICE:-1,CLARITY:-1}},
+      reframe: {msg:'Hai riconosciuto il pattern e cercato prove reali. +RADAR +VOICE',stat:{RADAR:3,VOICE:1}},
+    },
+    db:{pat:'La sindrome dell\'impostore come risposta al sistema, non come difetto personale',
+      ins:'La sindrome dell\'impostore colpisce di più le persone in ambienti dove non sono rappresentate. Non è una debolezza — è una risposta adattiva. La domanda giusta non è "sono abbastanza brava?" ma "cosa mi dice il sistema e quanto è accurato?"',
+      data:'Clance & Imes (1978, replicato più volte): la sindrome dell\'impostore è più frequente nei gruppi sottorappresentati in quel contesto professionale.'}
+  },
+  startup: {
+    id:'critic', sprite:'crit',
+    dlg:{spk:'👻 Inner Critic',color:'var(--danger)',
+      txt:'Tutte le startup falliscono. Sei l\'unica donna nel team tech. Se qualcosa va storto, tu sarai quella che "non ha funzionato". Forse dovresti stare più bassa — non fare domande difficili.',
+      chs:[
+        {t:'Stare bassa non mi ha mai protetta. Cosa mi dice questa voce?',out:'analyze'},
+        {t:'Forse ha ragione. Meglio non rischiare.',out:'believe'},
+        {t:'Se qualcosa va storto sarà per ragioni sistemiche, non perché ho fatto domande.',out:'reframe'},
+      ]},
+    outs:{
+      analyze: {msg:'Hai usato l\'Inner Critic come fonte di informazione, non come verità. +RADAR +CLARITY',stat:{RADAR:2,CLARITY:1}},
+      believe: {msg:'Hai internalizzato il messaggio. -VOICE -RADAR',stat:{VOICE:-2,RADAR:-1}},
+      reframe: {msg:'Hai separato la tua agency dalla struttura sistemica. +RADAR +VOICE',stat:{RADAR:3,VOICE:1}},
+    },
+    db:{pat:'Il "last hired, first fired" e la minaccia dello stereotipo',
+      ins:'Essere l\'unica donna in un team crea un doppio vincolo: ogni errore viene attribuito al genere, ogni successo alla squadra. Non è inevitabile — è il risultato di strutture che non distribuiscono il rischio equamente.',
+      data:'MIT Sloan 2020: nei team con una sola donna, i suoi errori hanno il doppio delle probabilità di essere menzionati nelle valutazioni rispetto agli stessi errori commessi da colleghi uomini.'}
+  },
+  consulenza: {
+    id:'critic', sprite:'crit',
+    dlg:{spk:'👻 Inner Critic',color:'var(--danger)',
+      txt:'Tutti qui hanno il doppio delle tue referenze. Il partner non ti ha sorriso dopo la presentazione. Probabilmente stai deludendo le aspettative. Forse questo ambiente non fa per te.',
+      chs:[
+        {t:'Il partner non sorrideva a nessuno — verifico il pattern, non un singolo evento.',out:'evidence'},
+        {t:'Forse ha ragione. Non sono tagliata per questo ambiente.',out:'believe'},
+        {t:'"Questo ambiente non fa per me" potrebbe essere vero — ma per ragioni diverse da quelle che dice l\'Inner Critic.',out:'nuance'},
+      ]},
+    outs:{
+      evidence:{msg:'Stai usando il pensiero critico contro l\'Inner Critic. +RADAR +CLARITY',stat:{RADAR:2,CLARITY:1}},
+      believe: {msg:'Hai generalizzato da un singolo evento. -VOICE -CLARITY',stat:{VOICE:-1,CLARITY:-1}},
+      nuance:  {msg:'Hai fatto una distinzione importante: valutare l\'ambiente è sano, incolpare te stessa no. +RADAR +CLARITY',stat:{RADAR:2,CLARITY:2}},
+    },
+    db:{pat:'La lettura dei segnali sociali e il confirmation bias',
+      ins:'La sindrome dell\'impostore porta a leggere selettivamente i segnali negativi e ignorare quelli positivi. Il training è andare alle prove: il partner non ha sorriso a nessuno? Ti ha dato feedback costruttivo? Ha risposto alle tue email?',
+      data:'Sakulku & Alexander (2011): le persone con alta sindrome dell\'impostore ricordano il 68% dei feedback negativi e il 23% di quelli positivi — a parità di frequenza.'}
+  },
+};
+
+// World intro cards
+const WORLD_INTROS = {
+  pmi: {
+    title:'PMI DI SETTORE',
+    emoji:'🏭',
+    what:'Piccola o media impresa manifatturiera, food, energy. Meno di 250 dipendenti, spesso a conduzione familiare o semi-familiare.',
+    role:'Come data/AI professional in una PMI sei spesso l\'unica persona con il tuo profilo. Lavori su problemi reali — qualità produzione, anomalie, forecast — ma con poca infrastruttura e zero mentorship tecnica.',
+    pros:['Esposizione diretta al business reale','Autonomia e visibilità rapida','Impatto misurabile fin da subito'],
+    cons:['Poco o nessun mentorship tecnico','Ruoli spesso mal definiti o sovrapposti','Sottoinvestimento in tool e dati'],
+    color:'#ffb74d',
+  },
+  startup: {
+    title:'STARTUP TECH',
+    emoji:'🚀',
+    what:'Early o growth stage. Da 5 a ~100 persone, prodotto digitale o AI, finanziamento VC o bootstrapped.',
+    role:'Come data/AI professional in una startup sei al centro del prodotto. Velocità alta, stack moderno, responsabilità anticipate. Ma anche: scope creep, confini assenti, instabilità strutturale.',
+    pros:['Tecnologie recenti, ritmo alto','Titoli ambiziosi e ownership reale','Prossimità al prodotto e alle decisioni'],
+    cons:['Alta instabilità — molte chiudono entro 3 anni','Credit gap elevato per informalità dei processi','Confine labile tra "autonomia" e mancanza di struttura'],
+    color:'#ce93d8',
+  },
+  consulenza: {
+    title:'BIG CONSULENZA',
+    emoji:'🏢',
+    what:'Grandi società di consulenza (McKinsey, Deloitte, Accenture e simili). Struttura gerarchica, clienti diversificati, carriera definita.',
+    role:'Come data/AI professional in consulenza lavori su progetti di 3-18 mesi per clienti diversi. Struttura e brand solidi, esposizione a molti settori — ma rischio di generalismo e criteri di valutazione opachi.',
+    pros:['Brand sul CV che apre porte','Struttura di carriera chiara','Rete professionale ampia e multi-settore'],
+    cons:['Rischio generalismo: tutto in superficie','Criteri di promozione spesso impliciti','Cultura orientata alle ore fatturabili'],
+    color:'#4fc3f7',
+  },
+};
+
+// ══════════════════════════════════════════════════════════════
+// WORLD 3 — LARGE CORPORATE
+// ══════════════════════════════════════════════════════════════
+const W3_NPCS = [
+  {
+    id:'hr_corp',sprite:'mgr',label:'HR & Performance',
+    gridX:4,gridY:5,
+    dlg:{spk:'👔 HR Director — GruppoTech SpA',color:'#4fc3f7',
+      txt:'La tua valutazione annuale è domani. Qui usiamo un sistema a 9 box: performance vs potenziale. Il tuo manager ti ha messo in "high performance / medium potential". La ragione? "Non ti vedo ancora pronta per la leadership." Ho il feedback scritto qui, ma è... generico.',
+      chs:[
+        {t:'Posso vedere il feedback completo e i criteri usati per valutare il "potenziale"?',out:'ask_criteria'},
+        {t:'Capisco. Cosa dovrei fare concretamente per migliorare la valutazione del potenziale?',out:'ask_actions'},
+        {t:'Interessante. Come sono stati valutati i colleghi con performance simili alla mia?',out:'compare'},
+      ]},
+    outs:{
+      ask_criteria:{msg:'Hai chiesto i criteri. Il sistema di valutazione diventa visibile quando viene interrogato. +VOICE +CLARITY +RADAR',stat:{VOICE:2,CLARITY:1,RADAR:2}},
+      ask_actions: {msg:'Approccio pratico — ma accetti criteri opachi. Utile a breve termine. +SKILL',stat:{SKILL:1}},
+      compare:     {msg:'Richiedi dati comparativi. Questo è esattamente il modo per rendere visibile il bias. +RADAR +VOICE',stat:{RADAR:3,VOICE:1}},
+    },
+    db:{pat:'Il sistema 9-box e i criteri opachi di "potenziale"',
+      ins:'Il framework 9-box (performance vs potenziale) è diffuso nelle corporate ma i criteri di "potenziale" sono raramente definiti in modo oggettivo. Le ricerche mostrano che "potenziale" viene valutato più favorevolmente negli uomini, mentre nelle donne si misura più la performance storica. Chiedere i criteri esplicitamente li rende negoziabili.',
+      data:'McKinsey Women in the Workplace 2022: le donne vengono promosse in base alle performance dimostrate, gli uomini in base al potenziale percepito — un divario che si accumula sistematicamente a ogni livello gerarchico.'}
+  },
+  {
+    id:'network_corp',sprite:'col',label:'Networking Informale',
+    gridX:8,gridY:4,
+    dlg:{spk:'👨‍💼 Collega Senior — Davide',color:'#4fc3f7',
+      txt:'Sai come funziona qui, vero? Le promozioni si decidono al campo da golf e nelle cene post-board. Io sono invitato perché conosco il VP da 10 anni. Non è il sistema migliore, lo so — ma è il sistema. Puoi entrare solo se qualcuno ti porta dentro.',
+      chs:[
+        {t:'Mi interessa capire come funziona questa rete. Come posso costruire connessioni reali qui?',out:'learn'},
+        {t:'Questo sistema mi sembra escludente per definizione. Come lo cambiamo?',out:'challenge'},
+        {t:'Capito. Posso chiederti di presentarmi al VP nel contesto giusto?',out:'direct_ask'},
+      ]},
+    outs:{
+      learn:      {msg:'Stai mappando il sistema. +RADAR +NETWORK',stat:{RADAR:2,NETWORK:2}},
+      challenge:  {msg:'Nomini il problema strutturale. Difficile da cambiare da sola, ma importante renderlo visibile. +VOICE +RADAR',stat:{VOICE:2,RADAR:2}},
+      direct_ask: {msg:'Chiedi direttamente. È scomodo ma efficace — e onesto. +NETWORK +VOICE',stat:{NETWORK:3,VOICE:1}},
+    },
+    db:{pat:'La rete informale maschile e il "golf club problem"',
+      ins:'Le reti professionali informali nelle large corporate tendono a essere omogenee per genere e background. Non per malafede individuale — per effetto di una struttura che si autoriproduce. Mappare questa rete e trovare punti di accesso legittimi è una skill professionale reale, non "fare politica".',
+      data:'Catalyst 2021: le donne manager hanno reti professionali il 25% più piccole degli uomini a parità di livello, e il 40% in meno di connessioni con i decision-maker senior. Questo gap spiega una parte significativa del divario di promozione.'}
+  },
+  {
+    id:'sister_corp',sprite:'sis',label:'Sala Riunioni B',
+    gridX:6,gridY:8,
+    dlg:{spk:'💜 Francesca — Senior Director (Alleata)',color:'#f06292',
+      txt:'Ho lavorato 12 anni qui prima di capire come funziona davvero. Ascolta: il mentore ti consiglia. Lo sponsor spende capitale politico per te — ti nomina nelle stanze dove non sei presente. Io posso essere la tua sponsor. Ma ho bisogno che tu sia visibile: manda un recap scritto ogni volta che fai qualcosa di rilevante. Lo condividerò con le persone giuste.',
+      chs:[
+        {t:'Questo ha senso. Come strutturiamo questo accordo in modo professionale?',out:'structure'},
+        {t:'Grazie. Posso fare lo stesso per te e per altre colleghe?',out:'reciprocal'},
+        {t:'Apprezzo molto. Ma voglio capire: cosa guadagni tu da questo?',out:'honest'},
+      ]},
+    outs:{
+      structure:  {msg:'Stai costruendo una relazione professionale solida. +NETWORK +CLARITY',stat:{NETWORK:2,CLARITY:1}},
+      reciprocal: {msg:'Pensi in modo sistemico — la sorellanza come rete, non come favore singolo. +NETWORK +RADAR',stat:{NETWORK:3,RADAR:2}},
+      honest:     {msg:'Domanda legittima che rafforza la relazione. Francesca apprezza la direttezza. +NETWORK +VOICE',stat:{NETWORK:2,VOICE:1}},
+    },
+    db:{pat:'Mentore vs Sponsor: una distinzione che cambia le carriere',
+      ins:'Il mentore consiglia, il coach guida, lo sponsor agisce. Lo sponsor nomina il tuo nome nelle stanze dove non sei presente, ti difende nelle decisioni di budget e promozione, investe reputazione in te. Le donne hanno più mentori e meno sponsor degli uomini — questo spiega una parte significativa del divario nei ruoli di leadership.',
+      data:'Hewlett et al., Harvard Business Review 2010: le donne con sponsor hanno il 22% in più di probabilità di essere promosse. Eppure le donne senior europee riportano di avere sponsor il 38% in meno rispetto ai colleghi uomini con seniority equivalente.'}
+  },
+  {
+    id:'maternity',sprite:'col',label:'Meeting Strategico',
+    gridX:10,gridY:7,
+    dlg:{spk:'👩‍💼 Manager — Revisione Team',color:'#4fc3f7',
+      txt:'Dobbiamo discutere i piani per il prossimo anno. Sento che sei in un momento... personale. Vogliamo assicurarci che tu possa dedicarti al progetto importante in arrivo. Ho pensato di assegnarlo a Marco, almeno per ora. È solo per supportarti.',
+      chs:[
+        {t:'Sono pienamente disponibile per il progetto. Possiamo discutere su quale base stai prendendo questa decisione?',out:'push_back'},
+        {t:'Apprezzo il pensiero, ma preferisco essere io a dirmi quando ho bisogno di supporto.',out:'agency'},
+        {t:'Questa decisione sembra basata su assunzioni sulla mia disponibilità. Possiamo parlarne apertamente?',out:'name_it'},
+      ]},
+    outs:{
+      push_back:{msg:'Hai richiesto trasparenza sui criteri. +VOICE +CLARITY',stat:{VOICE:2,CLARITY:1}},
+      agency:   {msg:'Hai rivendicato il diritto di definire i tuoi limiti da sola. +VOICE +RADAR',stat:{VOICE:2,RADAR:1}},
+      name_it:  {msg:'Hai nominato il meccanismo — la "protezione" non richiesta. +RADAR +VOICE',stat:{RADAR:3,VOICE:2}},
+    },
+    db:{pat:'La maternità penalty e la "protezione" non richiesta',
+      ins:'La maternità penalty si manifesta spesso come decisioni "protettive" non richieste: escludere dalle opportunità importanti "per non sovraccaricare", assumere disponibilità ridotta senza chiedere, non considerare per promozioni "perché ha già tanto". Sono bias strutturati che si presentano come gentilezza.',
+      data:'Correll, Benard & Paik (American Journal of Sociology, 2007): le madri vengono valutate il 10% meno competenti e il 12.6% meno impegnate rispetto alle donne senza figli, a CV identico. I padri vengono invece valutati più affidabili delle loro controparti senza figli.'}
+  },
+  {
+    id:'tech_corp',sprite:'tech',label:'Data Platform Team',
+    gridX:12,gridY:5,
+    dlg:{spk:'💻 Scenario Tecnico — Corporate',color:'#f7c46a',
+      txt:'Hai 5 stakeholder che vogliono usare lo stesso modello di forecast per scopi diversi: Finance vuole conservatorismo (meglio sbagliare in difetto), Sales vuole ottimismo (target ambiziosi), Operations vuole precisione, CEO vuole un numero solo da comunicare al board, tu devi mantenere l\'integrità tecnica. Come gestisci?',
+      chs:[
+        {t:'Costruisco un modello con intervalli di confidenza e creo view diverse per ogni stakeholder — stesso modello, output adattati.',out:'intervals'},
+        {t:'Facilito un workshop con tutti gli stakeholder per allineare prima le metriche di successo, poi costruisco.',out:'align_first'},
+        {t:'Documento per iscritto le assunzioni richieste da ciascuno e le implicazioni tecniche. La decisione finale è del business, non mia.',out:'document'},
+      ]},
+    outs:{
+      intervals:   {msg:'Soluzione tecnica elegante che rispetta le esigenze diverse senza compromettere l\'integrità. +SKILL +CLARITY',stat:{SKILL:2,CLARITY:1}},
+      align_first: {msg:'Problem framing prima del solving. Stai gestendo un problema politico con strumenti tecnici. +SKILL +NETWORK +RADAR',stat:{SKILL:1,NETWORK:1,RADAR:2}},
+      document:    {msg:'Separare responsabilità tecnica da decisione di business è professionalità avanzata. +SKILL +CLARITY +VOICE',stat:{SKILL:1,CLARITY:2,VOICE:1}},
+    },
+    db:{pat:'Il data scientist come arbitro politico — e come non esserlo',
+      ins:'Nelle large corporate il data scientist viene spesso usato per "oggettivare" decisioni già prese. Imparare a distinguere quando si sta costruendo un modello e quando si sta fornendo copertura tecnica a una decisione politica è una skill di sopravvivenza. La documentazione esplicita delle assunzioni protegge sia l\'integrità del lavoro che la propria reputazione.',
+      data:'Gartner 2023: il 67% dei data scientist nelle corporate riporta di aver ricevuto pressioni per modificare risultati o assunzioni per supportare conclusioni predeterminate. Il 43% ha accettato, spesso senza documentare il cambiamento.'}
+  },
+];
+
+// ══════════════════════════════════════════════════════════════
+// WORLD 4 — P.IVA / FOUNDER
+// ══════════════════════════════════════════════════════════════
+const W4_NPCS = [
+  {
+    id:'primo_cliente',sprite:'mgr',label:'Prima call cliente',
+    gridX:4,gridY:5,
+    dlg:{spk:'🤝 Potenziale Cliente — Primo Contatto',color:'#6af7c8',
+      txt:'Il tuo profilo è interessante. Abbiamo bisogno di qualcuno per un progetto AI per 3 mesi. Quanto costa lavorare con te? Ovviamente siamo una startup, non abbiamo budget enterprise. Pensavamo a qualcosa di flessibile — magari con una quota di successo.',
+      chs:[
+        {t:'La mia tariffa giornaliera è X€. Per 3 mesi full-time è Y. Possiamo discutere la struttura, non il valore del lavoro.',out:'hold_price'},
+        {t:'Dipende dal progetto. Possiamo fare una call di discovery gratuita per capire lo scope?',out:'discovery'},
+        {t:'Capisco il contesto startup. Cosa intendi per "quota di successo"? Ho bisogno di capire i rischi che mi chiedi di condividere.',out:'ask_terms'},
+      ]},
+    outs:{
+      hold_price: {msg:'Hai ancorato il prezzo senza scusarti. Difficile ma fondamentale. +VOICE +NETWORK',stat:{VOICE:2,NETWORK:1}},
+      discovery:  {msg:'Proteggi il tuo tempo con una struttura. Ma attenzione: il discovery gratuito è lavoro reale. +CLARITY',stat:{CLARITY:1}},
+      ask_terms:  {msg:'Hai chiesto chiarezza sui rischi prima di accettare. +RADAR +CLARITY +VOICE',stat:{RADAR:2,CLARITY:1,VOICE:1}},
+    },
+    db:{pat:'Il pricing del proprio lavoro e il bias di svalutazione',
+      ins:'Le freelance donna quotano in media il 18-26% in meno degli uomini per servizi equivalenti — non per mancanza di competenza, ma per interiorizzazione del bias di valore. La "quota di successo" è spesso un trasferimento di rischio dal cliente al fornitore senza compensazione adeguata. Tenere il prezzo è un atto professionale, non di arroganza.',
+      data:'Fiverr & Payoneer Global Freelancer Survey 2023: le freelance donna guadagnano in media il 22% in meno degli uomini a parità di categoria e rating. Il gap è più alto nelle categorie tech (+28%) e più basso nelle categorie creative (+11%).'}
+  },
+  {
+    id:'scope_creep',sprite:'col',label:'Progetto in corso',
+    gridX:8,gridY:4,
+    dlg:{spk:'📱 Cliente — WhatsApp alle 22:30',color:'#6af7c8',
+      txt:'Ciao! Scusa l\'orario. Domani abbiamo una demo con gli investitori. Avremmo bisogno di aggiungere anche un\'analisi predittiva al dashboard — è solo una cosa veloce. Puoi farlo stanotte? Sei sempre così disponibile, sei fantastica!',
+      chs:[
+        {t:'Non lavoro fuori dall\'orario concordato. Possiamo pianificare questa aggiunta come una nuova richiesta con tempo e compenso adeguati.',out:'boundary'},
+        {t:'Posso valutare cosa è fattibile domani mattina presto, ma è fuori dallo scope originale — ci sarà un extra.',out:'partial'},
+        {t:'Ok, ci provo. Ma dobbiamo poi parlare di come gestiamo le richieste urgenti.',out:'accept'},
+      ]},
+    outs:{
+      boundary:{msg:'Hai tenuto il confine in modo professionale. +VOICE +ENERGY',stat:{VOICE:2,ENERGY:2}},
+      partial: {msg:'Compromesso ragionevole — ma attenzione alla deriva: il prossimo "extra" si aspetterà lo stesso. +ENERGY -CLARITY',stat:{ENERGY:1,CLARITY:-1}},
+      accept:  {msg:'Hai ceduto. Il cliente ha imparato che funziona. -ENERGY -VOICE',stat:{ENERGY:-2,VOICE:-1}},
+    },
+    db:{pat:'Lo scope creep e i confini professionali nel lavoro autonomo',
+      ins:'Lo scope creep — l\'espansione progressiva del lavoro oltre i confini concordati — è uno dei pattern più costosi per chi lavora in autonomia. I complimenti ("sei fantastica!") vengono spesso usati inconsapevolmente per ammorbidire richieste fuori scope. I confini professionali non si difendono con le scuse — si comunicano con chiarezza e rispetto reciproco.',
+      data:'Freelancers Union Annual Survey 2023: il 77% dei freelance riporta scope creep regolare. Il 43% non ha mai ricevuto compenso aggiuntivo per lavoro fuori scope. Le donne rifiutano le richieste fuori scope il 35% meno degli uomini, anche a parità di esperienza.'}
+  },
+  {
+    id:'sister_piva',sprite:'sis',label:'Community Online',
+    gridX:6,gridY:8,
+    dlg:{spk:'💜 Sara — Freelance Senior AI (Alleata)',color:'#f06292',
+      txt:'Ho costruito una rete di 12 freelance donna in AI con cui condivido clienti, referenze, e pricing. Quando un cliente mi paga poco o si comporta male, lo segnalo alle altre. Quando ho troppo lavoro, passo i contatti. È sopravvivenza collettiva. Vuoi entrare?',
+      chs:[
+        {t:'Sì, assolutamente. Come posso contribuire attivamente alla rete?',out:'join_active'},
+        {t:'Mi interessa molto. Come gestite la condivisione delle informazioni sui clienti — c\'è una policy?',out:'ask_structure'},
+        {t:'Sono un po\' in difficoltà ad aprirmi — ho paura della concorrenza tra di noi.',out:'fear'},
+      ]},
+    outs:{
+      join_active:    {msg:'Entri nella rete con intenzione di dare, non solo ricevere. +NETWORK +ENERGY',stat:{NETWORK:3,ENERGY:1}},
+      ask_structure:  {msg:'Vuoi capire le regole prima di impegnarti. Professionale. +NETWORK +CLARITY',stat:{NETWORK:2,CLARITY:1}},
+      fear:           {msg:'La paura della concorrenza è reale — ma le freelance che collaborano guadagnano di più. +RADAR',stat:{RADAR:2}},
+    },
+    db:{pat:'La rete come infrastruttura di sopravvivenza per il lavoro autonomo',
+      ins:'Per chi lavora in autonomia, la rete professionale non è un optional — è infrastruttura. Le freelance donna che fanno parte di community di pari hanno tariffe mediamente più alte, pipeline più stabili, e maggiore capacità di rifiutare clienti scorretti. La "concorrenza" tra freelance della stessa categoria è spesso un framing controproducente: il mercato è abbastanza grande.',
+      data:'Leatherbee & Eesley (2014): le imprenditrici con reti professionali dense hanno probabilità di sopravvivenza dell\'impresa il 34% più alta nei primi 3 anni. Le reti omogenee per genere mostrano effetti aggiuntivi di fiducia e condivisione di informazioni sensibili (pricing, clienti difficili).'}
+  },
+  {
+    id:'investitori',sprite:'mgr',label:'Pitch Meeting',
+    gridX:10,gridY:6,
+    dlg:{spk:'💼 Investitore — VC Fund',color:'#6af7c8',
+      txt:'Interessante progetto. Ma ho qualche preoccupazione: sei sola, senza co-founder tecnico. Come scali? E scusa — hai esperienza di vendita? Perché per crescere serve qualcuno che sappia vendere. I migliori founder che ho visto sanno fare entrambe le cose.',
+      chs:[
+        {t:'Sono co-founder tecnica e business. Ho già X clienti paganti. Le domande che mi stai facendo le faresti a un fondatore uomo con lo stesso profilo?',out:'challenge'},
+        {t:'Ho un advisor tecnico senior. La trazione parla: X€ ARR in Y mesi, zero churn. Possiamo parlare dei numeri?',out:'metrics'},
+        {t:'Capisco la preoccupazione sul team. Sto attivamente costruendo il team — posso mostrarti i profili che sto valutando.',out:'team'},
+      ]},
+    outs:{
+      challenge:{msg:'Hai nominato il doppio standard direttamente. Rischioso ma potente. +VOICE +RADAR',stat:{VOICE:2,RADAR:2}},
+      metrics:  {msg:'Hai spostato la conversazione sui dati. È la mossa più efficace. +CLARITY +SKILL',stat:{CLARITY:2,SKILL:1}},
+      team:     {msg:'Risposta solida — ma hai accettato il framing del problema. +CLARITY',stat:{CLARITY:1}},
+    },
+    db:{pat:'Il gender gap nel funding e i criteri di valutazione asimmetrici',
+      ins:'Le founder donna ricevono domande diverse nei pitch rispetto agli uomini: più domande "preventive" (cosa può andare storto) vs domande "promozionali" (dove può arrivare). Questo framing influenza l\'ammontare del funding offerto. Spostare la conversazione sui numeri concreti — trazione, retention, unit economics — è la strategia più documentata per neutralizzare il bias.',
+      data:'Gompers & Wang, Harvard Business School 2017: le startup fondate da donne ricevono in media il 23% in meno di funding a parità di trazione. Pitchbook 2023: solo il 2.1% del VC europeo è andato a team tutti-femminili, il 15.6% a team misti.'}
+  },
+  {
+    id:'tech_piva',sprite:'tech',label:'Proposta Tecnica',
+    gridX:13,gridY:8,
+    dlg:{spk:'💻 Scenario Tecnico — P.IVA',color:'#f7c46a',
+      txt:'Un cliente ti chiede una proposta per "implementare AI nel loro processo di selezione CV". Budget: 15k€. Timeline: 6 settimane. Non hanno dati storici strutturati. Cosa proponi?',
+      chs:[
+        {t:'Con questi vincoli, propongo un sistema rule-based + NLP leggero per un primo filtro, con revisione umana obbligatoria. L\'AI generativa qui fa più danni che benefici.',out:'pragmatic'},
+        {t:'Prima di proporre qualsiasi soluzione tecnica, devo capire cosa intendono per "migliorare la selezione" — è un problema di volume, qualità, o bias nei criteri attuali?',out:'frame_first'},
+        {t:'Devo essere diretta: l\'AI nella selezione CV senza dati storici e senza audit di bias è un rischio legale e reputazionale per loro. Ti spiego perché e cosa proporrei invece.',out:'honest_risk'},
+      ]},
+    outs:{
+      pragmatic:   {msg:'Soluzione onesta e fattibile nei vincoli. +SKILL +CLARITY',stat:{SKILL:2,CLARITY:1}},
+      frame_first: {msg:'Stai proteggendo il cliente (e te stessa) da una soluzione al problema sbagliato. +SKILL +RADAR +CLARITY',stat:{SKILL:1,RADAR:2,CLARITY:2}},
+      honest_risk: {msg:'Massima onestà professionale — anche a rischio di perdere il progetto. +VOICE +RADAR +NETWORK',stat:{VOICE:2,RADAR:2,NETWORK:1}},
+    },
+    db:{pat:'Il bias algoritmico nelle HR tech e la responsabilità del consulente',
+      ins:'I sistemi di screening CV addestrati su dati storici tendono a replicare i bias di chi ha assunto in passato. Il caso Amazon (2018) — sistema che penalizzava CV con la parola "donna" — è il più noto, ma il pattern è sistemico. Come consulente, proporre un sistema che causa danno pur essendo tecnicamente funzionante è un problema etico e legale. Il cliente paga per la tua expertise, non solo per la tua esecuzione.',
+      data:'MIT Media Lab / Joy Buolamwini, "Gender Shades" (2018): i sistemi di riconoscimento facciale commerciali mostrano error rate fino al 34.7% su donne con pelle scura vs 0.8% su uomini con pelle chiara. I sistemi di screening CV mostrano pattern analoghi quando addestrati su dati storici non auditati (Amazon 2018, segnalato internamente e mai rilasciato).'}
+  },
+];
+
+const WORLD_DEFS_NEW = {
+  corporate:{
+    label:'WORLD 3 · LARGE CORPORATE',
+    palette:{floor:0x0f1a2e,wall:0x1a2a4e,accent:0x2a4a7a,bg:0x080d16},
+    exits:[{id:'piva',label:'P.IVA / FOUNDER →',color:0x6af7c8,x:0.88,y:0.55}],
+    npcs: W3_NPCS,
+  },
+  piva:{
+    label:'WORLD 4 · P.IVA & FOUNDER',
+    palette:{floor:0x0f2010,wall:0x1a3520,accent:0x2a5530,bg:0x060e08},
+    exits:[{id:'end_piva',label:'FINE →',color:0x6af7c8,x:0.88,y:0.55}],
+    npcs: W4_NPCS,
+  },
+};
+
+const WORLD_INTROS_NEW = {
+  corporate:{
+    title:'LARGE CORPORATE',
+    emoji:'🏗️',
+    what:'Grandi aziende con più di 1000 dipendenti — manifatturiero, finance, telco, energy. Struttura gerarchica complessa, budget importanti, processi consolidati.',
+    role:'Come data/AI professional in una large corporate hai accesso a dati reali su larga scala e risorse che le PMI non hanno. Ma le decisioni sono lente, la politica interna è reale, e le opportunità dipendono spesso da chi ti conosce.',
+    pros:['Dati e infrastruttura reale','Stabilità e benefit','Possibilità di specializzazione profonda'],
+    cons:['Burocrazia e lentezza decisionale','Avanzamento spesso per anzianità o rete','Criteri di "potenziale" spesso opachi e distorti'],
+    color:'#4fc3f7',
+  },
+  piva:{
+    title:'P.IVA & FOUNDER',
+    emoji:'🚀',
+    what:'Lavoro autonomo come consulente, freelance specializzata, o founder di una micro-impresa AI. Massima autonomia, massima responsabilità.',
+    role:'Sei tu il prodotto, il team di vendita, e l\'HR. Le tue competenze tech diventano un business. NETWORK è la tua risorsa più preziosa — più del codice che sai scrivere.',
+    pros:['Autonomia totale su progetti e clienti','Tariffa potenzialmente più alta','Costruisci qualcosa di tuo'],
+    cons:['Instabilità del reddito','Isolamento — nessun team, nessuna struttura','Ogni confine professionale lo devi proteggere tu'],
+    color:'#6af7c8',
+  },
+};
+
+const INNER_CRITICS_NEW = {
+  corporate:{
+    id:'critic',sprite:'crit',
+    dlg:{spk:'👻 Inner Critic',color:'#f76a6a',
+      txt:'Hai sentito? Ti hanno messo "medium potential". Dopo tutto quello che hai fatto. Forse non sei il tipo di persona che "brilla" nei contesti strutturati. Forse non hai il carattere giusto per arrivare in alto qui.',
+      chs:[
+        {t:'"Medium potential" secondo criteri che non mi sono stati spiegati. Questo non è un dato — è un\'opinione.',out:'reframe'},
+        {t:'Forse hanno ragione. Non mi vedo come una "leader".',out:'believe'},
+        {t:'Cosa succederebbe se chiedessi esattamente su cosa sono stata valutata?',out:'action'},
+      ]},
+    outs:{
+      reframe:{msg:'Hai distinto tra valutazione e verità. +RADAR +CLARITY',stat:{RADAR:2,CLARITY:1}},
+      believe:{msg:'Hai internalizzato un\'opinione come fatto. -VOICE -CLARITY',stat:{VOICE:-1,CLARITY:-1}},
+      action: {msg:'Trasformi l\'ansia in azione concreta. +VOICE +CLARITY',stat:{VOICE:1,CLARITY:2}},
+    },
+    db:{pat:'Il "medium potential" e il bias nelle valutazioni di leadership',
+      ins:'"Non la vedo come una leader" è uno dei feedback più comuni e meno utili nelle corporate. Raramente è accompagnato da criteri osservabili. La ricerca mostra che questo giudizio è influenzato da aspettative di genere: stili di leadership assertivi negli uomini vengono letti come "leadership", nelle donne come "difficoltà relazionali".',
+      data:'Cecchi-Dimeglio et al., Harvard Law School 2017: analisi di 81.000 performance review. Le donne ricevono il 2.5x più feedback sulla personalità ("troppo diretta", "deve lavorare sulla presenza") rispetto agli uomini. Gli uomini ricevono più feedback sulle competenze specifiche.'}
+  },
+  piva:{
+    id:'critic',sprite:'crit',
+    dlg:{spk:'👻 Inner Critic',color:'#f76a6a',
+      txt:'Chi ti credi di essere per farti pagare X€ al giorno? Ci sono persone con 10 anni di esperienza che chiedono meno. Forse stai sopravvalutando quello che vali. Forse il cliente ha ragione a trovare la tua tariffa "alta".',
+      chs:[
+        {t:'La mia tariffa riflette il valore che creo, non quello che gli altri si fanno pagare.',out:'reframe'},
+        {t:'Forse dovrei abbassare un po\'... per essere più competitiva.',out:'believe'},
+        {t:'Chi sono i "altri" con cui mi confronto? Come so che la loro tariffa è il benchmark giusto?',out:'question'},
+      ]},
+    outs:{
+      reframe: {msg:'Hai ancorato il valore all\'output, non al mercato. +VOICE +CLARITY',stat:{VOICE:2,CLARITY:1}},
+      believe: {msg:'Hai ceduto al confronto verso il basso. -VOICE -NETWORK',stat:{VOICE:-2,NETWORK:-1}},
+      question:{msg:'Hai messo in discussione il benchmark stesso. +RADAR +CLARITY',stat:{RADAR:2,CLARITY:1}},
+    },
+    db:{pat:'Il benchmark di pricing e il confronto verso il basso',
+      ins:'Il confronto con chi si fa pagare meno è la trappola più comune per i nuovi freelance. Il mercato ha range ampi — confrontarsi con il minimo invece che con il valore generato porta a una race to the bottom che danneggia sia il singolo che l\'intero mercato. Il pricing si basa sul valore per il cliente, non sul prezzo degli altri.',
+      data:'Fiverr Professional Survey 2023: i freelance che aumentano la tariffa del 30% perdono in media il 10% dei clienti ma aumentano il revenue del 17%, perché attraggono clienti con budget più alto e maggiore serietà professionale.'}
+  },
+};
+
+
+
+// ── Merge all world data (must be AFTER all _NEW declarations) ──
+Object.assign(WORLD_DEFS,    WORLD_DEFS_NEW);
+Object.assign(WORLD_INTROS,  WORLD_INTROS_NEW);
+Object.assign(INNER_CRITICS, INNER_CRITICS_NEW);
+// Redirect W2 exits to Corporate instead of hardcoded end
+WORLD_DEFS.startup.exits   = [{id:'corporate',label:'CORPORATE →',color:0x4fc3f7,x:0.88,y:0.55}];
+WORLD_DEFS.consulenza.exits = [{id:'corporate',label:'CONSULENZA → CORPORATE',color:0x4fc3f7,x:0.88,y:0.55}];
+
+// ══════════════════════════════════════
+// PHASER ENGINE — clean rewrite v7
+// ══════════════════════════════════════
+
+// ── Global game state ──────────────────
+let PG = null;
+let gameRunning = false;   // hard gate — set true only at end of gCreate
+let exitTriggered = false; // prevents handleExit firing multiple times
+let evActive = false;
+let curEv = null;
+let scn = null;
+let player = null;
+let cursors = null;
+let actKey = null;
+let zKey = null;
+let currentWorldDef = null;
+let lastActPressed = false; // edge-detect for interact key
+
+// Inner Critic state — reset per world
+let criticSpawned = false;
+let criticActive  = false;
+let criticSteps   = 0;
+const CRITIC_THRESHOLD = 200; // frames of movement before critic can spawn
+
+const TILE = 40;
+const TOUCH = {left:false,right:false,up:false,down:false,act:false};
+
+// ── Compute canvas dimensions reliably ─
+function getCanvasDims(){
+  // Measure HUD directly — it's always rendered before canvas
+  const hud = document.getElementById('gHud');
+  const hudH = hud ? hud.offsetHeight : 44;
+  const MSG_H = 40; // fixed msg bar height
+  const W = window.innerWidth;
+  const H = Math.max(window.innerHeight - hudH - MSG_H, 200);
+  return {W: Math.floor(W), H: Math.floor(H)};
+}
+
+// ── initGame: show intro card then launch ─
+function initGame(worldId){
+  currentWorldDef = WORLD_DEFS[worldId];
+  ST.world.id = worldId;
+
+  const intro = WORLD_INTROS[worldId];
+  const isMobile = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+  const hint = isMobile
+    ? 'Usa <kbd>✦</kbd> vicino a un NPC per interagire'
+    : 'Premi <kbd>SPAZIO</kbd> o <kbd>Z</kbd> vicino a un NPC per interagire';
+
+  if(intro){
+    document.getElementById('dlLayer').innerHTML = `
+    <div class="wi-ov">
+      <div class="wi-box">
+        <div class="wi-emoji">${intro.emoji}</div>
+        <div class="wi-title" style="color:${intro.color}">${intro.title}</div>
+        <div class="wi-what">${intro.what}</div>
+        <div class="wi-role">${intro.role}</div>
+        <div class="wi-cols">
+          <div class="wi-col">
+            <div class="wi-col-title" style="color:#6af7c8">✓ Pro</div>
+            <ul>${intro.pros.map(p=>`<li>${p}</li>`).join('')}</ul>
+          </div>
+          <div class="wi-col">
+            <div class="wi-col-title" style="color:#f76a6a">✗ Contro</div>
+            <ul>${intro.cons.map(c=>`<li>${c}</li>`).join('')}</ul>
+          </div>
+        </div>
+        <div class="wi-hint">🎮 ${hint} · Trova tutti gli NPC per sbloccare le uscite</div>
+        <button class="btn-next" id="btnStartWorld" style="align-self:center">Entra nel mondo →</button>
+      </div>
+    </div>`;
+    document.getElementById('btnStartWorld').onclick = ()=>{
+      document.getElementById('dlLayer').innerHTML = '';
+      launchPhaser(worldId);
+    };
+  } else {
+    launchPhaser(worldId);
+  }
+}
+
+// ── launchPhaser: destroy old instance, create fresh ─
+function launchPhaser(worldId){
+  // Hard reset all state
+  gameRunning   = false;
+  exitTriggered = false;
+  evActive      = false;
+  curEv         = null;
+  player        = null;
+  cursors       = null;
+  actKey        = null;
+  zKey          = null;
+  scn           = null;
+  lastActPressed= false;
+  criticSpawned = false;
+  criticActive  = false;
+  criticSteps   = 0;
+
+  if(PG){ try{ PG.destroy(true); }catch(e){} PG = null; }
+
+  // Remove old canvas immediately
+  document.getElementById('gArea').querySelectorAll('canvas').forEach(c=>c.remove());
+
+  // Wait 400ms — enough for the CSS opacity transition (.35s) to finish
+  // so window.innerWidth/Height and HUD offsetHeight are stable
+  setTimeout(()=>{
+    const cont = document.getElementById('gArea');
+    const {W,H} = getCanvasDims();
+
+    const cv = document.createElement('canvas');
+    cv.id = 'gameCanvas';
+    cv.width  = W;
+    cv.height = H;
+    cv.style.cssText = `display:block;width:${W}px;height:${H}px;image-rendering:pixelated;flex-shrink:0;`;
+
+    const msgEl = document.getElementById('gMsg');
+    if(msgEl) cont.insertBefore(cv, msgEl);
+    else cont.appendChild(cv);
+
+    PG = new Phaser.Game({
+      type: Phaser.CANVAS,
+      canvas: cv,
+      width:  W,
+      height: H,
+      backgroundColor: '#' + currentWorldDef.palette.bg.toString(16).padStart(6,'0'),
+      physics: {default:'arcade', arcade:{gravity:{y:0}, debug:false}},
+      scene: {preload:gPreload, create:gCreate, update:gUpdate}
+    });
+
+    bindTouchControls();
+  }, 400);
+}
+
+// ── Touch controls ─────────────────────
+function bindTouchControls(){
+  const map = {'tc-left':'left','tc-right':'right','tc-up':'up','tc-down':'down','tc-act':'act'};
+  Object.entries(map).forEach(([id,key])=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    // Remove old listeners by cloning
+    const fresh = el.cloneNode(true);
+    el.parentNode.replaceChild(fresh, el);
+    const on  = e=>{ e.preventDefault(); TOUCH[key]=true;  fresh.classList.add('pressed'); };
+    const off = e=>{ e.preventDefault(); TOUCH[key]=false; fresh.classList.remove('pressed'); };
+    fresh.addEventListener('touchstart', on,  {passive:false});
+    fresh.addEventListener('touchend',   off, {passive:false});
+    fresh.addEventListener('touchcancel',off, {passive:false});
+    fresh.addEventListener('mousedown',  on);
+    fresh.addEventListener('mouseup',    off);
+    fresh.addEventListener('mouseleave', off);
+  });
+}
+
+// ── gPreload: procedural textures ──────
+function gPreload(){
+  const g   = this.make.graphics({add:false});
+  const pal = currentWorldDef.palette;
+  const cls = CLASSES[ST.char?.cls||'analyst'];
+  const pc  = parseInt(cls.color.replace('#',''), 16);
+  const T   = TILE;
+
+  g.clear(); g.fillStyle(pal.floor); g.fillRect(0,0,T,T);
+  g.fillStyle(pal.wall,0.15); g.fillRect(0,0,T,1); g.fillRect(0,0,1,T);
+  g.generateTexture('floor',T,T); g.clear();
+
+  g.fillStyle(pal.wall); g.fillRect(0,0,T,T);
+  g.fillStyle(pal.accent,0.4); g.fillRect(2,2,T-4,T-4);
+  g.generateTexture('wall',T,T); g.clear();
+
+  g.fillStyle(0x3a3a5a); g.fillRect(0,8,T,T-8);
+  g.fillStyle(0x5a5a7a); g.fillRect(2,8,T-4,4);
+  g.generateTexture('desk',T,T); g.clear();
+
+  // Player
+  g.fillStyle(0xe0e0f0); g.fillCircle(16,12,8);
+  g.fillStyle(pc);        g.fillRect(8,20,16,12);
+  g.fillStyle(0xe0e0f0); g.fillRect(8,32,6,6); g.fillRect(18,32,6,6);
+  g.fillStyle(0xe0e0f0); g.fillRect(4,20,5,10); g.fillRect(23,20,5,10);
+  g.generateTexture('player',32,32); g.clear();
+
+  // NPCs
+  g.fillStyle(0xddccaa); g.fillCircle(16,10,8);
+  g.fillStyle(0x557788); g.fillRect(8,18,16,12);
+  g.fillStyle(0x446677); g.fillRect(8,30,6,6); g.fillRect(18,30,6,6);
+  g.generateTexture('mgr',32,32); g.clear();
+
+  g.fillStyle(0xffcc99); g.fillCircle(16,10,8);
+  g.fillStyle(0xd45b8a); g.fillRect(8,18,16,12);
+  g.fillStyle(0xc44a79); g.fillRect(8,30,6,6); g.fillRect(18,30,6,6);
+  g.fillStyle(0xffd700); g.fillCircle(16,4,4);
+  g.generateTexture('sis',32,32); g.clear();
+
+  g.fillStyle(0xffcc99); g.fillCircle(16,10,8);
+  g.fillStyle(0x9966cc); g.fillRect(8,18,16,12);
+  g.fillStyle(0x7755aa); g.fillRect(8,30,6,6); g.fillRect(18,30,6,6);
+  g.generateTexture('col',32,32); g.clear();
+
+  g.fillStyle(0xff4444,0.7); g.fillCircle(16,10,9);
+  g.fillStyle(0xff2222,0.5); g.fillRect(8,18,16,14);
+  g.fillStyle(0xffffff);     g.fillRect(11,8,5,5); g.fillRect(17,8,5,5);
+  g.fillStyle(0xff0000);     g.fillRect(13,16,6,2);
+  g.generateTexture('crit',32,32); g.clear();
+
+  g.fillStyle(0x1a2a3a); g.fillRect(4,4,24,20);
+  g.fillStyle(0x4fc3f7,0.6); g.fillRect(6,6,20,14);
+  g.fillStyle(0x00ff88); g.fillRect(8,9,4,2); g.fillRect(8,13,8,2); g.fillRect(8,17,6,2);
+  g.fillStyle(0x2a3a4a); g.fillRect(8,26,16,6);
+  g.generateTexture('tech',32,32); g.clear();
+
+  g.fillStyle(0xffd700); g.fillCircle(12,12,10);
+  g.fillStyle(0x111111); g.fillRect(10,5,4,7); g.fillCircle(12,16,2.5);
+  g.generateTexture('bub',24,24); g.clear();
+
+  g.fillStyle(0x333344); g.fillRect(0,0,T,T);
+  g.fillStyle(0x444455); g.fillRect(4,4,T-8,T-8);
+  g.fillStyle(0x888899); g.fillCircle(T/2,T/2,4);
+  g.generateTexture('door_locked',T,T); g.clear();
+
+  g.fillStyle(0x2244aa); g.fillRect(0,0,T,T);
+  g.fillStyle(0x4466cc); g.fillRect(4,4,T-8,T-8);
+  g.fillStyle(0xffd700); g.fillCircle(T-8,T/2,4);
+  g.generateTexture('door_open',T,T); g.clear();
+
+  g.destroy();
+}
+
+// ── gCreate ────────────────────────────
+function gCreate(){
+  scn = this;
+  const W = this.scale.width;
+  const H = this.scale.height;
+  const wd = currentWorldDef;
+  const cols = Math.floor(W/TILE);
+  const rows = Math.floor(H/TILE);
+
+  // Background floor
+  for(let r=1; r<rows-1; r++)
+    for(let c=1; c<cols-1; c++)
+      this.add.image(c*TILE+TILE/2, r*TILE+TILE/2, 'floor');
+
+  // Visual border walls
+  for(let c=0; c<cols; c++){
+    this.add.image(c*TILE+TILE/2, TILE/2, 'wall');
+    this.add.image(c*TILE+TILE/2, (rows-1)*TILE+TILE/2, 'wall');
+  }
+  for(let r=0; r<rows; r++){
+    this.add.image(TILE/2, r*TILE+TILE/2, 'wall');
+    this.add.image((cols-1)*TILE+TILE/2, r*TILE+TILE/2, 'wall');
+  }
+
+  // Decorative desks
+  [[3,3],[5,2],[cols-4,3],[cols-3,rows-4],[Math.floor(cols/2),2]].forEach(([c,r])=>{
+    if(c>0&&c<cols-1&&r>0&&r<rows-1)
+      this.add.image(c*TILE+TILE/2, r*TILE+TILE/2, 'desk').setAlpha(0.55);
+  });
+
+  // Physics walls (invisible)
+  const wallGroup = this.physics.add.staticGroup();
+  for(let c=0; c<cols; c++){
+    wallGroup.create(c*TILE+TILE/2, TILE/2, 'wall').setVisible(false).refreshBody();
+    wallGroup.create(c*TILE+TILE/2, (rows-1)*TILE+TILE/2, 'wall').setVisible(false).refreshBody();
+  }
+  for(let r=1; r<rows-1; r++){
+    wallGroup.create(TILE/2, r*TILE+TILE/2, 'wall').setVisible(false).refreshBody();
+    wallGroup.create((cols-1)*TILE+TILE/2, r*TILE+TILE/2, 'wall').setVisible(false).refreshBody();
+  }
+
+  // Player
+  player = this.physics.add.sprite(TILE*2+TILE/2, TILE*2+TILE/2, 'player');
+  player.setCollideWorldBounds(true);
+  player.body.setSize(24,24);
+  this.physics.add.collider(player, wallGroup);
+
+  // NPCs
+  const npcGroup = this.physics.add.staticGroup();
+  wd.npcs.forEach(npcDef=>{
+    const cx = npcDef.gridX*TILE+TILE/2;
+    const cy = npcDef.gridY*TILE+TILE/2;
+    const npc = npcGroup.create(cx, cy, npcDef.sprite);
+    npc.setData('def', npcDef);
+    npc.body.setSize(30,30);
+    npc.refreshBody();
+    if(npcDef.label){
+      this.add.text(cx, cy-26, npcDef.label,
+        {font:'7px "Space Mono"', fill:'#6868a8'}).setOrigin(0.5);
+    }
+    const bub = this.add.image(cx, cy-36, 'bub').setScale(0.9);
+    this.tweens.add({targets:bub, y:cy-40, duration:1000, yoyo:true, repeat:-1, ease:'Sine.easeInOut'});
+    npc.setData('bub', bub);
+  });
+  this.npcGroup = npcGroup;
+
+  // Exit doors — plain images, no physics
+  this.exitDoors = [];
+  wd.exits.forEach(exitDef=>{
+    const dx = Math.floor(W*exitDef.x/TILE)*TILE + TILE/2;
+    const dy = Math.floor(H*exitDef.y/TILE)*TILE + TILE/2;
+    const door = this.add.image(dx, dy, 'door_locked');
+    door.setData('exitDef', exitDef);
+    door.setData('unlocked', false);
+    door.setData('px', dx);  // store pixel coords
+    door.setData('py', dy);
+    this.add.text(dx, dy-28, exitDef.label,
+      {font:'7px "Press Start 2P"', fill:'#556688'}).setOrigin(0.5);
+    const lockTxt = this.add.text(dx, dy+24, '🔒', {font:'14px sans-serif'}).setOrigin(0.5);
+    door.setData('lockIcon', lockTxt);
+    this.exitDoors.push(door);
+  });
+
+  // Input
+  cursors = this.input.keyboard.createCursorKeys();
+  actKey  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+  zKey    = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+
+  // World label
+  this.add.text(W/2, TILE*0.6, wd.label,
+    {font:'7px "Press Start 2P"', fill:'#3a3a6a'}).setOrigin(0.5);
+
+  const isMobile = ('ontouchstart' in window)||navigator.maxTouchPoints>0;
+  setMsg(isMobile
+    ? '↕↔ muoviti · ✦ interagisci con NPC vicini'
+    : '↑↓←→ muoviti · SPAZIO o Z vicino a un NPC per interagire');
+
+  // Signal that gUpdate can safely run
+  gameRunning = true;
+}
+
+// ── gUpdate ────────────────────────────
+function gUpdate(){
+  // Triple guard: gameRunning flag + player + cursors
+  if(!gameRunning || evActive || !player || !cursors || !scn) return;
+  // Extra safety: if player body is destroyed, bail
+  if(!player.body || !player.active) return;
+
+  try{
+  const spd = 160;
+  const goL = cursors.left.isDown  || TOUCH.left;
+  const goR = cursors.right.isDown || TOUCH.right;
+  const goU = cursors.up.isDown    || TOUCH.up;
+  const goD = cursors.down.isDown  || TOUCH.down;
+  const goAct = (actKey&&actKey.isDown) || (zKey&&zKey.isDown) || TOUCH.act;
+
+  let vx=0, vy=0;
+  if(goL) vx=-spd; else if(goR) vx=spd;
+  if(goU) vy=-spd; else if(goD) vy=spd;
+  if(vx!==0&&vy!==0){ vx*=0.707; vy*=0.707; }
+  player.setVelocity(vx, vy);
+  if(vx<0) player.setFlipX(true);
+  else if(vx>0) player.setFlipX(false);
+
+  // Inner Critic counter
+  if(vx!==0||vy!==0) criticSteps++;
+  if(!criticSpawned && !criticActive && criticSteps>CRITIC_THRESHOLD){
+    const vis = ST.world.visited.length;
+    const tot = currentWorldDef.npcs.length;
+    if(vis>=1 && vis<tot){
+      criticSpawned = true;
+      criticActive  = true;
+      const cd = INNER_CRITICS[ST.world.id];
+      if(cd) triggerCritic(cd);
+    }
+  }
+
+  // Interact — edge detect (press, not hold)
+  const actNow = goAct && !lastActPressed;
+  lastActPressed = goAct;
+
+  if(actNow && !evActive){
+    let nearest=null, nearestDist=Infinity;
+    scn.npcGroup.getChildren().forEach(npc=>{
+      const def = npc.getData('def');
+      if(!def || ST.world.visited.includes(def.id)) return;
+      const dist = Phaser.Math.Distance.Between(player.x,player.y, npc.x,npc.y);
+      if(dist<TILE*2.5 && dist<nearestDist){ nearest=npc; nearestDist=dist; }
+    });
+    if(nearest){
+      triggerNPC(nearest.getData('def'), nearest);
+      return;
+    }
+    if(!exitTriggered){
+      scn.exitDoors.forEach(door=>{
+        if(!door.getData('unlocked')) return;
+        const dist = Phaser.Math.Distance.Between(
+          player.x, player.y, door.getData('px'), door.getData('py'));
+        if(dist < TILE*2) doExit(door.getData('exitDef'));
+      });
+    }
+  }
+
+  // Walk-through exit
+  if(!exitTriggered && !evActive){
+    scn.exitDoors.forEach(door=>{
+      if(!door.getData('unlocked')) return;
+      const dist = Phaser.Math.Distance.Between(
+        player.x, player.y, door.getData('px'), door.getData('py'));
+      if(dist < TILE*0.9) doExit(door.getData('exitDef'));
+    });
+  }
+
+  // Door unlock check
+  const allVisited = currentWorldDef.npcs.every(n=>ST.world.visited.includes(n.id));
+  scn.exitDoors.forEach(door=>{
+    if(!door.getData('unlocked') && allVisited){
+      door.setTexture('door_open');
+      door.getData('lockIcon')?.setText('✓');
+      door.setData('unlocked', true);
+      setMsg('Tutti incontrati! Avvicinati a una porta e premi SPAZIO/Z per uscire.');
+    }
+  });
+
+  }catch(e){ /* swallow update errors — never crash the game loop */ }
+}
+
+// ── NPC / Critic triggers ───────────────
+function triggerNPC(def, npc){
+  evActive = true;
+  curEv    = def;
+  player.setVelocity(0,0);
+  // Hide bubble immediately — don't wait for gUpdate
+  const bub = npc?.getData('bub');
+  if(bub) bub.setVisible(false);
+  showDialog(def);
+}
+
+function triggerCritic(def){
+  if(evActive){ criticActive=false; criticSpawned=false; return; } // bail if busy
+  evActive = true;
+  curEv    = {...def, isCritic:true};
+  player?.setVelocity(0,0);
+  const flash = document.createElement('div');
+  flash.style.cssText = 'position:absolute;inset:0;background:rgba(200,0,0,.15);z-index:40;pointer-events:none;';
+  document.getElementById('gArea').appendChild(flash);
+  setTimeout(()=>{ flash.remove(); showDialog({...def,isCritic:true}); }, 250);
+}
+
+// ── Dialogs ─────────────────────────────
+function showDialog(def){
+  const d = def.dlg;
+  const boxClass = def.id==='critic'||def.isCritic ? 'critic'
+    : def.sprite==='sis' ? 'sister'
+    : def.sprite==='tech' ? 'tech' : '';
+  document.getElementById('dlLayer').innerHTML = `
+  <div class="dl-ov">
+    <div class="dl-box ${boxClass}">
+      <div class="dl-spk" style="color:${d.color}">${d.spk}</div>
+      <div class="dl-txt">${d.txt}</div>
+      <div class="dl-choices">
+        ${d.chs.map(c=>`<button class="ch-btn" data-out="${c.out}">${c.t}</button>`).join('')}
+      </div>
+    </div>
+  </div>`;
+  document.querySelectorAll('.ch-btn').forEach(b=>{
+    b.addEventListener('click',()=>handleChoice(def, b.dataset.out));
+  });
+}
+
+function handleChoice(def, out){
+  const res = def.outs[out];
+  // Apply stat changes
+  Object.entries(res.stat).forEach(([k,v])=>{
+    ST.gs[k] = Math.max(0, (ST.gs[k]||0) + v);
+  });
+  ST.gs.RADAR = Math.max(0, (ST.gs.RADAR||0) + 1);
+  ST.world.choices.push({npc:def.id, out});
+  showDebrief(def, res);
+}
+
+function showDebrief(def, res){
+  const db = def.db;
+  const pills = Object.entries(res.stat).map(([k,v])=>{
+    const col = v<0 ? '#f76a6a' : SC[k];
+    return `<span class="st-pill" style="color:${col};border-color:${col}">${k} ${v>0?'+':''}${v}</span>`;
+  }).join('') + `<span class="st-pill" style="color:${SC.RADAR};border-color:${SC.RADAR}">RADAR +1</span>`;
+
+  document.getElementById('dlLayer').innerHTML = `
+  <div class="dl-ov">
+    <div class="dl-box debrief">
+      <div class="db-sec">
+        <div class="db-lbl">📋 PATTERN RICONOSCIUTO</div>
+        <div style="font-weight:700;font-size:.88rem;margin-bottom:.4rem">${db.pat}</div>
+        <div class="db-ins">${db.ins}<div class="db-data">📊 ${db.data}</div></div>
+      </div>
+      <div class="db-sec">
+        <div class="db-lbl">⚡ ESITO</div>
+        <div style="font-size:.8rem;margin-bottom:.38rem;color:#e8e8f8">${res.msg}</div>
+        <div class="st-pills">${pills}</div>
+      </div>
+      <button class="btn-next" id="btnCloseDb">Continua →</button>
+    </div>
+  </div>`;
+  document.getElementById('btnCloseDb').addEventListener('click', closeDebrief);
+}
+
+function closeDebrief(){
+  if(curEv){
+    if(curEv.id==='critic'||curEv.isCritic){
+      ST.world.patterns.push(curEv.db.pat);
+      criticActive = false;
+    } else {
+      ST.world.visited.push(curEv.id);
+      ST.world.patterns.push(curEv.db.pat);
+    }
+  }
+  document.getElementById('dlLayer').innerHTML = '';
+  evActive = false;
+  curEv    = null;
+  updHUD();
+
+  const total     = currentWorldDef.npcs.length;
+  const remaining = total - ST.world.visited.length;
+  setMsg(remaining > 0
+    ? `${remaining} personaggi rimasti. Trovali tutti per sbloccare le uscite!`
+    : 'Tutti incontrati! Avvicinati a una porta e premi SPAZIO/Z per uscire.');
+}
+
+// ── Exit handling ───────────────────────
+function doExit(exitDef){
+  if(exitTriggered || !gameRunning) return;
+  exitTriggered = true;
+  gameRunning   = false;
+  evActive      = true;
+  player?.setVelocity(0,0);
+
+  // Destroy Phaser synchronously
+  if(PG){ try{ PG.destroy(true); }catch(e){} PG=null; }
+  player=null; cursors=null; actKey=null; zKey=null; scn=null;
+
+  if(exitDef.id==='end_startup'||exitDef.id==='end_consulenza'||exitDef.id==='end_piva'){
+    show('outcome');
+    renderOutcome();
+    return;
+  }
+
+  // Record completion and go back to map
+  if(!ST.worldHistory.includes(ST.world.id)) ST.worldHistory.push(ST.world.id);
+  ST.worldPath = exitDef.id;
+  const worldIntro = WORLD_INTROS[ST.world.id]||{title:ST.world.id.toUpperCase()};
+
+  document.getElementById('dlLayer').innerHTML = `
+  <div class="wt-overlay">
+    <div class="wt-title">${worldIntro.emoji||'🏁'} MONDO COMPLETATO</div>
+    <div class="wt-sub">Tornando alla mappa — scegli il tuo prossimo percorso.</div>
+    <div class="wt-progress"><div class="wt-fill"></div></div>
+  </div>`;
+
+  setTimeout(()=>{
+    document.getElementById('dlLayer').innerHTML = '';
+    exitTriggered = false;
+    evActive      = false;
+    show('map');
+    renderMap();
+  }, 2200);
+}
+
+function setMsg(t){ const el=document.getElementById('gMsg'); if(el) el.textContent=t; }
+
+// ══════════════════════════════════════
+// OUTCOME
+// ══════════════════════════════════════
+function renderOutcome(){
+  const cls  = CLASSES[ST.char.cls];
+  const gs   = ST.gs;
+  const init = ST.char.stats;
+
+  const statPills = Object.entries(gs).map(([k,v])=>{
+    const d    = v-(init[k]||0);
+    const dstr = d>0?` (+${d})`:d<0?` (${d})`:'';
+    return `<span class="st-pill" style="color:${SC[k]};border-color:${SC[k]}">${k} ${v}${dstr}</span>`;
+  }).join('');
+
+  const allPatterns = [...new Set(ST.world.patterns)];
+  const patHtml = allPatterns.length>0
+    ? allPatterns.map(p=>`
+        <div class="oc-row">
+          <span class="oc-tag" style="background:rgba(106,247,200,.1);color:#6af7c8;border:1px solid rgba(106,247,200,.3)">✓</span>
+          <span>${p}</span>
+        </div>`).join('')
+    : '<div style="color:#6868a8;font-size:.78rem">Esplora tutti gli NPC per riconoscere i pattern.</div>';
+
+  const radarGain = gs.RADAR-(init.RADAR||3);
+  const radarTxt  = radarGain>=8
+    ? 'RADAR molto alto: riesci a leggere il sistema con chiarezza.'
+    : radarGain>=4
+    ? 'RADAR in crescita: hai iniziato a vedere i meccanismi.'
+    : 'RADAR basso: torna a esplorare tutti gli NPC per costruire la tua lettura del sistema.';
+
+  const worldLabel = ST.worldPath==='startup' ? 'Startup Tech' : 'Big Consulenza';
+  const pathNote   = ST.worldPath==='startup'
+    ? `Come ${cls.name} in una Startup hai trovato velocità e autonomia — ma anche confini assenti e credit gap elevato.`
+    : `Come ${cls.name} in una Big Consulenza hai trovato struttura e visibilità — ma anche criteri impliciti e double bind.`;
+
+  document.getElementById('s-outcome').innerHTML = `
+    <div class="oc-em">🏁</div>
+    <div class="oc-title">PERCORSO COMPLETATO<br>PMI → ${worldLabel.toUpperCase()}</div>
+    <div class="oc-desc">Hai navigato 2 mondi come <strong>${cls.name}</strong>.<br>
+    Ogni scelta ha costruito la tua mappa — non come giudizio, ma come informazione.</div>
+    <div class="oc-card"><div class="oc-card-title">// STAT FINALI</div>
+    <div class="st-pills">${statPills}</div></div>
+    <div class="oc-card"><div class="oc-card-title">// PATTERN RICONOSCIUTI</div>
+    <div class="oc-rows">${patHtml}</div></div>
+    <div class="oc-take">
+      <strong>${radarTxt}</strong><br><br>
+      ${pathNote}<br><br>
+      <em>Una cosa da portare fuori dal gioco:</em> il mercato non è neutro.
+      Ha strutture, bias e pattern ricorrenti. Conoscerli non significa accettarli —
+      significa scegliere consapevolmente quando adattarsi, quando resistere, e quando cambiare ambiente.
+    </div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center">
+      <button class="btn-replay" id="btnOtherPath">↩ Prova l'altro percorso</button>
+      <button class="btn-replay" id="btnRestart">↺ Ricomincia da capo</button>
+    </div>`;
+
+  document.getElementById('btnOtherPath').onclick = ()=>{
+    gameRunning=false; evActive=false; exitTriggered=false;
+    if(PG){try{PG.destroy(true);}catch(e){} PG=null;}
+    player=null; cursors=null; scn=null;
+    show('map');
+    renderMap();
+  };
+
+  document.getElementById('btnRestart').onclick = ()=>{
+    ST.step=0; ST.ans={hard:{},soft:{},pref:{}};
+    ST.char=null; ST.gs={SKILL:0,VOICE:0,CLARITY:0,NETWORK:0,ENERGY:10,RADAR:0};
+    ST.world={id:null,visited:[],choices:[],patterns:[]};
+    ST.worldPath=null; ST.worldHistory=[];
+    gameRunning=false; evActive=false; exitTriggered=false;
+    if(PG){try{PG.destroy(true);}catch(e){} PG=null;}
+    player=null; cursors=null; scn=null;
+    show('title');
+  };
+}
+
+
+// ══════════════════════════════════════
+// WORLD MAP
+// ══════════════════════════════════════
+// ── MAP CONFIG — affinity graph, all nodes always clickable ──
+const MAP_NODES = [
+  {id:'pmi',       emoji:'🏭', label:'PMI\nSettore',    color:'#ffb74d',
+   affinities:['startup','corporate'],
+   desc:'Piccola impresa, dati reali, zero struttura'},
+  {id:'startup',   emoji:'🚀', label:'Startup\nTech',   color:'#ce93d8',
+   affinities:['pmi','piva'],
+   desc:'Velocità, autonomia, instabilità'},
+  {id:'consulenza',emoji:'🏢', label:'Big\nConsulenza', color:'#4fc3f7',
+   affinities:['startup','corporate'],
+   desc:'Brand, struttura, criteri opachi'},
+  {id:'corporate', emoji:'🏗️', label:'Large\nCorporate',color:'#81c784',
+   affinities:['pmi','consulenza'],
+   desc:'Risorse, politica, rete informale'},
+  {id:'piva',      emoji:'💡', label:'P.IVA &\nFounder', color:'#6af7c8',
+   affinities:['startup','corporate'],
+   desc:'Autonomia totale, costruisci il tuo'},
+];
+
+// Edges derived from affinities (deduplicated)
+const MAP_EDGES = [];
+MAP_NODES.forEach(n=>{
+  n.affinities.forEach(b=>{
+    const exists = MAP_EDGES.some(e=>(e[0]===n.id&&e[1]===b)||(e[0]===b&&e[1]===n.id));
+    if(!exists) MAP_EDGES.push([n.id,b]);
+  });
+});
+
+// Node positions — pentagon, flat-top, center at (300,260), radius 190
+// Vertices starting from top, clockwise: pmi(top), consulenza(top-right), corporate(bottom-right), piva(bottom-left), startup(top-left)
+// angle offset -90deg so first vertex points up
+const MAP_POS = (()=>{
+  const cx=300, cy=255, r=185;
+  const ids=['pmi','consulenza','corporate','piva','startup'];
+  const pos={};
+  ids.forEach((id,i)=>{
+    const angle = (Math.PI*2/5)*i - Math.PI/2; // start from top
+    pos[id]={ x: Math.round(cx+r*Math.cos(angle)), y: Math.round(cy+r*Math.sin(angle)) };
+  });
+  return pos;
+})();
+
+function renderMap(){
+  const done = ST.worldHistory;
+  const VW=600, VH=510;
+  const NW=84, NH=84; // node box size
+
+  // Build SVG edges
+  const edgeSVG = MAP_EDGES.map(([a,b])=>{
+    const pa=MAP_POS[a], pb=MAP_POS[b];
+    const na=MAP_NODES.find(n=>n.id===a);
+    const doneA=done.includes(a), doneB=done.includes(b);
+    const stroke = (doneA||doneB) ? '#3a4a6a' : '#232340';
+    const sw = (doneA&&doneB) ? 2 : 1.5;
+    return `<line x1="${pa.x}" y1="${pa.y}" x2="${pb.x}" y2="${pb.y}"
+      stroke="${stroke}" stroke-width="${sw}" stroke-dasharray="${doneA&&doneB?'none':'6,4'}" opacity=".7"/>`;
+  }).join('');
+
+  // Build node HTML (as foreignObject)
+  const nodesSVG = MAP_NODES.map(n=>{
+    const pos = MAP_POS[n.id];
+    const isDone = done.includes(n.id);
+    const bg     = isDone ? n.color+'33' : n.color+'18';
+    const border = n.color;
+    const opacity= isDone ? '.75' : '1';
+    const statusTxt = isDone ? '✓ Completato' : 'Clicca per entrare';
+    const statusCol = isDone ? '#6af7c8' : n.color;
+    const badge  = isDone ? `<div class="mn-done-badge">✓</div>` : '';
+    // foreignObject: wide enough for card + label below, centered on pos
+    const foW = 110, foH = 130;
+    return `
+    <foreignObject x="${pos.x-foW/2}" y="${pos.y-NH/2-8}" width="${foW}" height="${foH}" class="mn-fo">
+      <div xmlns="http://www.w3.org/1999/xhtml"
+           class="mn-card" data-world="${n.id}"
+           style="opacity:${opacity};width:${NW}px;margin:0 auto;">
+        <div class="mn-box" style="background:${bg};border-color:${border};width:${NW}px;height:${NH}px;">
+          ${badge}
+          <div class="mn-emoji">${n.emoji}</div>
+          <div class="mn-lbl" style="color:${n.color}">${n.label}</div>
+        </div>
+        <div class="mn-status" style="color:${statusCol}">${statusTxt}</div>
+        <div class="mn-affinities">${n.desc}</div>
+      </div>
+    </foreignObject>`;
+  }).join('');
+
+  document.getElementById('mapWrap').innerHTML = `
+    <div class="map-title">🗺️ CAREER WORLD MAP</div>
+    <div class="map-subtitle">Cinque mondi, tutti accessibili. Ogni lato connette contesti affini.</div>
+    <div class="map-free-note">Inizia da dove vuoi — le linee mostrano affinità di pattern, non sequenze obbligatorie.</div>
+    <div class="map-svg-wrap">
+      <svg viewBox="0 0 ${VW} ${VH}" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        ${edgeSVG}
+        ${nodesSVG}
+      </svg>
+    </div>`;
+
+  // Click handlers — all nodes clickable
+  document.querySelectorAll('.mn-card').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const wid = el.dataset.world;
+      const wdef = WORLD_DEFS[wid];
+      if(!wdef){ console.warn('World not found:',wid); return; }
+      ST.world = {id:wid, visited:[], choices:[], patterns:[]};
+      const label = wdef.label || wid.toUpperCase();
+      show('game');
+      renderHUD(label);
+      setTimeout(()=>initGame(wid), 100);
+    });
+  });
+}
+
+
+// ══════════════════════════════════════
+// STARS + BOOT
+// ══════════════════════════════════════
+function buildStars(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<70;i++){
+    const s=document.createElement('div');s.className='sd';
+    const sz=Math.random()*2.5+.5;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;--dl:${Math.random()*4}s`;
+    c.appendChild(s);
+  }
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  buildStars();
+  document.getElementById('btnStart').onclick=()=>{show('assess');renderAssess();};
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.60.0/phaser.min.js"></script>
+</body>
+</html>
