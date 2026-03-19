@@ -136,21 +136,30 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 .g-area canvas{display:block;width:100%;image-rendering:pixelated;flex-shrink:0}
 .g-msg{position:absolute;bottom:0;left:0;right:0;background:rgba(9,9,15,.92);border-top:1px solid var(--border);padding:.5rem 1.1rem;font-family:'Space Mono',monospace;font-size:.62rem;color:var(--accent3);min-height:38px;display:flex;align-items:center;z-index:20}
 
-/* touch controls */
-#tc{position:absolute;bottom:42px;left:0;right:0;display:none;pointer-events:none;z-index:30;padding:0 .8rem .4rem}
-@media(hover:none),(max-width:600px){#tc{display:flex;justify-content:space-between;align-items:flex-end}}
+/* touch controls — fixed bar below canvas, never overlaps */
+#tc{display:none;pointer-events:none;background:rgba(9,9,15,.95);border-top:1px solid var(--border);padding:.45rem .8rem .55rem;flex-shrink:0;width:100%;box-sizing:border-box}
+@media(hover:none),(max-width:600px){
+  #tc{display:flex;justify-content:space-between;align-items:center}
+  .g-msg{display:none} /* msg bar hidden on mobile — space used by controls */
+}
 .tc-l{display:flex;gap:.4rem;pointer-events:all}
 .tc-r{pointer-events:all}
-.tc-btn{width:54px;height:54px;border-radius:50%;border:2px solid rgba(255,255,255,.18);background:rgba(0,0,0,.45);color:rgba(255,255,255,.7);font-size:1.2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:none;transition:background .1s,border-color .1s}
+.tc-btn{width:52px;height:52px;border-radius:50%;border:2px solid rgba(255,255,255,.18);background:rgba(0,0,0,.45);color:rgba(255,255,255,.7);font-size:1.2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:none;transition:background .1s,border-color .1s}
 .tc-btn.pressed{background:rgba(124,106,247,.45);border-color:rgba(124,106,247,.8)}
-.tc-jump{width:62px;height:62px;background:rgba(106,247,200,.12);border-color:rgba(106,247,200,.35);font-size:1.4rem}
+.tc-jump{width:60px;height:60px;background:rgba(106,247,200,.12);border-color:rgba(106,247,200,.35);font-size:1.4rem}
 .tc-jump.pressed{background:rgba(106,247,200,.4)}
 
 /* dialog */
-.dl-ov{position:absolute;inset:0;background:rgba(0,0,0,.72);display:flex;align-items:flex-end;justify-content:center;padding:1.1rem;z-index:50;animation:fadein .2s}
+.dl-ov{position:absolute;inset:0;background:rgba(0,0,0,.72);display:flex;align-items:flex-end;justify-content:center;padding:.75rem;z-index:50;animation:fadein .2s;overflow-y:auto}
 @keyframes fadein{from{opacity:0}}
-.dl-box{width:100%;max-width:640px;background:var(--surface);border:1.5px solid var(--accent);border-radius:12px;padding:1.3rem;box-shadow:0 0 40px rgba(124,106,247,.18);animation:slideup .25s cubic-bezier(.22,1,.36,1)}
+.dl-box{width:100%;max-width:640px;background:var(--surface);border:1.5px solid var(--accent);border-radius:12px;padding:1.3rem;box-shadow:0 0 40px rgba(124,106,247,.18);animation:slideup .25s cubic-bezier(.22,1,.36,1);max-height:88vh;overflow-y:auto;box-sizing:border-box}
 @keyframes slideup{from{transform:translateY(18px);opacity:0}}
+@media(max-width:640px){
+  .dl-ov{align-items:flex-start;padding-top:max(.5rem,env(safe-area-inset-top))}
+  .dl-box{max-height:96vh;border-radius:10px;padding:.9rem;font-size:.9rem}
+  .dl-txt{font-size:.82rem;line-height:1.6}
+  .ch-btn{font-size:.76rem;padding:.52rem .7rem}
+}
 .dl-box.critic{border-color:var(--danger);box-shadow:0 0 40px rgba(247,106,106,.15)}
 .dl-box.sister{border-color:#e53935;box-shadow:0 0 40px rgba(229,57,53,.18)}
 .dl-box.tech{border-color:var(--warn);box-shadow:0 0 40px rgba(247,196,106,.15)}
@@ -162,6 +171,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 .ch-btn:hover{border-color:var(--accent);background:rgba(124,106,247,.1)}
 .db-sec{margin-bottom:.85rem}
 .db-rows{display:flex;flex-direction:column;gap:.3rem;margin-top:.3rem}
+.wd-insight{border-radius:0 6px 6px 0;margin-bottom:.3rem;transition:all .3s}
+.wd-insight-new{animation:fadein .4s ease both}
 .db-row{display:flex;gap:.5rem;align-items:flex-start;font-size:.72rem;line-height:1.5}
 .db-tag{color:#6af7c8;flex-shrink:0;font-weight:bold}
 .db-lbl{font-family:'Space Mono',monospace;font-size:.5rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.28rem}
@@ -171,7 +182,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 .st-pill{font-family:'Space Mono',monospace;font-size:.56rem;padding:.2rem .52rem;border-radius:20px;border:1px solid}
 
 /* world transition */
-.wt-overlay{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;z-index:100}
+.wt-overlay{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:1rem;z-index:100;overflow-y:auto;padding:1.5rem}
+@media(min-height:600px){.wt-overlay{justify-content:center}}
 .wt-title{font-family:'Press Start 2P',monospace;font-size:clamp(.7rem,2vw,1.1rem);color:var(--accent3);text-align:center;line-height:1.8}
 .wt-sub{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--muted);text-align:center}
 .wt-progress{width:200px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:.5rem}
@@ -248,8 +260,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 .pp-status.open{color:#6af7c8;background:rgba(106,247,200,.08);border:1px solid rgba(106,247,200,.2);}
 
 /* world intro overlay */
-.wi-ov{position:absolute;inset:0;background:rgba(5,5,15,.96);display:flex;align-items:center;justify-content:center;z-index:200;padding:1.5rem;animation:fadein .3s}
-.wi-box{width:100%;max-width:560px;display:flex;flex-direction:column;gap:1rem}
+.wi-ov{position:absolute;inset:0;background:rgba(5,5,15,.96);display:flex;align-items:flex-start;justify-content:center;z-index:200;padding:1.5rem;animation:fadein .3s;overflow-y:auto}
+.wi-box{width:100%;max-width:560px;display:flex;flex-direction:column;gap:1rem;padding-bottom:1.5rem}
+@media(min-height:700px){.wi-ov{align-items:center}}
 .wi-emoji{font-size:3rem;text-align:center}
 .wi-title{font-family:'Press Start 2P',monospace;font-size:clamp(.7rem,2vw,1.1rem);text-align:center;line-height:1.8}
 .wi-what{font-size:.8rem;color:var(--muted);line-height:1.65;font-style:italic;text-align:center}
@@ -314,16 +327,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
   <div class="g-hud" id="gHud"></div>
   <div class="g-area" id="gArea">
     <div class="g-msg" id="gMsg">Muoviti con ← → ↑ ↓ · Premi SPAZIO o Z vicino a un NPC per interagire</div>
-    <div id="tc">
-      <div class="tc-l">
-        <div class="tc-btn" id="tc-left">◀</div>
-        <div class="tc-btn" id="tc-right">▶</div>
-        <div class="tc-btn" id="tc-up">▲</div>
-        <div class="tc-btn" id="tc-down">▼</div>
-      </div>
-      <div class="tc-r"><div class="tc-btn tc-jump" id="tc-act">✦</div></div>
-    </div>
     <div id="dlLayer"></div>
+  </div>
+  <div id="tc">
+    <div class="tc-l">
+      <div class="tc-btn" id="tc-left">◀</div>
+      <div class="tc-btn" id="tc-right">▶</div>
+      <div class="tc-btn" id="tc-up">▲</div>
+      <div class="tc-btn" id="tc-down">▼</div>
+    </div>
+    <div class="tc-r"><div class="tc-btn tc-jump" id="tc-act">✦</div></div>
   </div>
 </div>
 
@@ -2124,6 +2137,162 @@ function typeOf(n){
   return 'npc';
 }
 
+// ══════════════════════════════════════════════════════════════
+// WORLD DEBRIEF CONTENT
+// 3 levels per world based on interactions completed:
+//   base     (visited >= minRequired: 3npc+1sis+1tech = 5)
+//   medium   (visited >= 7)
+//   complete (visited >= 9)
+// Each level adds to the previous — cumulative learning.
+// ══════════════════════════════════════════════════════════════
+const WORLD_DEBRIEF = {
+
+  pmi: {
+    theme: 'Il lavoro invisibile e il ruolo vago',
+    levels: [
+      { // base — 5+ interactions
+        min: 5,
+        insight: 'Nelle PMI il ruolo tech è spesso indefinito per design, non per caso. Il "fai un po\' di tutto" è una struttura che consuma risorse senza riconoscerle. Hai iniziato a vedere questo meccanismo.',
+        takeaway: 'Documentare il proprio lavoro non è burocrazia — è il modo per rendere visibile ciò che altrimenti rimane invisibile nelle valutazioni.',
+        badge: '👁️ Occhi aperti',
+      },
+      { // medium — 7+ interactions
+        min: 7,
+        insight: 'Il credito gap e il lavoro invisibile si sommano: fai più di quello che è scritto nel tuo ruolo, e quello che fai non viene attribuito correttamente. Nelle PMI questo schema si ripete sistematicamente — non è sfortuna, è struttura.',
+        takeaway: 'La strategia più efficace nella PMI è duplice: chiedere chiarezza scritta sul ruolo all\'inizio, e costruire alleanze con chi può nominare il tuo lavoro quando tu non sei nella stanza.',
+        badge: '🗺️ Mappa del territorio',
+      },
+      { // complete — 9+ interactions
+        min: 9,
+        insight: 'Hai esplorato quasi ogni angolo di questo contesto. La PMI offre esposizione reale e impatto immediato — ma il prezzo è spesso la mancanza di struttura, mentorship e riconoscimento formale. Non è un contesto da evitare: è un contesto da navigare con consapevolezza, sapendo cosa stai accettando e cosa stai costruendo.',
+        takeaway: 'Il valore della PMI è nell\'esperienza concreta che costruisci. Portala fuori documentata: non "ho lavorato in una PMI", ma "ho costruito X che ha prodotto Y risultato misurabile".',
+        badge: '🏭 Esperta di contesto PMI',
+      },
+    ],
+  },
+
+  startup: {
+    theme: 'Il credit gap e i confini professionali',
+    levels: [
+      {
+        min: 5,
+        insight: 'Le startup vendono autonomia e impatto — e spesso le mantengono. Ma "cultura famiglia" e "siamo tutti fondatori" sono frame che possono normalizzare confini assenti e lavoro non riconosciuto. Hai iniziato a distinguere il valore reale dal frame narrativo.',
+        takeaway: 'In una startup, documentare per iscritto dopo ogni conversazione importante non è paranoia — è professionalità. Le email di recap proteggono il tuo lavoro e creano una traccia del tuo contributo.',
+        badge: '📝 Prima documentazione',
+      },
+      {
+        min: 7,
+        insight: 'Il credit gap nelle startup è il 35% più alto che nelle corporate, principalmente per l\'informalità dei processi. Le idee circolano velocemente e senza traccia. Hai visto come si manifesta e come le alleate possono aiutare a renderlo visibile sistematicamente.',
+        takeaway: 'Costruire una rete di mutuo riconoscimento con 2-3 colleghe è la strategia più efficace contro il credit gap. Non basta lavorare bene — serve qualcuno che nomini il tuo lavoro nelle stanze dove non sei.',
+        badge: '🤝 Rete di supporto',
+      },
+      {
+        min: 9,
+        insight: 'Hai esplorato l\'intera ecologia della startup: il founder visionario, il collega competitivo, la cultura del crunch, il pitch agli investitori. La startup è l\'ambiente con il rapporto rischio/opportunità più alto. Sa che sei pronta ad affrontarne la volatilità — e sai come proteggerti mentre lo fai.',
+        takeaway: 'Nella startup la tua traiettoria dipende molto dalla qualità delle relazioni che costruisci. Scegli le tue battaglie con cura: non tutto vale la spesa energetica. Documentare, costruire alleanze, tenere i confini sui carichi non ragionevoli.',
+        badge: '🚀 Navigatrice di startup',
+      },
+    ],
+  },
+
+  consulenza: {
+    theme: 'Visibilità, criteri opachi e double bind',
+    levels: [
+      {
+        min: 5,
+        insight: 'In consulenza il lavoro tecnico è necessario ma non sufficiente. I criteri di avanzamento sono spesso impliciti e costruiti su modelli di "executive presence" che riflettono norme maschili. Hai iniziato a mappare questi meccanismi.',
+        takeaway: 'Chiedere esplicitamente i criteri di promozione non è aggressivo — è professionale. "Cosa dovrei fare nei prossimi 6 mesi per essere considerata per il livello successivo?" è una domanda che va posta e scritta.',
+        badge: '🔍 Prima mappatura',
+      },
+      {
+        min: 7,
+        insight: 'Il double bind — troppo assertiva se parla, poco propositiva se tace — è documentato e sistematico nelle consulenze. L\'amplification strategy (ripetere le idee delle colleghe attribuendole esplicitamente) è la risposta collettiva più efficace. Hai visto come funziona in pratica.',
+        takeaway: 'Il mutuo riconoscimento attivo non è solo gentilezza — è strategia. Costruisci un cerchio di 2-3 colleghe con cui praticare sistematicamente: "Voglio aggiungere a quello che ha detto X..." o "Come stava dicendo Y prima..."',
+        badge: '📣 Amplification in pratica',
+      },
+      {
+        min: 9,
+        insight: 'Hai attraversato l\'intera esperienza consulenza: il partner con aspettative impossibili, il pay gap, il mentoring non riconosciuto, le sfide tecniche con stakeholder multipli. La consulenza forma il profilo professionale più velocemente di quasi ogni altro contesto — ma il prezzo è alto se non si naviga consapevolmente la politica interna.',
+        takeaway: 'Il brand che costruisci in consulenza è il tuo asset più prezioso. Gestiscilo attivamente: qual è la tua specializzazione emergente? Chi sa cosa fai? Come compare il tuo nome nelle conversazioni importanti?',
+        badge: '🏢 Esperta di consulenza',
+      },
+    ],
+  },
+
+  corporate: {
+    theme: 'Reti informali, sponsor e criteri di potenziale',
+    levels: [
+      {
+        min: 5,
+        insight: 'La large corporate ha risorse e stabilità — ma le opportunità circolano attraverso reti informali che tendono a riprodurre l\'omofilia. Hai iniziato a capire che la visibilità non arriva automaticamente: va costruita strategicamente.',
+        takeaway: 'La distinzione mentore/sponsor è concreta e importante. Conta quante persone nella tua organizzazione spenderebbero capitale politico per te in una stanza dove non sei presente. Se la risposta è zero, questo è il problema da risolvere prima di qualsiasi altra cosa.',
+        badge: '🌐 Mappa del potere',
+      },
+      {
+        min: 7,
+        insight: 'Il sistema 9-box, i criteri opachi di "potenziale", la maternità penalty nella versione "protettiva" — hai visto come le corporate producono discriminazione strutturale attraverso meccanismi che sembrano neutri. Chiedere i criteri espliciti li rende negoziabili.',
+        takeaway: 'Dichiarare l\'ambizione esplicitamente — "voglio arrivare a X in Y anni, cosa devo fare?" — ancorandola agli obiettivi dell\'organizzazione riduce il backlash. Le donne che non dichiarano le proprie ambizioni vengono sistematicamente ignorate nei processi di successione.',
+        badge: '📊 Criteri visibili',
+      },
+      {
+        min: 9,
+        insight: 'Hai esplorato l\'intera ecologia corporate: dalla valutazione opaca al networking informale, dalla mobilità internazionale con domande illegali alla governance dei dati. La corporate ti dà scala e stabilità — ma richiede di navigare attivamente una struttura costruita su modelli che non ti includevano per default.',
+        takeaway: 'Nelle corporate il cambiamento strutturale è lento, ma il tuo percorso individuale può essere rapido se costruito correttamente. Tre cose da fare subito: trovare uno sponsor (non solo un mentore), rendere visibili i risultati per iscritto ogni mese, e dichiarare esplicitamente le proprie ambizioni al management.',
+        badge: '🏗️ Esperta di corporate',
+      },
+    ],
+  },
+
+  piva: {
+    theme: 'Pricing, confini e autonomia sostenibile',
+    levels: [
+      {
+        min: 5,
+        insight: 'Il lavoro autonomo massimizza la libertà — e massimizza anche la responsabilità di proteggere quella libertà. Il pricing svalutato e lo scope creep sono i due pattern che consumano di più l\'autonomia reale. Hai iniziato a riconoscerli.',
+        takeaway: 'La tariffa giornaliera non è un\'opinione — è il risultato di un calcolo: costi fissi + contributi + margine + tempo non fatturabile. Se non hai mai fatto questo calcolo, farlo è la priorità.',
+        badge: '💰 Valore del lavoro',
+      },
+      {
+        min: 7,
+        insight: 'Il bias di svalutazione del proprio lavoro è documentato e sistematico nelle freelance donna (+22% di gap rispetto agli uomini). La rete professionale — non solo come fonte di clienti, ma come infrastruttura di sopravvivenza — è la risposta strutturale più efficace.',
+        takeaway: 'Trovare 3-5 freelance con cui condividere pricing, segnalare clienti scorretti e passare lavoro in eccesso vale più di qualsiasi ottimizzazione individuale della tariffa. Le freelance che fanno parte di community di pari guadagnano mediamente il 19% in più.',
+        badge: '🤝 Community come strategia',
+      },
+      {
+        min: 9,
+        insight: 'Hai attraversato l\'esperienza completa del lavoro autonomo: il primo cliente che svaluta, lo scope creep notturno, la rete come infrastruttura, il pitch agli investitori con domande asimmetriche, le scelte fiscali, l\'etica nei sistemi AI per i clienti. Il lavoro autonomo nel tech è uno dei contesti con il potenziale più alto — e il più alto rischio di burn-out invisibile se non gestito con struttura.',
+        takeaway: 'Autonomia sostenibile richiede tre cose: tariffe che riflettono il valore reale, confini professionali comunicati in anticipo (non difesi dopo), e una rete che ti supporta quando il pipeline è vuoto. Nessuna delle tre arriva da sola.',
+        badge: '💡 Fondatrice consapevole',
+      },
+    ],
+  },
+
+  pa: {
+    theme: 'Struttura pubblica, precariato e impatto sistemico',
+    levels: [
+      {
+        min: 5,
+        insight: 'La PA e l\'accademia offrono qualcosa che il privato non ha: la possibilità di un impatto sistemico reale, su scala pubblica. Il prezzo è la lentezza strutturale e, nell\'accademia, un precariato documentato tra i più lunghi d\'Europa. Hai iniziato a capire le regole di questo contesto.',
+        takeaway: 'Nella PA il "quick win" è la strategia più efficace per costruire credibilità: risultati dimostrabili con i dati già accessibili aprono porte che le proposte teoriche non aprono. Inizia da quello che puoi fare ora, non da quello che potresti fare con risorse ideali.',
+        badge: '🏛️ Prima navigazione PA',
+      },
+      {
+        min: 7,
+        insight: 'Il precariato accademico italiano ha una struttura che premia la pazienza e la rete più che il merito puro. Le ricercatrici che escono dal sistema accademico lo fanno molto più spesso degli uomini — e spesso per ragioni che non riguardano la qualità della loro ricerca. Le reti di supporto reciproco tra ricercatrici sono documentatamente efficaci.',
+        takeaway: 'Costruire visibilità internazionale — anche senza spostarsi fisicamente — attraverso conferenze, preprint, collaborazioni remote cambia le prospettive in modo non lineare. Una presentazione a una conferenza internazionale vale più di anni di lavoro invisibile.',
+        badge: '🌍 Rete internazionale',
+      },
+      {
+        min: 9,
+        insight: 'Hai attraversato l\'esperienza completa della PA/ricerca: il concorso con bias impliciti, la burocrazia dei sistemi legacy, il precariato strutturale, il trasferimento tecnologico e l\'IP universitaria, il grant writing europeo, la policy per il Ministero. Questo contesto è il più complesso da navigare — e il più importante, perché le decisioni che vengono prese qui riguardano tutti.',
+        takeaway: 'Il profilo ibrido — ricercatrice con competenze di comunicazione pubblica e policy — è il più raro e il più necessario nell\'ecosistema italiano dell\'AI. Se riesci a costruirlo, le opportunità sono uniche.',
+        badge: '🎓 Ricercatrice-ponte',
+      },
+    ],
+  },
+};
+
+
 function patchWorldsV12(){
   // Tag all NPCs with their type — door logic counts by TYPE, not by specific id.
   // Any 3 NPCs of type 'npc' + any 1 of type 'sis' + any 1 of type 'tech' unlocks the door.
@@ -2791,61 +2960,111 @@ function showWorldDebrief(){
   const wIntro = WORLD_INTROS[wid]||{emoji:'🏁',title:wid,color:'#6af7c8'};
   const npcs   = WORLD_DEFS[wid]?.npcs||[];
   const vis    = ST.world.visited;
+  const color  = wIntro.color||'#6af7c8';
+
+  // Depth level based on interactions
+  const count   = vis.length;
+  const dbConf  = WORLD_DEBRIEF[wid];
+  const levels  = dbConf?.levels||[];
+  // Find highest unlocked level
+  const level   = [...levels].reverse().find(l=>count>=l.min) || levels[0];
+  const prevLevels = level ? levels.filter(l=>l.min<level.min) : [];
+
+  // Depth indicator
+  const maxMin  = levels.length ? levels[levels.length-1].min : 9;
+  const pct     = Math.min(100, Math.round((count/maxMin)*100));
+  const depthLabel = count>=maxMin ? '🔓 Lettura completa'
+                   : count>=7      ? '🔆 Lettura approfondita'
+                   :                 '💡 Lettura base';
 
   // Patterns from visited NPCs
   const patterns = [...new Set(ST.world.patterns)];
   const patHtml  = patterns.length
-    ? patterns.map(p=>`<div class="db-row"><span class="db-tag">✓</span><span>${p}</span></div>`).join('')
-    : '<div style="color:var(--muted);font-size:.72rem">Nessun pattern registrato — esplora altri NPC.</div>';
+    ? patterns.map(p=>`<div class="db-row"><span class="db-tag" style="color:${color}">✓</span><span>${p}</span></div>`).join('')
+    : `<div style="color:var(--muted);font-size:.72rem">Hai completato il minimo. Torna a esplorare gli NPC opzionali per scoprire altri pattern.</div>`;
 
-  // Stat changes this world
+  // Insight block — cumulative: show all unlocked levels
+  const unlockedLevels = levels.filter(l=>count>=l.min);
+  const insightHtml = unlockedLevels.length ? unlockedLevels.map((l,i)=>{
+    const isLatest = i===unlockedLevels.length-1;
+    return `<div class="wd-insight${isLatest?' wd-insight-new':''}" style="${isLatest?`border-left:3px solid ${color};background:${color}08`:'border-left:3px solid #3a3a5a;opacity:.7'}">
+      <div style="font-size:.72rem;line-height:1.65;padding:.6rem .8rem">${l.insight}</div>
+    </div>`;
+  }).join('') : `<div style="color:var(--muted);font-size:.72rem;padding:.4rem 0">Completa più interazioni per sbloccare gli insight.</div>`;
+
+  // Takeaway — only latest level
+  const takeaway = level?.takeaway||'';
+  const badge    = level?.badge||'';
+
+  // Stat changes
   const init  = ST.char.stats;
   const pills = Object.entries(ST.gs).map(([k,v])=>{
     const delta = v-(init[k]||0);
-    const col   = delta<0?'#f76a6a':SC[k];
-    const sign  = delta>0?'+':'';
+    if(delta===0) return '';
+    const col  = delta<0?'#f76a6a':SC[k];
+    const sign = delta>0?'+':'';
     return `<span class="st-pill" style="color:${col};border-color:${col}">${k} ${sign}${delta}</span>`;
-  }).join('');
+  }).filter(Boolean).join('');
 
-  // Visited summary
-  const visitedNPCs = npcs.filter(n=>vis.includes(n.id));
-  const totalNPCs   = npcs.length;
-  const summaryTxt  = `${vis.length}/${totalNPCs} interazioni completate`;
-
-  const color = wIntro.color||'#6af7c8';
+  // Locked levels teaser
+  const lockedLevels = levels.filter(l=>count<l.min);
+  const teaserHtml = lockedLevels.length ? `
+    <div style="font-size:.65rem;color:var(--muted);margin-top:.4rem;font-style:italic">
+      🔒 ${lockedLevels.length} livello/i di insight ancora da sbloccare — torna in questo mondo con più interazioni.
+    </div>` : `<div style="font-size:.65rem;color:${color};margin-top:.4rem">✓ Tutti gli insight sbloccati per questo mondo.</div>`;
 
   document.getElementById('dlLayer').innerHTML = `
-  <div class="wt-overlay" style="overflow-y:auto;padding:1.5rem">
-    <div style="max-width:540px;width:100%;display:flex;flex-direction:column;gap:1rem">
-      <div class="wt-title" style="color:${color};font-size:clamp(.55rem,2vw,.85rem)">
-        ${wIntro.emoji||'🏁'} ${wIntro.title||wid} — COMPLETATO
-      </div>
+  <div class="wt-overlay" style="overflow-y:auto;padding:1.25rem 1rem">
+    <div style="max-width:560px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:.9rem">
 
-      <div class="db-sec">
-        <div class="db-lbl">📋 PATTERN RICONOSCIUTI</div>
-        <div class="db-rows">${patHtml}</div>
-      </div>
-
-      <div class="db-sec">
-        <div class="db-lbl">⚡ VARIAZIONI STAT</div>
-        <div class="st-pills" style="margin-top:.4rem">${pills}</div>
-      </div>
-
-      <div class="db-sec">
-        <div class="db-lbl">🗺️ PROSSIMI PASSI</div>
-        <div style="font-size:.72rem;color:var(--muted);line-height:1.6">
-          ${summaryTxt}. Torna alla mappa per esplorare un altro contesto — ogni mondo aggiunge nuovi pattern alla tua lettura del mercato.
+      <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+        <div class="wt-title" style="color:${color};font-size:clamp(.5rem,1.8vw,.78rem);margin:0">
+          ${wIntro.emoji||'🏁'} ${wIntro.title||wid} — COMPLETATO
         </div>
+        ${badge?`<span style="font-size:.62rem;background:${color}22;color:${color};border:1px solid ${color}44;border-radius:12px;padding:.18rem .6rem">${badge}</span>`:''}
       </div>
 
-      <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
-        <button class="btn-next" id="btnBackMap" style="background:${color}33;border:1px solid ${color}66;color:${color}">
-          ← Torna alla mappa
+      <div style="display:flex;align-items:center;gap:.6rem">
+        <div style="flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+          <div style="width:${pct}%;height:100%;background:${color};border-radius:2px;transition:width 1s"></div>
+        </div>
+        <span style="font-size:.58rem;color:${color};white-space:nowrap">${depthLabel} · ${count}/${npcs.length} NPC</span>
+      </div>
+
+      <div class="db-sec" style="margin-bottom:0">
+        <div class="db-lbl">📋 PATTERN RICONOSCIUTI (${patterns.length})</div>
+        <div class="db-rows" style="margin-top:.35rem">${patHtml}</div>
+      </div>
+
+      <div class="db-sec" style="margin-bottom:0">
+        <div class="db-lbl">🧠 COSA HAI IMPARATO</div>
+        <div style="display:flex;flex-direction:column;gap:.4rem;margin-top:.35rem">
+          ${insightHtml}
+        </div>
+        ${teaserHtml}
+      </div>
+
+      ${takeaway ? `<div class="db-sec" style="margin-bottom:0">
+        <div class="db-lbl">💡 TAKEAWAY PRATICO</div>
+        <div class="db-ins" style="font-size:.75rem;margin-top:.35rem">${takeaway}</div>
+      </div>` : ''}
+
+      ${pills ? `<div class="db-sec" style="margin-bottom:0">
+        <div class="db-lbl">⚡ STAT GUADAGNATE</div>
+        <div class="st-pills" style="margin-top:.35rem">${pills}</div>
+      </div>` : ''}
+
+      <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;padding-top:.4rem">
+        <button class="btn-next" id="btnBackMap"
+          style="background:${color}33;border:1px solid ${color}66;color:${color}">
+          ← Mappa
         </button>
-        <button class="btn-next" id="btnViewOutcome" style="background:#1a1a2e;border:1px solid #3a3a5a;color:var(--muted)">
+        <button class="btn-next" id="btnViewOutcome"
+          style="background:#1a1a2e;border:1px solid #3a3a5a;color:var(--muted);font-size:.55rem">
           📊 Riepilogo completo
         </button>
       </div>
+
     </div>
   </div>`;
 
@@ -2879,25 +3098,10 @@ function doExit(exitDef){
     return;
   }
 
-  // Record completion and go back to map
+  // All exits (including world-to-world) → debrief → map
   if(!ST.worldHistory.includes(ST.world.id)) ST.worldHistory.push(ST.world.id);
   ST.worldPath = exitDef.id;
-  const worldIntro = WORLD_INTROS[ST.world.id]||{title:ST.world.id.toUpperCase()};
-
-  document.getElementById('dlLayer').innerHTML = `
-  <div class="wt-overlay">
-    <div class="wt-title">${worldIntro.emoji||'🏁'} MONDO COMPLETATO</div>
-    <div class="wt-sub">Tornando alla mappa — scegli il tuo prossimo percorso.</div>
-    <div class="wt-progress"><div class="wt-fill"></div></div>
-  </div>`;
-
-  setTimeout(()=>{
-    document.getElementById('dlLayer').innerHTML = '';
-    exitTriggered = false;
-    evActive      = false;
-    show('map');
-    renderMap();
-  }, 2200);
+  showWorldDebrief();
 }
 
 function setMsg(t){ const el=document.getElementById('gMsg'); if(el) el.textContent=t; }
