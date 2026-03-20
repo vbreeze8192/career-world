@@ -5,7 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <!-- @UI_TEXTS.meta.page_title -->
 <title>Career World · alpha 1.0.35</title>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#09090f;--surface:#111120;--surface2:#191930;
@@ -394,13 +398,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 
 </div><!-- /#gc -->
 
-<!-- career-world-data.js deve essere caricato PRIMA di questo script -->
-<script src="career-world-data.js"></script>
+<!-- career-world_data.js deve essere caricato PRIMA di questo script -->
+<script src="career-world_data.js"></script>
 <script>
 
 // ══════════════════════════════════════════════════════════════
 // applyUITexts — popola tutti gli elementi HTML statici
-// da UI_TEXTS (definito in career-world-data.js).
+// da UI_TEXTS (definito in career-world_data.js).
 // Chiamato una sola volta al DOMContentLoaded.
 // ══════════════════════════════════════════════════════════════
 function applyUITexts(){
@@ -731,7 +735,7 @@ function updHUD(){
 }
 
 // ══════════════════════════════════════
-// WORLD DEFS (già in career-world-data.js)
+// WORLD DEFS (già in career-world_data.js)
 // ══════════════════════════════════════
 
 // ══════════════════════════════════════
@@ -890,36 +894,137 @@ function gPreload(){
   g.fillStyle(0x3a3a5a);g.fillRect(0,8,T,T-8);
   g.fillStyle(0x5a5a7a);g.fillRect(2,8,T-4,4);
   g.generateTexture('desk',T,T);g.clear();
-  g.fillStyle(0xe0e0f0);g.fillCircle(16,12,8);
-  g.fillStyle(pc);g.fillRect(8,20,16,12);
-  g.fillStyle(0xe0e0f0);g.fillRect(8,32,6,6);g.fillRect(18,32,6,6);
-  g.fillStyle(0xe0e0f0);g.fillRect(4,20,5,10);g.fillRect(23,20,5,10);
-  g.generateTexture('player',32,32);g.clear();
-  g.fillStyle(0xddccaa);g.fillCircle(16,10,8);
-  g.fillStyle(0x557788);g.fillRect(8,18,16,12);
-  g.fillStyle(0x446677);g.fillRect(8,30,6,6);g.fillRect(18,30,6,6);
-  g.generateTexture('mgr',32,32);g.clear();
-  g.fillStyle(0xffcc99);g.fillCircle(16,10,8);
-  g.fillStyle(0xe53935);g.fillRect(8,18,16,12);
-  g.fillStyle(0xc62828);g.fillRect(8,30,6,6);g.fillRect(18,30,6,6);
-  g.fillStyle(0xffd700);g.fillCircle(16,4,4);
-  g.generateTexture('sis',32,32);g.clear();
-  g.fillStyle(0xffcc99);g.fillCircle(16,10,8);
-  g.fillStyle(0x9966cc);g.fillRect(8,18,16,12);
-  g.fillStyle(0x7755aa);g.fillRect(8,30,6,6);g.fillRect(18,30,6,6);
-  g.generateTexture('col',32,32);g.clear();
-  g.fillStyle(0xff4444,0.7);g.fillCircle(16,10,9);
-  g.fillStyle(0xff2222,0.5);g.fillRect(8,18,16,14);
-  g.fillStyle(0xffffff);g.fillRect(11,8,5,5);g.fillRect(17,8,5,5);
-  g.fillStyle(0xff0000);g.fillRect(13,16,6,2);
+  // ── PLAYER — protagonista, colore classe ──────────────────
+  // Testa rotonda con capelli, corpo con giacca colorata, mani e piedi
+  g.fillStyle(0xffe0b2);g.fillCircle(16,9,7);           // testa
+  g.fillStyle(0x5d4037);g.fillRect(9,4,14,5);            // capelli top
+  g.fillStyle(0x5d4037);g.fillRect(9,6,3,5);             // capelli sx
+  g.fillStyle(0x5d4037);g.fillRect(20,6,3,5);            // capelli dx
+  g.fillStyle(0x000000);g.fillCircle(13,9,1.5);          // occhio sx
+  g.fillStyle(0x000000);g.fillCircle(19,9,1.5);          // occhio dx
+  g.fillStyle(0xffb3ba);g.fillCircle(11,12,1.5);         // guancia sx
+  g.fillStyle(0xffb3ba);g.fillCircle(21,12,1.5);         // guancia dx
+  g.fillStyle(0xff6b6b);g.fillRect(14,13,4,2);           // bocca sorriso
+  g.fillStyle(pc);g.fillRect(9,17,14,11);                // corpo/giacca
+  g.fillStyle(0xffffff);g.fillRect(12,17,8,6);           // camicia interna
+  g.fillStyle(pc,0.8);g.fillRect(14,17,4,6);             // cravatta/detail
+  g.fillStyle(0xffe0b2);g.fillRect(5,18,5,8);            // braccio sx
+  g.fillStyle(0xffe0b2);g.fillRect(22,18,5,8);           // braccio dx
+  g.fillStyle(pc);g.fillRect(5,17,5,4);                  // manica sx
+  g.fillStyle(pc);g.fillRect(22,17,5,4);                 // manica dx
+  g.fillStyle(0x37474f);g.fillRect(9,28,6,4);            // gamba sx
+  g.fillStyle(0x37474f);g.fillRect(17,28,6,4);           // gamba dx
+  g.fillStyle(0x212121);g.fillRect(8,30,7,3);            // scarpa sx
+  g.fillStyle(0x212121);g.fillRect(17,30,7,3);           // scarpa dx
+  g.generateTexture('player',32,34);g.clear();
+
+  // ── MGR — manager/hr, grigio-blu formale ──────────────────
+  g.fillStyle(0xffe0b2);g.fillCircle(16,9,7);
+  g.fillStyle(0x37474f);g.fillRect(9,4,14,6);            // capelli scuri formali
+  g.fillStyle(0x000000);g.fillCircle(13,9,1.5);
+  g.fillStyle(0x000000);g.fillCircle(19,9,1.5);
+  g.fillStyle(0x546e7a);g.fillRect(9,17,14,11);          // giacca grigio-blu
+  g.fillStyle(0xeceff1);g.fillRect(12,17,8,6);           // camicia bianca
+  g.fillStyle(0x0d47a1);g.fillRect(14,17,4,7);           // cravatta blu scuro
+  g.fillStyle(0xffe0b2);g.fillRect(5,18,5,8);
+  g.fillStyle(0xffe0b2);g.fillRect(22,18,5,8);
+  g.fillStyle(0x546e7a);g.fillRect(5,17,5,4);
+  g.fillStyle(0x546e7a);g.fillRect(22,17,5,4);
+  g.fillStyle(0x263238);g.fillRect(9,28,6,4);
+  g.fillStyle(0x263238);g.fillRect(17,28,6,4);
+  g.fillStyle(0x111111);g.fillRect(8,30,7,3);
+  g.fillStyle(0x111111);g.fillRect(17,30,7,3);
+  g.generateTexture('mgr',32,34);g.clear();
+
+  // ── SIS — alleata, caldo/rosso con dettaglio hair ─────────
+  g.fillStyle(0xffcc80);g.fillCircle(16,9,7);
+  g.fillStyle(0xe53935);g.fillRect(8,3,16,7);            // capelli rossi/colorati
+  g.fillStyle(0xe53935);g.fillRect(8,5,3,8);             // ciocca sx
+  g.fillStyle(0xe53935);g.fillRect(21,5,3,8);            // ciocca dx
+  g.fillStyle(0xffd700);g.fillCircle(16,2,3);            // accessorio capelli
+  g.fillStyle(0x880000);g.fillCircle(13,9,1.5);
+  g.fillStyle(0x880000);g.fillCircle(19,9,1.5);
+  g.fillStyle(0xff8a80);g.fillCircle(11,12,2);
+  g.fillStyle(0xff8a80);g.fillCircle(21,12,2);
+  g.fillStyle(0xe53935);g.fillRect(8,17,16,11);          // top rosso
+  g.fillStyle(0xff8a80,0.5);g.fillRect(10,17,12,4);      // dettaglio neckline
+  g.fillStyle(0xffcc80);g.fillRect(5,18,5,8);
+  g.fillStyle(0xffcc80);g.fillRect(22,18,5,8);
+  g.fillStyle(0xe53935);g.fillRect(5,17,5,4);
+  g.fillStyle(0xe53935);g.fillRect(22,17,5,4);
+  g.fillStyle(0x880e4f);g.fillRect(9,28,6,4);
+  g.fillStyle(0x880e4f);g.fillRect(17,28,6,4);
+  g.fillStyle(0x4a148c);g.fillRect(8,30,7,3);
+  g.fillStyle(0x4a148c);g.fillRect(17,30,7,3);
+  g.generateTexture('sis',32,34);g.clear();
+
+  // ── COL — collega, viola medio casual ─────────────────────
+  g.fillStyle(0xffe0b2);g.fillCircle(16,9,7);
+  g.fillStyle(0x6d4c41);g.fillRect(9,4,14,6);
+  g.fillStyle(0x6d4c41);g.fillRect(9,5,3,7);
+  g.fillStyle(0x6d4c41);g.fillRect(20,5,3,7);
+  g.fillStyle(0x4a148c);g.fillCircle(13,9,1.5);
+  g.fillStyle(0x4a148c);g.fillCircle(19,9,1.5);
+  g.fillStyle(0xffb3ba);g.fillCircle(11,12,1.5);
+  g.fillStyle(0xffb3ba);g.fillCircle(21,12,1.5);
+  g.fillStyle(0x9c27b0);g.fillRect(9,17,14,11);          // maglione viola
+  g.fillStyle(0xce93d8,0.6);g.fillRect(10,17,12,3);      // colletto
+  g.fillStyle(0xffe0b2);g.fillRect(5,18,5,8);
+  g.fillStyle(0xffe0b2);g.fillRect(22,18,5,8);
+  g.fillStyle(0x9c27b0);g.fillRect(5,17,5,4);
+  g.fillStyle(0x9c27b0);g.fillRect(22,17,5,4);
+  g.fillStyle(0x4a148c);g.fillRect(9,28,6,4);
+  g.fillStyle(0x4a148c);g.fillRect(17,28,6,4);
+  g.fillStyle(0x1a237e);g.fillRect(8,30,7,3);
+  g.fillStyle(0x1a237e);g.fillRect(17,30,7,3);
+  g.generateTexture('col',32,34);g.clear();
+
+  // ── CRIT — inner critic, fantasma rosso inquietante ───────
+  g.fillStyle(0xff1744,0.15);g.fillCircle(16,16,14);     // alone rosso
+  g.fillStyle(0xb71c1c,0.9);g.fillCircle(16,11,9);       // testa
+  g.fillStyle(0xff1744,0.7);g.fillRect(7,11,18,14);      // corpo
+  // bordo inferiore ondulato (pixel art)
+  g.fillStyle(0xff1744,0.7);
+  g.fillRect(7,25,3,2);g.fillRect(13,25,3,2);g.fillRect(19,25,3,2);
+  g.fillStyle(0xffffff,0.9);g.fillCircle(12,10,2.5);     // occhio sx bianco
+  g.fillStyle(0xffffff,0.9);g.fillCircle(20,10,2.5);     // occhio dx bianco
+  g.fillStyle(0xff1744);g.fillCircle(12,10,1.5);         // pupilla sx
+  g.fillStyle(0xff1744);g.fillCircle(20,10,1.5);         // pupilla dx
+  g.fillStyle(0x000000);g.fillCircle(12,10,0.8);         // puntino pupilla
+  g.fillStyle(0x000000);g.fillCircle(20,10,0.8);
+  g.fillStyle(0xff1744,0.8);g.fillRect(11,16,10,2);      // bocca
+  g.fillStyle(0xffffff,0.5);g.fillRect(12,16,2,2);g.fillRect(17,16,2,2); // denti
   g.generateTexture('crit',32,32);g.clear();
-  g.fillStyle(0x1a2a3a);g.fillRect(4,4,24,20);
-  g.fillStyle(0x4fc3f7,0.6);g.fillRect(6,6,20,14);
-  g.fillStyle(0x00ff88);g.fillRect(8,9,4,2);g.fillRect(8,13,8,2);g.fillRect(8,17,6,2);
-  g.fillStyle(0x2a3a4a);g.fillRect(8,26,16,6);
-  g.generateTexture('tech',32,32);g.clear();
-  g.fillStyle(0xffd700);g.fillCircle(12,12,10);
-  g.fillStyle(0x111111);g.fillRect(10,5,4,7);g.fillCircle(12,16,2.5);
+
+  // ── TECH — sfida tecnica, laptop persona ──────────────────
+  g.fillStyle(0xffe0b2);g.fillCircle(16,8,7);
+  g.fillStyle(0x1565c0);g.fillRect(9,4,14,5);            // capelli blu tech
+  g.fillStyle(0x000000);g.fillCircle(13,8,1.5);
+  g.fillStyle(0x000000);g.fillCircle(19,8,1.5);
+  g.fillStyle(0x00e5ff);g.fillRect(8,16,16,10);          // hoodie ciano
+  g.fillStyle(0x006064);g.fillRect(13,16,6,10);          // tasca centrale
+  g.fillStyle(0xffe0b2);g.fillRect(4,17,5,8);
+  g.fillStyle(0xffe0b2);g.fillRect(23,17,5,8);
+  g.fillStyle(0x00e5ff);g.fillRect(4,16,5,4);
+  g.fillStyle(0x00e5ff);g.fillRect(23,16,5,4);
+  // laptop in mano
+  g.fillStyle(0x37474f);g.fillRect(1,22,8,5);
+  g.fillStyle(0x4fc3f7,0.8);g.fillRect(2,23,6,3);
+  g.fillStyle(0x00ff88);g.fillRect(3,24,2,1);g.fillRect(3,25,4,1);
+  g.fillStyle(0x263238);g.fillRect(9,27,14,5);
+  g.fillStyle(0x111111);g.fillRect(9,30,6,3);
+  g.fillStyle(0x111111);g.fillRect(17,30,6,3);
+  g.generateTexture('tech',32,34);g.clear();
+
+  // ── BUB — bolla esclamativa più carina ────────────────────
+  g.fillStyle(0xffd700);g.fillCircle(12,11,10);          // bolla principale
+  g.fillStyle(0xffec6e);g.fillCircle(10,9,5);            // riflesso
+  g.fillStyle(0xff6f00);g.fillRect(0,0,24,22);           // maschera per coda
+  g.fillStyle(0xffd700);g.fillCircle(12,11,10);          // ridisegno senza maschera
+  g.fillStyle(0xff8f00);g.fillRect(8,19,6,4);            // coda bolla
+  g.fillStyle(0xff8f00);g.fillRect(6,21,4,3);
+  g.fillStyle(0x111111);g.fillRect(10,7,4,6);            // !
+  g.fillStyle(0x111111);g.fillCircle(12,16,2);           // punto !
   g.generateTexture('bub',24,24);g.clear();
   g.fillStyle(0x333344);g.fillRect(0,0,T,T);
   g.fillStyle(0x444455);g.fillRect(4,4,T-8,T-8);
