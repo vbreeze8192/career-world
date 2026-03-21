@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Career World — Editor v2</title>
+<style>
+:root{
+  --bg:#09090f;--surf:#111120;--surf2:#191930;
+  --border:#2a2a4a;--border2:#3a3a6a;
+  --text:#e8e8f8;--muted:#6868a8;--muted2:#4a4a7a;
+  --accent:#7c6af7;--accent3:#6af7c8;
+  --warn:#f7c46a;--danger:#f76a6a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+body{display:flex;flex-direction:column}
+
+/* TOP BAR */
+.topbar{height:48px;background:var(--surf);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.7rem;padding:0 1rem;flex-shrink:0}
+.logo{font-family:monospace;font-size:.72rem;font-weight:700;color:var(--accent);letter-spacing:.1em}
+.logo span{color:var(--accent3)}
+.sep{flex:1}
+.btn{padding:.32rem .8rem;border-radius:6px;border:1px solid var(--border);background:var(--surf2);color:var(--text);font-size:.72rem;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn:hover{border-color:var(--accent);background:rgba(124,106,247,.12)}
+.btn.dl{background:rgba(106,247,200,.12);border-color:var(--accent3);color:var(--accent3)}
+.btn.dl:hover{background:rgba(106,247,200,.22)}
+#fileInfo{font-size:.62rem;color:var(--muted);font-family:monospace}
+.vbadge{font-size:.58rem;padding:.12rem .45rem;border-radius:10px;cursor:pointer;border:1px solid}
+.vbadge.ok{color:var(--accent3);border-color:rgba(106,247,200,.4);background:rgba(106,247,200,.08)}
+.vbadge.warn{color:var(--warn);border-color:rgba(247,196,106,.4);background:rgba(247,196,106,.08)}
+.vbadge.err{color:var(--danger);border-color:rgba(247,106,106,.4);background:rgba(247,106,106,.08)}
+.vbadge.none{color:var(--muted);border-color:var(--border)}
+
+/* LAYOUT */
+.main{flex:1;display:flex;overflow:hidden;min-height:0}
+.sidebar{width:220px;background:var(--surf);border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0;padding:.5rem 0}
+.nav-sec{font-size:.48rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;padding:.5rem .8rem .2rem;margin-top:.3rem}
+.nav-item{padding:.42rem .85rem;font-size:.75rem;cursor:pointer;border-radius:6px;margin:.08rem .35rem;transition:all .15s;color:var(--muted);display:flex;align-items:center;gap:.4rem}
+.nav-item:hover{background:var(--surf2);color:var(--text)}
+.nav-item.active{background:rgba(124,106,247,.18);color:var(--accent)}
+.content{flex:1;display:flex;overflow:hidden;min-height:0}
+.panel{flex:1;overflow-y:auto;padding:1.2rem;display:flex;flex-direction:column;gap:.9rem;min-height:0}
+.side-panel{width:300px;background:var(--surf);border-left:1px solid var(--border);overflow-y:auto;padding:.85rem;display:flex;flex-direction:column;gap:.7rem;flex-shrink:0}.side-panel.hidden{display:none;width:0;padding:0;border:none}
+
+/* CARDS */
+.card{background:var(--surf);border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.card-head{padding:.6rem .9rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid var(--border);background:var(--surf2)}
+.card-head h3{font-size:.76rem;font-weight:600;flex:1}
+.card-meta{font-size:.58rem;color:var(--muted)}
+.card-body{padding:.85rem}
+.card-body.sm{padding:.6rem}
+
+/* FORMS */
+.field{display:flex;flex-direction:column;gap:.28rem;margin-bottom:.7rem}
+.field:last-child{margin-bottom:0}
+label{font-size:.62rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:.3rem;flex-wrap:wrap}
+.hint{font-size:.56rem;color:var(--muted2);text-transform:none;letter-spacing:0}
+.smaptag{font-size:.54rem;padding:.06rem .32rem;border-radius:3px;font-weight:700;text-transform:none;letter-spacing:0}
+input,textarea,select{width:100%;padding:.45rem .65rem;background:var(--surf2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.76rem;font-family:inherit;outline:none;transition:border-color .15s}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:58px;line-height:1.55}
+select option{background:var(--surf2)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.6rem}
+
+/* STAT PILLS */
+.stat-grid{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.2rem}
+.stat-pill{display:flex;align-items:center;gap:.25rem;background:var(--surf2);border:1px solid var(--border);border-radius:5px;padding:.18rem .45rem}
+.stat-pill label{font-size:.56rem;min-width:48px;text-transform:none;letter-spacing:0;color:var(--muted)}
+.stat-pill input{width:42px;padding:.12rem .28rem;font-size:.68rem;text-align:center;background:var(--bg);border:1px solid var(--border);border-radius:4px}
+
+/* NPC LIST */
+.npc-list{display:flex;flex-direction:column;gap:.38rem}
+.npc-card{background:var(--surf2);border:1px solid var(--border);border-radius:7px;cursor:pointer;transition:all .15s}
+.npc-card:hover{border-color:var(--border2)}
+.npc-card.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.npc-head{padding:.5rem .7rem;display:flex;align-items:center;gap:.45rem}
+.npc-icon{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.npc-info{flex:1;min-width:0}
+.npc-id{font-family:monospace;font-size:.6rem;color:var(--accent3)}
+.npc-spk{font-size:.7rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.npc-tags{display:flex;gap:.3rem;margin-top:.1rem;flex-wrap:wrap}
+.tag{font-size:.48rem;padding:.06rem .28rem;border-radius:4px;border:1px solid}
+.tag.npc{border-color:#a0c4ff44;color:#a0c4ff;background:rgba(160,196,255,.07)}
+.tag.sis{border-color:#e5393544;color:#e53935;background:rgba(229,57,53,.07)}
+.tag.tech{border-color:#f7c46a44;color:#f7c46a;background:rgba(247,196,106,.07)}
+.tag.req{border-color:#6af7c844;color:#6af7c8;background:rgba(106,247,200,.07)}
+.tag.opt{border-color:#6868a844;color:var(--muted)}
+.del-btn{width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:.7rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.del-btn:hover{border-color:var(--danger);color:var(--danger);background:rgba(247,106,106,.1)}
+
+/* CHOICES */
+.choice{background:var(--surf2);border:1px solid var(--border);border-radius:7px;padding:.6rem;margin-bottom:.5rem}
+.choice-head{display:flex;align-items:center;gap:.4rem;margin-bottom:.45rem}
+.cnum{width:16px;height:16px;border-radius:50%;background:var(--accent);color:#fff;font-size:.5rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rmv{margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:.75rem;padding:.06rem .25rem;border-radius:3px}
+.rmv:hover{color:var(--danger)}
+.addbtn{display:flex;align-items:center;gap:.35rem;padding:.4rem .7rem;background:none;border:1px dashed var(--border2);border-radius:6px;color:var(--muted);cursor:pointer;font-size:.7rem;width:100%;justify-content:center;transition:all .15s}
+.addbtn:hover{border-color:var(--accent);color:var(--accent);background:rgba(124,106,247,.07)}
+
+/* WORLD TABS */
+.wtabs{display:flex;gap:.25rem;flex-wrap:wrap;margin-bottom:.85rem}
+.wtab{padding:.3rem .72rem;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-size:.68rem;cursor:pointer;transition:all .15s}
+.wtab:hover{border-color:var(--border2);color:var(--text)}
+.wtab.active{background:rgba(124,106,247,.2);border-color:var(--accent);color:var(--accent)}
+
+/* TABS */
+.tabbar{display:flex;border-bottom:1px solid var(--border);margin-bottom:.85rem}
+.tab{padding:.42rem .85rem;font-size:.7rem;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .15s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* PREVIEW */
+.prev-title{font-size:.48rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;padding-bottom:.32rem;border-bottom:1px solid var(--border)}
+.prev-box{background:var(--surf2);border:1.5px solid var(--accent);border-radius:9px;padding:.8rem}
+.prev-box.sis{border-color:#e53935}
+.prev-box.tech{border-color:var(--warn)}
+.prev-box.crit{border-color:var(--danger)}
+.prev-spk{font-family:monospace;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.35rem}
+.prev-txt{line-height:1.6;font-size:.73rem;margin-bottom:.65rem}
+.prev-ch{padding:.38rem .6rem;background:var(--surf);border:1px solid var(--border);border-radius:5px;font-size:.68rem;margin-bottom:.28rem}
+.prev-debrief{background:rgba(106,247,200,.07);border:1px solid rgba(106,247,200,.2);border-radius:7px;padding:.65rem;font-size:.68rem;line-height:1.55;margin-top:.6rem}
+.prev-pat{font-weight:700;color:var(--accent3);margin-bottom:.28rem;font-size:.7rem}
+.prev-src{font-family:monospace;font-size:.54rem;color:var(--warn);margin-top:.35rem}
+.prev-stats{display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.4rem}
+.prev-stat{font-size:.54rem;padding:.1rem .38rem;border-radius:10px;border:1px solid}
+.prev-empty{text-align:center;padding:1.2rem 0;color:var(--muted);font-size:.7rem;line-height:1.8}
+
+/* VALIDATION */
+.vitem{display:flex;align-items:flex-start;gap:.45rem;padding:.4rem .55rem;border-radius:6px;font-size:.7rem;line-height:1.5;margin-bottom:.35rem}
+.vitem.ok{background:rgba(106,247,200,.07);border:1px solid rgba(106,247,200,.18);color:var(--accent3)}
+.vitem.warn{background:rgba(247,196,106,.07);border:1px solid rgba(247,196,106,.18);color:var(--warn)}
+.vitem.err{background:rgba(247,106,106,.07);border:1px solid rgba(247,106,106,.18);color:var(--danger)}
+
+/* RULES */
+.rulebox{background:var(--surf2);border:1px solid var(--border);border-radius:7px;padding:.7rem;font-size:.7rem;line-height:1.75;margin-bottom:.65rem}
+.rulebox h4{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.45rem}
+.rulebox li{margin-left:1rem;color:var(--text)}
+.rulebox code{background:var(--surf);border:1px solid var(--border);border-radius:3px;padding:.02rem .28rem;font-size:.62rem;color:var(--accent3)}
+.rulebox .note{color:var(--muted2);font-size:.62rem}
+
+/* MISC */
+.sec-title{font-size:.82rem;font-weight:700}
+.sec-sub{font-size:.68rem;color:var(--muted);margin-top:.2rem;line-height:1.6}
+.empty{text-align:center;padding:1.5rem;color:var(--muted);font-size:.73rem}
+.toast{position:fixed;bottom:1rem;right:1rem;padding:.55rem 1rem;background:var(--surf);border:1px solid var(--accent3);border-radius:7px;font-size:.73rem;color:var(--accent3);z-index:9999;animation:tin .2s ease;box-shadow:0 4px 18px rgba(0,0,0,.4)}
+@keyframes tin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">CAREER<span>WORLD</span>/EDITOR v2</div>
+  <div id="fileInfo">nessun file caricato</div>
+  <div class="sep"></div>
+  <span class="vbadge none" id="vbadge" onclick="showSec('validate')" title="Validazione">— errori</span>
+  <input type="file" id="fi" accept=".js" style="display:none" onchange="loadFile(this)">
+  <button class="btn" onclick="document.getElementById('fi').click()">📂 Carica JS</button>
+  <button class="btn dl" onclick="downloadJS()">⬇ Download JS</button>
+</div>
+
+<div class="main">
+<div class="sidebar">
+  <div class="nav-sec">Contenuto</div>
+  <div class="nav-item active" id="nav-npcs" onclick="showSec('npcs')">👥 NPC &amp; Dialoghi</div>
+  <div class="nav-item" id="nav-debrief" onclick="showSec('debrief')">📋 World Debrief</div>
+  <div class="nav-item" id="nav-outcome" onclick="showSec('outcome')">🏁 Report Finale</div>
+  <div class="nav-item" id="nav-steps" onclick="showSec('steps')">📝 Assessment</div>
+  <div class="nav-sec">Interfaccia</div>
+  <div class="nav-item" id="nav-ui" onclick="showSec('ui')">🔤 UI Texts</div>
+  <div class="nav-sec">Strumenti</div>
+  <div class="nav-item" id="nav-worlds" onclick="showSec('worlds')">🌍 Mondi</div>
+  <div class="nav-item" id="nav-validate" onclick="showSec('validate')">✅ Validazione &amp; Regole</div>
+</div>
+
+<div class="content">
+
+<!-- NPC -->
+<div class="panel" id="sec-npcs">
+  <div><div class="sec-title">👥 NPC &amp; Dialoghi</div>
+  <div class="sec-sub">Seleziona mondo → NPC. L'anteprima si aggiorna mentre scrivi.</div></div>
+  <div class="wtabs" id="wTabs"></div>
+  <div style="display:flex;gap:.7rem;align-items:flex-start">
+    <div style="width:230px;flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.45rem">
+        <span style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">NPC nel mondo</span>
+        <button class="addbtn" style="width:auto;padding:.2rem .6rem;font-size:.62rem" onclick="addNPC()">+ Nuovo</button>
+      </div>
+      <div class="npc-list" id="npcList"></div>
+    </div>
+    <div style="flex:1;min-width:0" id="npcEditor"><div class="empty">👈 Seleziona un NPC</div></div>
+  </div>
+</div>
+
+<!-- WORLD DEBRIEF -->
+<div class="panel" id="sec-debrief" style="display:none">
+  <div><div class="sec-title">📋 World Debrief</div>
+  <div class="sec-sub">Appare <strong>subito dopo che il giocatore esce da un mondo</strong>. Ha 3 livelli progressivi sbloccati per numero di NPC visitati.<br>
+  ⚠️ È diverso dal Report Finale (🏁) che aggrega tutti i mondi completati.</div></div>
+  <div class="wtabs" id="dbTabs"></div>
+  <div id="dbContent"></div>
+</div>
+
+<!-- REPORT FINALE -->
+<div id="sec-outcome" style="display:none;flex:1;overflow-y:auto;padding:1.2rem;box-sizing:border-box;min-height:0">
+  <div id="ocInner"><p style="color:var(--muted);font-size:.75rem">Carica un file JS per vedere il report finale.</p></div>
+</div>
+
+<!-- STEPS -->
+<div class="panel" id="sec-steps" style="display:none">
+  <div><div class="sec-title">📝 Assessment</div>
+  <div class="sec-sub">Le opzioni delle domande Hard e Soft Skills devono corrispondere esattamente a chiavi nel dizionario SMAP del file JS. La barra colorata mostra il peso attuale (verde=alto, rosso=basso, grigio=non in SMAP).</div></div>
+  <div class="tabbar" id="stepTabs"></div>
+  <div id="stepContent"></div>
+</div>
+
+<!-- UI TEXTS -->
+<div class="panel" id="sec-ui" style="display:none">
+  <div><div class="sec-title">🔤 UI Texts</div>
+  <div class="sec-sub">Testi statici dell'interfaccia. Modificarli non rompe la logica di gioco — sono solo etichette.</div></div>
+  <div id="uiContent"></div>
+</div>
+
+<!-- WORLDS -->
+<div class="panel" id="sec-worlds" style="display:none">
+  <div><div class="sec-title">🌍 Mondi</div>
+  <div class="sec-sub">Panoramica strutturale. Indica se la porta di ogni mondo è configurabile.</div></div>
+  <div id="worldsContent"></div>
+</div>
+
+<!-- VALIDATE -->
+<div class="panel" id="sec-validate" style="display:none">
+  <div style="display:flex;align-items:center;gap:.6rem">
+    <div class="sec-title">✅ Validazione &amp; Regole</div>
+    <button class="btn" onclick="runVal()" style="margin-left:auto">🔄 Ricalcola</button>
+  </div>
+  <div id="valResults"></div>
+  <div class="card">
+    <div class="card-head"><h3>📖 Regole essenziali — cosa può rompere il gioco</h3></div>
+    <div class="card-body">
+
+      <div class="rulebox">
+        <h4 style="color:var(--accent3)">ID NPC</h4>
+        <ul>
+          <li>Ogni <code>id</code> deve essere <strong>unico in tutto il file</strong>, anche tra mondi diversi</li>
+          <li>Niente spazi: usa underscore — <span class="note">es. pmi_nuovo_npc</span></li>
+          <li><strong>Non modificare</strong> l'id di un NPC già visitato da un giocatore — rompe il suo stato salvato</li>
+        </ul>
+      </div>
+
+      <div class="rulebox">
+        <h4 style="color:var(--accent3)">Scelte e chiavi outcome</h4>
+        <ul>
+          <li>Il campo <code>out</code> di ogni scelta deve avere una chiave corrispondente in <code>outs{}</code></li>
+          <li>Le chiavi out non devono avere spazi — <span class="note">usa_underscore</span></li>
+          <li><strong>2–4 scelte per NPC</strong>: meno di 2 è inutile, più di 4 non entra su mobile</li>
+          <li>Gli apostrofi nel testo <strong>non vanno escapati</strong> nell'editor — l'export li gestisce</li>
+        </ul>
+      </div>
+
+      <div class="rulebox">
+        <h4 style="color:var(--accent3)">Sblocco porta (required)</h4>
+        <ul>
+          <li>Ogni mondo deve avere: <strong>≥3 NPC required di tipo npc</strong> + <strong>≥1 sis required</strong> + <strong>≥1 tech required</strong></li>
+          <li>Puoi aggiungere quanti NPC vuoi con <code>required: false</code> — non bloccano il progresso</li>
+          <li>Il <strong>tipo</strong> (npc / sis / tech) determina a quale contatore contribuisce</li>
+        </ul>
+      </div>
+
+      <div class="rulebox">
+        <h4 style="color:var(--accent3)">Delta stat</h4>
+        <ul>
+          <li>I valori in <code>stat</code> vengono moltiplicati per <strong>2.5</strong> in gioco — <code>VOICE:2</code> = +5 punti reali (max 50)</li>
+          <li>I valori negativi <strong>non</strong> vengono scalati: <code>VOICE:-1</code> = -1 punto reale</li>
+          <li>Range consigliato: da <strong>-2 a +3</strong> per scelta</li>
+        </ul>
+      </div>
+
+      <div class="rulebox">
+        <h4 style="color:var(--accent3)">Assessment e SMAP</h4>
+        <ul>
+          <li>Ogni opzione di risposta nelle domande Hard/Soft Skills deve corrispondere a una chiave in <code>SMAP</code></li>
+          <li>Se aggiungi una nuova opzione di risposta, devi anche aggiungerla a SMAP nel file JS <strong>manualmente</strong> — l'editor non può farlo</li>
+          <li>La domanda <code>orient</code> (Preferenze) determina la classe del personaggio — <strong>non eliminarla</strong></li>
+          <li>Modificare il <strong>testo</strong> di un'opzione già mappata in SMAP <strong>rompe il mapping</strong> — il gioco non troverà più il punteggio</li>
+        </ul>
+      </div>
+
+      <div class="rulebox" style="margin-bottom:0">
+        <h4 style="color:var(--accent3)">Griglia e posizionamento NPC</h4>
+        <ul>
+          <li>gridX da <strong>2 a 13</strong>, gridY da <strong>2 a 9</strong></li>
+          <li>Se due NPC hanno la stessa posizione, il secondo viene spostato automaticamente</li>
+          <li>Evita gridX=1/14 e gridY=1/10 — sono i muri</li>
+          <li>Il giocatore parte da posizione (2,2) — non mettere NPC lì</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SIDE PREVIEW -->
+<div class="side-panel" id="sidePanel">
+  <div class="prev-title">👁 Anteprima dialogo</div>
+  <div id="prevContent"><div class="prev-empty">🎮<br>Seleziona un NPC<br>per vedere l'anteprima</div></div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+// ── STATE ─────────────────────────────────────────────────────
+const D={ui:{},worlds:{},debrief:{},steps:[],critics:{},smap:{},_src:'',_file:''};
+let CW=null,SEL=null,CDB=null,CST=0;
+
+const WL={pmi:'🏭 PMI',startup:'🚀 Startup',consulenza:'🏢 Consulenza',corporate:'🏗️ Corporate',piva:'💡 P.IVA',pa:'🎓 PA'};
+const SE={mgr:'👔',sis:'❤️',col:'👨‍💻',tech:'💻',crit:'👻'};
+const SK=['SKILL','VOICE','CLARITY','NETWORK','ENERGY','RADAR'];
+const SC={SKILL:'#4fc3f7',VOICE:'#f06292',CLARITY:'#aed581',NETWORK:'#ffb74d',ENERGY:'#4db6ac',RADAR:'#ce93d8'};
+const SMAP_INFO={
+  hard:{label:'Hard Skills',color:'#4fc3f7',note:'I punteggi SMAP di queste opzioni contribuiscono a SKILL. Modifica il testo solo se aggiorni anche la chiave in SMAP nel file JS.'},
+  soft:{label:'Soft Skills',color:'#f06292',note:'Le risposte soft influenzano VOICE (comm, conflict), CLARITY (feedback, auto), ENERGY (chaos). Cambiare il testo rompe il mapping SMAP.'},
+  pref:{label:'Preferenze → Classe',color:'#ce93d8',note:'Gli slider non usano SMAP. La domanda "orient" determina direttamente la classe (analyst/scientist/ml/ai). Non eliminarla.'},
+};
+const KNOWN_SMAP={
+  'Sì, più volte':5,'Sì, regolarmente':5,'Sì, in produzione':5,'Sì, in un progetto reale':5,'Sì, in team':5,'Sì, con successo':5,'Sì, più volte e consapevolmente':5,
+  'Una volta / in corso':3,'Qualche volta':3,'Sì, progetto personale':3,'Esperimenti/prototipo':3,'Sì':4,'Sì, con difficoltà ma ce l\'ho fatta':4,
+  'Una volta':3,'Sì, con difficoltà':3,'Ci metto un po\' ma riesco':3,'Esperimenti':3,'In corso':3,
+  'Solo tutorial':1.5,'Solo corso/tutorial':1.5,'Solo esercizi':1.5,'Solo concetti':1,'Solo prompt su interfaccia':1,'No ma so i concetti':1,
+  'Espresso il mio punto con dati':5,'Fatto domande per capire':4,'Taciuto ma ci ho rimuginato':2,'Accettato senza problemi':3,
+  'Mi adatto bene':5,'Preferisco stabilità':2,'Mi stresso molto':1,
+  "L'ho usato per migliorare":5,'Mi ha fatto male ma l\'ho integrato':4,'L\'ho preso molto sul personale':2,
+  'Non ancora':2,'Non è il mio focus':1,'Non ancora capitato':2,'Preferisco avere guida':2,
+  'Non ricordo situazioni':2,'Raramente, non ci ho pensato':2,'No':0,
+};
+
+// ── FILE LOAD ─────────────────────────────────────────────────
+function loadFile(inp){
+  const f=inp.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>parseJS(ev.target.result,f.name);
+  r.readAsText(f);
+}
+
+function parseJS(src,fname){
+  try{
+    const sb={};
+    new Function('sb',
+      src+'\n'+
+      'try{sb.UI_TEXTS=UI_TEXTS}catch(e){}\n'+
+      'try{sb.STEPS=STEPS}catch(e){}\n'+
+      'try{sb.WORLD_DEFS=WORLD_DEFS}catch(e){}\n'+
+      'try{sb.WORLD_DEBRIEF=WORLD_DEBRIEF}catch(e){}\n'+
+      'try{sb.INNER_CRITICS=INNER_CRITICS}catch(e){}\n'+
+      'try{sb.SMAP=SMAP}catch(e){}\n'
+    )(sb);
+    D.ui=sb.UI_TEXTS||{};
+    D.steps=sb.STEPS||[];
+    D.worlds=sb.WORLD_DEFS||{};
+    D.debrief=sb.WORLD_DEBRIEF||{};
+    D.critics=sb.INNER_CRITICS||{};
+    D.smap=sb.SMAP||{};
+    D._src=src; D._file=fname;
+    document.getElementById('fileInfo').textContent=fname;
+    CW=Object.keys(D.worlds)[0]||null;
+    CDB=CW; CST=0;
+    initUI();
+    toast('✅ Caricato: '+fname);
+  }catch(e){toast('❌ '+e.message,true);console.error(e);}
+}
+
+function initUI(){
+  renderWTabs(); renderNpcList();
+  renderDbTabs();
+  renderStepTabs();
+  renderUI();
+  renderWorlds();
+  renderOutcome();
+  runVal();
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────
+function showSec(id){
+  ['npcs','debrief','outcome','steps','ui','worlds','validate'].forEach(s=>{
+    const el=document.getElementById('sec-'+s);
+    if(el)el.style.display=s===id?'flex':'none';
+    const n=document.getElementById('nav-'+s);
+    if(n)n.classList.toggle('active',s===id);
+  });
+  const sp=document.getElementById('sidePanel');sp.classList.toggle('hidden',id!=='npcs');
+  if(id==='debrief')renderDbContent();
+  if(id==='steps')renderStepContent();
+  if(id==='outcome')renderOutcome();
+  if(id==='validate')runVal();
+}
+
+// ── WORLD TABS ────────────────────────────────────────────────
+function renderWTabs(){
+  document.getElementById('wTabs').innerHTML=Object.keys(D.worlds).map(id=>
+    `<button class="wtab ${id===CW?'active':''}" onclick="selWorld('${id}')">${WL[id]||id}</button>`
+  ).join('');
+}
+function selWorld(id){CW=id;SEL=null;renderWTabs();renderNpcList();document.getElementById('npcEditor').innerHTML='<div class="empty">👈 Seleziona un NPC</div>';clearPrev();}
+
+// ── NPC LIST ─────────────────────────────────────────────────
+function renderNpcList(){
+  const el=document.getElementById('npcList');
+  if(!CW||!D.worlds[CW]){el.innerHTML='<div class="empty">Carica un file JS</div>';return;}
+  const npcs=D.worlds[CW].npcs||[];
+  if(!npcs.length){el.innerHTML='<div class="empty">Nessun NPC</div>';return;}
+  el.innerHTML=npcs.map((n,i)=>{
+    const t=n.type||'npc';
+    return `<div class="npc-card ${i===SEL?'sel':''}" onclick="selNPC(${i})">
+      <div class="npc-head">
+        <div class="npc-icon" style="background:${tbg(t)}">${SE[n.sprite||'col']||'👤'}</div>
+        <div class="npc-info">
+          <div class="npc-id">${n.id||'?'}</div>
+          <div class="npc-spk">${n.dlg?.spk||n.label||'—'}</div>
+          <div class="npc-tags">
+            <span class="tag ${t}">${t}</span>
+            <span class="tag ${n.required!==false?'req':'opt'}">${n.required!==false?'required':'optional'}</span>
+          </div>
+        </div>
+        <button class="del-btn" onclick="event.stopPropagation();delNPC(${i})">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function tbg(t){return t==='sis'?'rgba(229,57,53,.15)':t==='tech'?'rgba(247,196,106,.12)':'rgba(124,106,247,.12)';}
+
+// ── NPC EDITOR ────────────────────────────────────────────────
+function selNPC(i){SEL=i;renderNpcList();renderNpcEditor(i);renderPrev(i);}
+
+function renderNpcEditor(i){
+  const n=D.worlds[CW].npcs[i];
+  if(!n)return;
+  const chs=(n.dlg?.chs||[]).map((ch,ci)=>choiceHtml(ci,ch,n.outs||{})).join('');
+  document.getElementById('npcEditor').innerHTML=`
+  <div style="display:flex;flex-direction:column;gap:.8rem">
+    <div class="card">
+      <div class="card-head"><h3>🪪 Identità</h3></div>
+      <div class="card-body">
+        <div class="g2">
+          <div class="field"><label>ID <span class="hint">univoco, no spazi</span></label>
+            <input value="${x(n.id||'')}" oninput="upN(${i},'id',this.value)" placeholder="pmi_nuovo"></div>
+          <div class="field"><label>Label <span class="hint">sopra l'NPC</span></label>
+            <input value="${x(n.label||'')}" oninput="upN(${i},'label',this.value)" placeholder="Ufficio HR"></div>
+        </div>
+        <div class="g3">
+          <div class="field"><label>Sprite</label>
+            <select onchange="upN(${i},'sprite',this.value)">
+              ${['mgr','sis','col','tech','crit'].map(s=>`<option value="${s}" ${n.sprite===s?'selected':''}>${SE[s]} ${s}</option>`).join('')}
+            </select></div>
+          <div class="field"><label>Tipo</label>
+            <select onchange="upN(${i},'type',this.value)">
+              ${['npc','sis','tech'].map(t=>`<option value="${t}" ${(n.type||'npc')===t?'selected':''}>${t}</option>`).join('')}
+            </select></div>
+          <div class="field"><label>Required</label>
+            <select onchange="upN(${i},'required',this.value==='true')">
+              <option value="true" ${n.required!==false?'selected':''}>✅ Sì</option>
+              <option value="false" ${n.required===false?'selected':''}>⭕ Opzionale</option>
+            </select></div>
+        </div>
+        <div class="g4">
+          <div class="field"><label>gridX <span class="hint">2–13</span></label>
+            <input type="number" min="2" max="13" value="${n.gridX||4}" oninput="upN(${i},'gridX',+this.value)"></div>
+          <div class="field"><label>gridY <span class="hint">2–9</span></label>
+            <input type="number" min="2" max="9" value="${n.gridY||5}" oninput="upN(${i},'gridY',+this.value)"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>💬 Dialogo</h3></div>
+      <div class="card-body">
+        <div class="g2">
+          <div class="field"><label>Speaker</label>
+            <input value="${x(n.dlg?.spk||'')}" oninput="upD(${i},'spk',this.value);renderPrev(${i})" placeholder="👔 Manager HR"></div>
+          <div class="field"><label>Colore</label>
+            <input value="${x(n.dlg?.color||'var(--accent)')}" oninput="upD(${i},'color',this.value)"></div>
+        </div>
+        <div class="field"><label>Testo dialogo <span class="hint">apostrofi liberi, non escapare</span></label>
+          <textarea rows="4" oninput="upD(${i},'txt',this.value);renderPrev(${i})">${x(n.dlg?.txt||'')}</textarea></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>🔀 Scelte</h3><span class="card-meta">${(n.dlg?.chs||[]).length}/4</span></div>
+      <div class="card-body sm">
+        <div id="chList_${i}">${chs}</div>
+        ${(n.dlg?.chs||[]).length<4?`<button class="addbtn" onclick="addCh(${i})" style="margin-top:.4rem">+ Aggiungi scelta</button>`:''}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>📋 Pattern &amp; Debrief</h3><span class="card-meta">db.pat appare nel Report Finale</span></div>
+      <div class="card-body">
+        <div class="field"><label>Nome pattern <span style="color:var(--accent2)">*</span></label>
+          <input value="${x(n.db?.pat||'')}" oninput="upDb(${i},'pat',this.value)" placeholder="Il ruolo vago come meccanismo di sfruttamento"></div>
+        <div class="field"><label>Insight pedagogico</label>
+          <textarea rows="3" oninput="upDb(${i},'ins',this.value)">${x(n.db?.ins||'')}</textarea></div>
+        <div class="field"><label>Fonte / dato</label>
+          <textarea rows="2" oninput="upDb(${i},'data',this.value)">${x(n.db?.data||'')}</textarea></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function choiceHtml(ci,ch,outs){
+  const k=ch.out||`out_${ci}`;
+  const o=outs[k]||{msg:'',stat:{}};
+  return `<div class="choice" id="ch_${ci}">
+    <div class="choice-head">
+      <div class="cnum">${ci+1}</div>
+      <input value="${x(ch.out||'')}" placeholder="chiave_out" style="font-family:monospace;font-size:.6rem;padding:.15rem .4rem;width:125px"
+        oninput="upChKey(${SEL},${ci},this.value)">
+      <button class="rmv" onclick="rmCh(${SEL},${ci})">✕</button>
+    </div>
+    <div class="field" style="margin-bottom:.45rem">
+      <label>Testo scelta</label>
+      <textarea rows="2" oninput="upChTxt(${SEL},${ci},this.value);renderPrev(${SEL})">${x(ch.t||'')}</textarea>
+    </div>
+    <div class="field" style="margin-bottom:.45rem">
+      <label>Feedback mostrato dopo la scelta</label>
+      <input value="${x(o.msg||'')}" oninput="upOutMsg('${k}',${SEL},this.value)"
+        placeholder="Es: +VOICE +CLARITY">
+    </div>
+    <div class="field" style="margin-bottom:0">
+      <label>Delta stat <span class="hint">×2.5 in gioco · range -2/+3</span></label>
+      <div class="stat-grid">
+        ${SK.map(s=>`<div class="stat-pill">
+          <label style="color:${SC[s]}">${s}</label>
+          <input type="number" min="-5" max="5" value="${o.stat?.[s]||0}"
+            oninput="upStat('${k}',${SEL},'${s}',+this.value)">
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── NPC MUTATIONS ─────────────────────────────────────────────
+function npc(i){return D.worlds[CW].npcs[i];}
+function upN(i,k,v){npc(i)[k]=v;if(['sprite','type','required'].includes(k))renderNpcList();}
+function upD(i,k,v){const n=npc(i);if(!n.dlg)n.dlg={};n.dlg[k]=v;}
+function upDb(i,k,v){const n=npc(i);if(!n.db)n.db={};n.db[k]=v;}
+function upChTxt(ni,ci,v){npc(ni).dlg.chs[ci].t=v;}
+function upChKey(ni,ci,val){
+  const chs=npc(ni).dlg.chs,old=chs[ci].out;chs[ci].out=val;
+  const outs=npc(ni).outs||{};
+  if(old&&outs[old]&&old!==val){outs[val]=outs[old];delete outs[old];}
+}
+function upOutMsg(k,ni,v){ensOut(ni,k);npc(ni).outs[k].msg=v;}
+function upStat(k,ni,sk,v){ensOut(ni,k);if(!npc(ni).outs[k].stat)npc(ni).outs[k].stat={};npc(ni).outs[k].stat[sk]=v;}
+function ensOut(ni,k){const n=npc(ni);if(!n.outs)n.outs={};if(!n.outs[k])n.outs[k]={msg:'',stat:{}};}
+function addCh(ni){
+  const n=npc(ni);if(!n.dlg.chs)n.dlg.chs=[];
+  const k=`out_${n.dlg.chs.length}`;n.dlg.chs.push({t:'',out:k});
+  if(!n.outs)n.outs={};n.outs[k]={msg:'',stat:{}};
+  renderNpcEditor(ni);
+}
+function rmCh(ni,ci){npc(ni).dlg.chs.splice(ci,1);renderNpcEditor(ni);renderPrev(ni);}
+function addNPC(){
+  if(!CW){toast('Carica prima un file JS',true);return;}
+  const n={id:`${CW}_new_${Date.now()}`,sprite:'col',label:'Nuovo NPC',type:'npc',required:false,
+    gridX:6,gridY:5,dlg:{spk:'👤 Nuovo',color:'var(--accent)',txt:'',chs:[]},outs:{},db:{pat:'',ins:'',data:''}};
+  D.worlds[CW].npcs.push(n);
+  selNPC(D.worlds[CW].npcs.length-1);
+  toast('NPC aggiunto');
+}
+function delNPC(i){
+  if(!confirm('Eliminare questo NPC?'))return;
+  D.worlds[CW].npcs.splice(i,1);SEL=null;
+  renderNpcList();document.getElementById('npcEditor').innerHTML='<div class="empty">👈 Seleziona un NPC</div>';
+  clearPrev();runVal();toast('Eliminato');
+}
+
+// ── PREVIEW — FIXED ───────────────────────────────────────────
+function renderPrev(i){
+  const n=D.worlds[CW]?.npcs?.[i]; if(!n){clearPrev();return;}
+  const d=n.dlg||{},sprite=n.sprite||'col';
+  const cls=sprite==='sis'?'sis':sprite==='tech'?'tech':sprite==='crit'?'crit':'';
+  const col=d.color||'var(--accent)';
+  const txt=d.txt||'';
+  const chs=d.chs||[];
+
+  const firstOut=Object.values(n.outs||{})[0];
+  const pills=firstOut?Object.entries(firstOut.stat||{})
+    .filter(([,v])=>v!==0)
+    .map(([k,v])=>`<span class="prev-stat" style="color:${SC[k]};border-color:${SC[k]}">${k} ${v>0?'+':''}${v}</span>`)
+    .join(''):'';
+
+  const db=n.db||{};
+  document.getElementById('prevContent').innerHTML=`
+    <div class="prev-box ${cls}">
+      <div class="prev-spk" style="color:${col}">${d.spk||'Parlante'}</div>
+      <div class="prev-txt">${txt.substring(0,240)}${txt.length>240?'…':''}</div>
+      ${chs.length
+        ? chs.map((c,ci)=>`<div class="prev-ch">${ci+1}. ${c.t||'...'}</div>`).join('')
+        : '<div style="color:var(--muted);font-size:.65rem">Nessuna scelta</div>'}
+    </div>
+    ${db.pat?`<div class="prev-debrief">
+      <div class="prev-pat">${db.pat}</div>
+      <div>${(db.ins||'').substring(0,180)}${(db.ins||'').length>180?'…':''}</div>
+      ${db.data?`<div class="prev-src">📊 ${db.data.substring(0,100)}${db.data.length>100?'…':''}</div>`:''}
+      ${pills?`<div class="prev-stats">${pills}<span class="prev-stat" style="color:${SC.RADAR};border-color:${SC.RADAR}">RADAR +1</span></div>`:''}
+    </div>`:''}`;
+}
+function clearPrev(){document.getElementById('prevContent').innerHTML='<div class="prev-empty">🎮<br>Seleziona un NPC<br>per vedere l\'anteprima</div>';}
+
+// ── WORLD DEBRIEF ─────────────────────────────────────────────
+function renderDbTabs(){
+  document.getElementById('dbTabs').innerHTML=Object.keys(D.debrief).map(id=>
+    `<button class="wtab ${id===CDB?'active':''}" onclick="selDb('${id}')">${WL[id]||id}</button>`
+  ).join('');
+}
+function selDb(id){CDB=id;renderDbTabs();renderDbContent();}
+function renderDbContent(){
+  const c=document.getElementById('dbContent');
+  if(!CDB||!D.debrief[CDB]){c.innerHTML='<div class="empty">Carica un file JS</div>';return;}
+  const db=D.debrief[CDB];
+  c.innerHTML=`
+    <div class="field" style="margin-bottom:.85rem">
+      <label>Tema del mondo <span class="hint">appare nel Report Finale sotto il nome mondo</span></label>
+      <input value="${x(db.theme||'')}" oninput="D.debrief['${CDB}'].theme=this.value">
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.85rem">
+    ${(db.levels||[]).map((lv,li)=>`
+      <div class="card">
+        <div class="card-head">
+          <h3>${['💡 Livello Base','🔆 Livello Approfondito','🔓 Livello Completo'][li]||'Livello '+li}</h3>
+          <span class="card-meta">≥${lv.min} interazioni</span>
+        </div>
+        <div class="card-body">
+          <div class="field"><label>Insight</label>
+            <textarea rows="3" oninput="D.debrief['${CDB}'].levels[${li}].insight=this.value">${x(lv.insight||'')}</textarea></div>
+          <div class="field"><label>Takeaway pratico</label>
+            <textarea rows="2" oninput="D.debrief['${CDB}'].levels[${li}].takeaway=this.value">${x(lv.takeaway||'')}</textarea></div>
+          <div class="g2">
+            <div class="field"><label>Badge</label>
+              <input value="${x(lv.badge||'')}" oninput="D.debrief['${CDB}'].levels[${li}].badge=this.value"></div>
+            <div class="field"><label>Min interazioni</label>
+              <input type="number" value="${lv.min||5}" oninput="D.debrief['${CDB}'].levels[${li}].min=+this.value"></div>
+          </div>
+        </div>
+      </div>`).join('')}
+    </div>`;
+}
+
+// ── OUTCOME / REPORT FINALE ───────────────────────────────────
+function renderOutcome(){
+  var el=document.getElementById('ocInner');
+  if(!el)return;
+  var ot=(D.ui&&D.ui.outcome)||{};
+  var tw=ot.takeaways||{};
+  var rdr=ot.radar||{};
+  var IS='width:100%;padding:.45rem .65rem;background:var(--surf2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.76rem;font-family:inherit;box-sizing:border-box';
+  var TS=IS+';resize:vertical';
+  var LS='display:block;font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.28rem';
+  var HS='font-size:.54rem;color:var(--muted2);text-transform:none;letter-spacing:0';
+  var CS='background:var(--surf);border:1px solid var(--border);border-radius:3px;padding:.02rem .28rem;font-size:.62rem;color:var(--accent3)';
+  var CARD_S='background:var(--surf);border:1px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:.9rem';
+  var HEAD_S='padding:.6rem .9rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid var(--border);background:var(--surf2)';
+  var BODY_S='padding:.85rem';
+  var FD='margin-bottom:.75rem';
+
+  function fld(lbl,hint,inp){return '<div style="'+FD+'"><label style="'+LS+'">'+lbl+(hint?' <span style="'+HS+'">'+hint+'</span>':'')+'</label>'+inp+'</div>';}
+  function ta(v,k){return '<textarea rows="2" style="'+TS+'" oninput="setKey(D.ui,\''+k+'\',this.value)">'+x(v)+'</textarea>';}
+  function inp(v,k){return '<input style="'+IS+'" value="'+x(v)+'" oninput="setKey(D.ui,\''+k+'\',this.value)">';}
+  function card(t,meta,body){return '<div style="'+CARD_S+'"><div style="'+HEAD_S+'"><span style="font-size:.76rem;font-weight:600;flex:1">'+t+'</span>'+(meta?'<span style="font-size:.58rem;color:var(--muted)">'+meta+'</span>':'')+'</div><div style="'+BODY_S+'">'+body+'</div></div>';}
+  function co(t){return '<code style="'+CS+'">'+t+'</code>';}
+
+  var html='';
+
+  // ── Info card ───────────────────────────────────────────────
+  html+=card('📌 Struttura del report','',
+    '<div style="background:var(--surf2);border:1px solid var(--border);border-radius:7px;padding:.7rem;font-size:.7rem;line-height:1.75">'
+    +'<div style="font-size:.6rem;color:var(--accent3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.45rem">Cosa mostra e da dove viene</div>'
+    +'<ul style="margin-left:1rem;color:var(--text)">'
+    +'<li>Emoji + Titolo → '+co('UI_TEXTS.outcome.emoji')+' e '+co('title')+'</li>'
+    +'<li>Mondi visitati → '+co('WORLD_DEBRIEF[wid].theme')+' per ogni mondo completato</li>'
+    +'<li>Pattern riconosciuti → tutti i '+co('db.pat')+' degli NPC visitati</li>'
+    +'<li>Takeaway globale → '+co('UI_TEXTS.outcome.takeaways.*')+'</li>'
+    +'<li>Lettura RADAR → '+co('UI_TEXTS.outcome.radar.*')+'</li>'
+    +'</ul></div>'
+  );
+
+  // ── Takeaways ───────────────────────────────────────────────
+  var twBody='';
+  [{k:'has_piva',lbl:'Se ha visitato P.IVA',hint:'priorità 1'},
+   {k:'has_corporate',lbl:'Se ha visitato Corporate',hint:'priorità 2, no P.IVA'},
+   {k:'has_startup',lbl:'Se ha visitato Startup',hint:'priorità 3'},
+   {k:'default',lbl:'Default',hint:'tutti gli altri casi'}
+  ].forEach(function(it){twBody+=fld(it.lbl,it.hint+' · outcome.takeaways.'+it.k,ta(tw[it.k]||'','outcome.takeaways.'+it.k));});
+  html+=card('🌍 Takeaway per combinazione mondi','UI_TEXTS.outcome.takeaways',twBody);
+
+  // ── RADAR ───────────────────────────────────────────────────
+  var rdrBody='';
+  [{k:'exceptional',lbl:'≥20 punti RADAR guadagnati'},
+   {k:'high',lbl:'≥12 punti RADAR'},
+   {k:'growing',lbl:'≥6 punti RADAR'},
+   {k:'base',lbl:'Default'}
+  ].forEach(function(it){rdrBody+=fld(it.lbl,'outcome.radar.'+it.k,inp(rdr[it.k]||'','outcome.radar.'+it.k));});
+  html+=card('📊 Testi RADAR per livello','UI_TEXTS.outcome.radar',rdrBody);
+
+  // ── Fixed texts ─────────────────────────────────────────────
+  var fixBody='';
+  ['emoji','title','section_worlds','section_stats','section_patterns','no_patterns','no_worlds','global_suffix','btn_other_path','btn_restart'].forEach(function(k){
+    var v=ot[k]||'';
+    fixBody+=fld(k,'',v.length>80?ta(v,'outcome.'+k):inp(v,'outcome.'+k));
+  });
+  html+=card('🔤 Testi fissi del report','',fixBody);
+
+  el.innerHTML=html;
+}
+
+// ── STEPS — with SMAP indicators ─────────────────────────────
+function renderStepTabs(){
+  document.getElementById('stepTabs').innerHTML=D.steps.map((s,i)=>
+    `<div class="tab ${i===CST?'active':''}" onclick="selSt(${i})">${s.tag||'Step '+i}</div>`
+  ).join('');
+}
+function selSt(i){CST=i;renderStepTabs();renderStepContent();}
+function renderStepContent(){
+  const c=document.getElementById('stepContent');
+  if(!D.steps.length){c.innerHTML='<div class="empty">Carica un file JS</div>';return;}
+  const st=D.steps[CST];
+  const meta=SMAP_INFO[st?.id]||{label:'Step',color:'#888',note:''};
+  let h=`
+    <div class="card" style="margin-bottom:.8rem">
+      <div class="card-head"><h3>Intestazione step</h3></div>
+      <div class="card-body">
+        <div class="field"><label>Tag</label><input value="${x(st.tag||'')}" oninput="D.steps[${CST}].tag=this.value"></div>
+        <div class="field"><label>Titolo</label><input value="${x(st.title||'')}" oninput="D.steps[${CST}].title=this.value"></div>
+        <div class="field"><label>Sottotitolo</label><input value="${x(st.sub||'')}" oninput="D.steps[${CST}].sub=this.value"></div>
+        <div class="field"><label>Nota metodologica</label><input value="${x(st.note||'')}" oninput="D.steps[${CST}].note=this.value"></div>
+      </div>
+    </div>
+    <div class="rulebox" style="margin-bottom:.8rem">
+      <h4 style="color:${meta.color}">${meta.label}</h4><span>${meta.note}</span>
+    </div>`;
+  if(st.qs){
+    const lockedIds=['python','sql','viz','ml','llm','cloud','sdev','comm','conflict','auto','chaos','feedback','network'];
+    h+=st.qs.map((q,qi)=>`
+      <div class="card" style="margin-bottom:.7rem">
+        <div class="card-head">
+          <h3>Domanda ${qi+1}</h3>
+          <button class="btn" style="padding:.18rem .5rem;font-size:.6rem;border-color:var(--danger);color:var(--danger)" onclick="D.steps[${CST}].qs.splice(${qi},1);renderStepContent()">✕</button>
+        </div>
+        <div class="card-body">
+          <div class="g2" style="margin-bottom:.6rem">
+            <div class="field" style="margin-bottom:0"><label>ID <span class="hint" id="idHint_${qi}">${lockedIds.includes(q.id)?'🔒 CRITICO — non modificare':'✏️ modificabile'}</span></label>
+              <input value="${x(q.id||'')}" oninput="D.steps[${CST}].qs[${qi}].id=this.value"
+                placeholder="es. nuova_domanda"
+                style="font-family:monospace;font-size:.74rem;${lockedIds.includes(q.id)?'border-color:rgba(247,196,106,.5);background:rgba(247,196,106,.04)':''}"
+                ${lockedIds.includes(q.id)?'title="Questo ID è usato da computeChar() per calcolare la classe — non modificarlo"':''}></div>
+            <div style="display:flex;flex-direction:column;justify-content:flex-end">
+              <div style="font-size:.6rem;color:var(--muted2);line-height:1.5">⚠️ ID critico — usato da computeChar() per calcolare la classe. Non modificare gli ID esistenti: python, sql, viz, ml, llm, cloud, sdev (hard) e comm, conflict, auto, chaos, feedback, network (soft).</div>
+            </div>
+          </div>
+          <div class="field"><label>Testo domanda</label>
+            <textarea rows="2" oninput="D.steps[${CST}].qs[${qi}].t=this.value">${x(q.t||'')}</textarea></div>
+          <div class="field">
+            <label>Opzioni <span class="hint">barra colorata = peso SMAP (verde=5 rosso=0 grigio=non mappato)</span></label>
+            ${(q.opts||[]).map((opt,oi)=>{
+              const sc=KNOWN_SMAP[opt];
+              const has=sc!==undefined;
+              const pct=has?(sc/5)*100:0;
+              const col=sc>=4?'#6af7c8':sc>=2.5?'#f7c46a':'#f76a6a';
+              return `<div style="display:flex;gap:.35rem;margin-bottom:.28rem;align-items:center">
+                <input type="number" min="0" max="5" step="0.5"
+                  value="${has?sc:(D.smap[opt]!==undefined?D.smap[opt]:0)}"
+                  title="Peso SMAP (0–5). Verde≥4, Giallo≥2.5, Rosso<2.5"
+                  style="width:46px;font-size:.62rem;text-align:center;padding:.18rem .25rem;flex-shrink:0;border-color:${has?col:'var(--border2)'}"
+                  oninput="D.smap[D.steps[${CST}].qs[${qi}].opts[${oi}]]=+this.value">
+                <div style="width:28px;height:3px;background:var(--border);border-radius:2px;flex-shrink:0;margin:0 2px">
+                  ${has?`<div style="width:${pct}%;height:100%;background:${col};border-radius:2px"></div>`:''}</div>
+                <input value="${x(opt)}" oninput="D.steps[${CST}].qs[${qi}].opts[${oi}]=this.value" style="flex:1">
+                <button class="del-btn" onclick="D.steps[${CST}].qs[${qi}].opts.splice(${oi},1);renderStepContent()">✕</button>
+              </div>`;
+            }).join('')}
+            <button class="addbtn" onclick="D.steps[${CST}].qs[${qi}].opts.push('Nuova opzione');renderStepContent()">+ Opzione</button>
+          </div>
+        </div>
+      </div>`).join('');
+    h+=`<button class="addbtn" onclick="D.steps[${CST}].qs.push({id:'',t:'Nuova domanda',opts:['Opzione 1','Opzione 2']});renderStepContent()">+ Nuova domanda</button>`;
+  }
+  c.innerHTML=h;
+}
+
+// ── UI TEXTS ─────────────────────────────────────────────────
+function renderUI(){
+  const c=document.getElementById('uiContent');
+  const flat=flatObj(D.ui,'');
+  const secs={};
+  flat.forEach(([p,v])=>{const t=p.split('.')[0];if(!secs[t])secs[t]=[];secs[t].push([p,v]);});
+  c.innerHTML=Object.entries(secs).map(([sec,entries])=>`
+    <div class="card" style="margin-bottom:.7rem">
+      <div class="card-head"><h3>UI_TEXTS.${sec}</h3></div>
+      <div class="card-body">
+        ${entries.map(([p,v])=>{
+          if(typeof v!=='string')return'';
+          return `<div class="field"><label>${p} ${v.includes('<')?'<span class="hint">(HTML)</span>':''}</label>
+            ${v.length>80
+              ?`<textarea rows="2" oninput="setKey(D.ui,'${p}',this.value)">${x(v)}</textarea>`
+              :`<input value="${x(v)}" oninput="setKey(D.ui,'${p}',this.value)">`}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ── WORLDS OVERVIEW ───────────────────────────────────────────
+function renderWorlds(){
+  const c=document.getElementById('worldsContent');
+  c.innerHTML=Object.entries(D.worlds).map(([id,w])=>{
+    const npcs=w.npcs||[];
+    const types={npc:0,sis:0,tech:0};
+    npcs.forEach(n=>{const t=n.type||'npc';types[t]=(types[t]||0)+1;});
+    const req={npc:0,sis:0,tech:0};
+    npcs.filter(n=>n.required!==false).forEach(n=>{const t=n.type||'npc';req[t]=(req[t]||0)+1;});
+    const ok=req.npc>=3&&req.sis>=1&&req.tech>=1;
+    return `<div class="card" style="margin-bottom:.6rem">
+      <div class="card-head">
+        <h3>${WL[id]||id}</h3>
+        <span class="card-meta">${npcs.length} NPC</span>
+        <span style="font-size:.6rem;padding:.12rem .4rem;border-radius:4px;${ok?'color:var(--accent3);background:rgba(106,247,200,.1);border:1px solid rgba(106,247,200,.2)':'color:var(--danger);background:rgba(247,106,106,.1);border:1px solid rgba(247,106,106,.2)'}">${ok?'✅ porta OK':'⚠️ porta incompleta'}</span>
+        <button class="btn" style="padding:.2rem .55rem;font-size:.6rem" onclick="selWorld('${id}');showSec('npcs')">Modifica NPC</button>
+      </div>
+      <div class="card-body sm">
+        <div style="display:flex;gap:.4rem;flex-wrap:wrap">
+          <span class="tag npc">👥 ${types.npc} npc (${req.npc} req)</span>
+          <span class="tag sis">❤️ ${types.sis} sis (${req.sis} req)</span>
+          <span class="tag tech">💻 ${types.tech} tech (${req.tech} req)</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── VALIDATION ────────────────────────────────────────────────
+function runVal(){
+  if(!D._src){updBadge(0,0,false);return;}
+  const errs=[],warns=[],oks=[];
+  const allIds=[];
+  Object.entries(D.worlds).forEach(([wid,w])=>{
+    const npcs=w.npcs||[];
+    const req={npc:0,sis:0,tech:0};
+    npcs.forEach((n,i)=>{
+      if(allIds.includes(n.id))errs.push(`ID duplicato: "${n.id}" in ${WL[wid]||wid}`);
+      else if(n.id)allIds.push(n.id);
+      if(!n.id)errs.push(`NPC #${i} in ${WL[wid]||wid}: id mancante`);
+      else if(/\s/.test(n.id))errs.push(`ID con spazio: "${n.id}" — usa underscore`);
+      (n.dlg?.chs||[]).forEach(ch=>{
+        if(!ch.out)errs.push(`NPC "${n.id}": scelta senza chiave out`);
+        else if(!(n.outs||{})[ch.out])errs.push(`NPC "${n.id}": out "${ch.out}" senza outcome corrispondente`);
+      });
+      if(!n.dlg?.txt)warns.push(`NPC "${n.id}" (${WL[wid]||wid}): dialogo vuoto`);
+      if(!n.db?.pat)warns.push(`NPC "${n.id}": db.pat mancante — non apparirà nel Report Finale`);
+      if(n.required!==false){const t=n.type||'npc';req[t]=(req[t]||0)+1;}
+    });
+    if(req.npc<3)errs.push(`${WL[wid]||wid}: solo ${req.npc}/3 NPC required di tipo "npc" — porta bloccata`);
+    if(req.sis<1)errs.push(`${WL[wid]||wid}: nessuna sis required`);
+    if(req.tech<1)errs.push(`${WL[wid]||wid}: nessuna tech required`);
+    if(req.npc>=3&&req.sis>=1&&req.tech>=1)oks.push(`${WL[wid]||wid}: porta configurata correttamente`);
+  });
+  D.steps.forEach(st=>{
+    if(st.id==='hard'||st.id==='soft'){
+      (st.qs||[]).forEach(q=>{
+        (q.opts||[]).forEach(opt=>{
+          if(KNOWN_SMAP[opt]===undefined)warns.push(`Assessment: "${opt.substring(0,35)}" non ha un peso SMAP — trattata come 0`);
+        });
+      });
+    }
+  });
+  const el=document.getElementById('valResults');
+  if(el)el.innerHTML=[
+    ...errs.map(e=>`<div class="vitem err"><span>❌</span><span>${e}</span></div>`),
+    ...warns.map(w=>`<div class="vitem warn"><span>⚠️</span><span>${w}</span></div>`),
+    ...oks.map(o=>`<div class="vitem ok"><span>✅</span><span>${o}</span></div>`),
+  ].join('');
+  updBadge(errs.length,warns.length,true);
+}
+function updBadge(e,w,loaded){
+  const b=document.getElementById('vbadge');
+  if(!loaded){b.className='vbadge none';b.textContent='— errori';return;}
+  if(e>0){b.className='vbadge err';b.textContent=`${e} errori`;}
+  else if(w>0){b.className='vbadge warn';b.textContent=`${w} avvisi`;}
+  else{b.className='vbadge ok';b.textContent='✅ ok';}
+}
+
+// ── UTILS ─────────────────────────────────────────────────────
+function x(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function flatObj(o,pre){
+  const r=[];
+  for(const[k,v]of Object.entries(o||{})){
+    const p=pre?`${pre}.${k}`:k;
+    if(v&&typeof v==='object'&&!Array.isArray(v))r.push(...flatObj(v,p));
+    else r.push([p,v]);
+  }
+  return r;
+}
+function setKey(o,path,val){
+  const ps=path.split('.');let c=o;
+  for(let i=0;i<ps.length-1;i++){if(!c[ps[i]])c[ps[i]]={};c=c[ps[i]];}
+  c[ps[ps.length-1]]=val;
+}
+function toast(msg,err=false){
+  const el=document.createElement('div');el.className='toast';
+  if(err)el.style.cssText='border-color:var(--danger);color:var(--danger)';
+  el.textContent=msg;document.body.appendChild(el);setTimeout(()=>el.remove(),2600);
+}
+
+// ── DOWNLOAD ─────────────────────────────────────────────────
+function downloadJS(){
+  if(!D._src){toast('Carica prima un file JS',true);return;}
+  const out=buildJS();
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([out],{type:'text/javascript'}));
+  a.download=D._file||'career-world-data.js';
+  a.click();
+  toast('✅ Scaricato: '+(D._file||'career-world-data.js'));
+}
+
+function buildJS(){
+  const src=D._src;
+  let out=`// ══════════════════════════════════════════════════════════════
+// CAREER WORLD DATA — v14 (Career World Editor)
+// ══════════════════════════════════════════════════════════════\n\n`;
+  out+=`const UI_TEXTS = ${jss(D.ui,0)};\n\n`;
+  out+=`const STEPS=${jss(D.steps,0)};\n\n`;
+  // ORIENT_OPTS and CLASSES preserved verbatim; SMAP rebuilt from D.smap + original
+  const orientBlock=exB(src,'const ORIENT_OPTS=');
+  if(orientBlock)out+=orientBlock+'\n\n';
+  // Merge original SMAP with user edits in D.smap
+  out+='const SMAP={\n';
+  const smapMerged=Object.assign({},D.smap);
+  Object.entries(smapMerged).forEach(([k,v])=>{
+    out+='  '+js(k)+':'+v+',\n';
+  });
+  out+='}\n\n';
+  const classesBlock=exB(src,'const CLASSES=');
+  if(classesBlock)out+=classesBlock+'\n\n';
+  out+=`const WORLD_DEFS={\n`;
+  ['pmi','startup','consulenza'].forEach(w=>{if(D.worlds[w])out+=`  ${w}:${jss(D.worlds[w],1)},\n`;});
+  out+=`};\n\n`;
+  out+=`const INNER_CRITICS = ${jss(D.critics,0)};\n\n`;
+  const wi=exB(src,'const WORLD_INTROS =')||exB(src,'const WORLD_INTROS=');
+  if(wi)out+=wi+'\n\n';
+  if(D.worlds.corporate)out+=`const W3_NPCS = ${jss(D.worlds.corporate.npcs||[],0)};\n\n`;
+  if(D.worlds.piva)out+=`const W4_NPCS = ${jss(D.worlds.piva.npcs||[],0)};\n\n`;
+  out+=`const WORLD_DEFS_NEW = {\n`;
+  if(D.worlds.corporate){const w=D.worlds.corporate;out+=`  corporate:{label:${js(w.label)},palette:${jss(w.palette,2)},exits:${jss(w.exits,2)},npcs:W3_NPCS},\n`;}
+  if(D.worlds.piva){const w=D.worlds.piva;out+=`  piva:{label:${js(w.label)},palette:${jss(w.palette,2)},exits:${jss(w.exits,2)},npcs:W4_NPCS},\n`;}
+  out+=`};\n\n`;
+  ['const WORLD_INTROS_NEW','const INNER_CRITICS_NEW','const W5_NPCS',
+   'const PA_ADDITIONS','const PA_INNER_CRITICS',
+   'const PMI_ADDITIONS','const STARTUP_ADDITIONS','const CONSULENZA_ADDITIONS',
+   'const CORPORATE_ADDITIONS','const PIVA_ADDITIONS'].forEach(m=>{const b=exB(src,m);if(b)out+=b+'\n\n';});
+  out+=`const WORLD_DEBRIEF = ${jss(D.debrief,0)};\n\n`;
+  const tf=exB(src,'function typeOf'),pw=exB(src,'function patchWorldsV12');
+  if(tf)out+=tf+'\n\n';if(pw)out+=pw+'\n\n';
+  out+=`patchWorldsV12();\n`;
+  return out;
+}
+
+function exB(src,marker){
+  const i=src.indexOf(marker);if(i===-1)return null;
+  const after=src.slice(i);
+  const nx=after.search(/\n(?:const |function |let |Object\.|WORLD_DEFS\.|patchWorlds)/);
+  return nx===-1?after.trimEnd():after.slice(0,nx).trimEnd();
+}
+
+function jss(val,d=0){
+  if(val===null||val===undefined)return'null';
+  if(typeof val==='boolean')return String(val);
+  if(typeof val==='number')return String(val);
+  if(typeof val==='string')return js(val);
+  if(Array.isArray(val)){
+    if(!val.length)return'[]';
+    const it=val.map(v=>jss(v,d+1));
+    if(it.every(i=>!i.includes('\n'))&&it.join(',').length<80)return`[${it.join(',')}]`;
+    const ind='  '.repeat(d+1);
+    return`[\n${it.map(i=>`${ind}${i}`).join(',\n')}\n${'  '.repeat(d)}]`;
+  }
+  if(typeof val==='object'){
+    const en=Object.entries(val).filter(([,v])=>v!==undefined);
+    if(!en.length)return'{}';
+    const ind='  '.repeat(d+1);
+    return`{\n${en.map(([k,v])=>`${ind}${/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(k)?k:JSON.stringify(k)}:${jss(v,d+1)}`).join(',\n')}\n${'  '.repeat(d)}}`;
+  }
+  return String(val);
+}
+function js(s){return`'${String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n')}'`;}
+
+showSec('npcs');
+</script>
+</body>
+</html>
